@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.payment</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>payment-app</name>
+	<name>paymanager</name>
 	<description>Payment Management App</description>
 	<url/>
 	<licenses>

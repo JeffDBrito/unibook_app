@@ -11,7 +11,7 @@
 	<groupId>com.payment</groupId>
 	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>paymanager</name>
+	<name>unibook</name>
 	<description>Payment Management App</description>
 	<url/>
 	<licenses>

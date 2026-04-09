@@ -1,8 +1,9 @@
-package com.payment.app.controller;
+package com.unibook.app.controller;
 
-import com.payment.app.model.User;
-import com.payment.app.service.UserService;
 import org.springframework.web.bind.annotation.*;
+
+import com.unibook.app.model.User;
+import com.unibook.app.service.UserService;
 
 import java.util.List;
 

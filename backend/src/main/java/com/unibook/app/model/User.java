@@ -1,4 +1,4 @@
-package com.payment.app.model;
+package com.unibook.app.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,5 +15,8 @@ public class User {
     private String name;
 
     private String email;
+
+    public User() {
+    }
 
 }

@@ -1,8 +1,9 @@
-package com.payment.app.service;
+package com.unibook.app.service;
 
-import com.payment.app.model.User;
-import com.payment.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import com.unibook.app.model.User;
+import com.unibook.app.repository.UserRepository;
 
 import java.util.List;
 

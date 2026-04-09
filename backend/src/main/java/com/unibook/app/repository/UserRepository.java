@@ -1,7 +1,8 @@
-package com.payment.app.repository;
+package com.unibook.app.repository;
 
-import com.payment.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.unibook.app.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

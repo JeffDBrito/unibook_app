@@ -1,4 +1,4 @@
-package com.payment.app;
+package com.unibook.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

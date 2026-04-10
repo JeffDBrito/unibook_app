@@ -8,11 +8,11 @@
 		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.payment</groupId>
+	<groupId>com.unibook</groupId>
 	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>paymanager</name>
-	<description>Payment Management App</description>
+	<name>unibook</name>
+	<description>Unibook App</description>
 	<url/>
 	<licenses>
 		<license/>

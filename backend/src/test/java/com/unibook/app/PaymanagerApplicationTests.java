@@ -1,10 +1,10 @@
-package com.payment.app;
+package com.unibook.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PaymanagerApplicationTests {
+class UnibookApplicationTests {
 
 	@Test
 	void contextLoads() {

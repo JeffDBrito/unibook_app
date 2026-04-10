@@ -6,6 +6,6 @@ COPY . .
 
 RUN ./mvnw clean package -DskipTests
 
-EXPOSE 8080
+EXPOSE ${BACKEND_PORT}
 
 CMD ["java", "-jar", "target/app-0.0.1-SNAPSHOT.jar"]

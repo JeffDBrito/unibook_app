@@ -14,6 +14,13 @@ docker run -d --name unibook-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=uni
 docker container start unibook-db
 ```
 
+## Install postgresql locally on Ubuntu
+```
+sudo apt install postgresql postgresql-contrib
+sudo systemctl status postgresql
+sudo -i -u postgres
+```
+
 ## Create database if your postgres is running locally
 ```
 psql -U postgres
@@ -66,3 +73,14 @@ nvm use 20
 >   - Go to frontend folder and run the app frontend
 >       - ```cd frontend```
 >       - ```npm run dev```
+
+> ### Database connection error after installing postgres locally
+> - It happens if you have installed postgres recently and running ```psql -h localhost -U postgres -d unibook_db``` doesn't works
+> - Fix: 
+>   - Run psql on terminal:
+>       - ```sudo -u postgres psql```
+>   - Update password to match env password
+>       - ```ALTER USER postgres WITH PASSWORD 'postgres';```
+>   - Test trying to connect to postgres with these new credentials
+>       - ```psql -h localhost -U postgres -d unibook_db```
+>       - ``` ```

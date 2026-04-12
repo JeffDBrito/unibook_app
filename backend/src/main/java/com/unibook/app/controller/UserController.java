@@ -2,6 +2,8 @@ package com.unibook.app.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.unibook.app.dto.request.CreateUserRequest;
+import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.model.User;
 import com.unibook.app.service.UserService;
 
@@ -9,21 +11,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "*") // TODO: configure CORS properly
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
+    // List users
     @GetMapping
-    public List<User> list() {
-        return service.listUsers();
+    public List<UserResponse> getAllUsers() {
+        return userService.findAll();
     }
 
+    // Get user by id
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    // Create user
     @PostMapping
-    public User create(@RequestBody User user) {
-        return service.createUser(user);
+    public User createUser(@RequestBody CreateUserRequest request) {
+        return userService.createUser(
+                request.getName(),
+                request.getEmail(),
+                request.getLogin(),
+                request.getPassword(),
+                request.getRoleId(),
+                request.isSuperuser()
+        );
     }
 }

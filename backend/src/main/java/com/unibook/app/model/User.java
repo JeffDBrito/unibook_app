@@ -1,22 +1,31 @@
 package com.unibook.app.model;
 
+
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String login;
+    private String password;
 
-    private String email;
+    @Column(nullable = false)
+    private boolean superuser;
 
-    public User() {
-    }
+    @OneToOne
+    private Person person;
 
+    @ManyToOne
+    private Role role;
 }

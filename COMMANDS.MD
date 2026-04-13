@@ -1,3 +1,15 @@
+## Project Requirements
+> - JDK 21 (LTS)
+> - Postgresql
+> - Node 20
+
+## Install system 
+> - Install JDK 21 (LTS) [Here](https://www.oracle.com/br/java/technologies/downloads/#java21)
+> - Install PostgreSQL [Here](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+> - Copy .env.example to .env
+>   - ``` cp .env.example .env ```
+> - ./mvnw spring-boot:run
+
 # Running on Docker
 ```
 docker compose build

@@ -1,6 +1,6 @@
 ## Project Requirements
 > - JDK 21 (LTS)
-> - Postgresql
+> - Postgresql 18
 > - Node 20
 
 ## Install system 

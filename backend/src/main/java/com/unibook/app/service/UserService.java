@@ -26,7 +26,7 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public User createUser(String name, String email, String login, String password, Long roleId, boolean superuser) {
+    public UserResponse createUser(String name, String email, String login, String password, Long roleId, boolean superuser) {
 
         // create Person
         Person person = new Person();
@@ -53,7 +53,9 @@ public class UserService {
         user.setSuperuser(superuser);
         System.out.println("Creating user with login: " + login + ", role: " + role.getTitle() + ", superuser: " + superuser);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        
+        return toResponse(savedUser);
     }
 
     public List<UserResponse> findAll() {

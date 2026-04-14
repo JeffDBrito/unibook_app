@@ -34,7 +34,7 @@ public class UserController {
 
     // Create user
     @PostMapping
-    public User createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@RequestBody CreateUserRequest request) {
         return userService.createUser(
                 request.getName(),
                 request.getEmail(),

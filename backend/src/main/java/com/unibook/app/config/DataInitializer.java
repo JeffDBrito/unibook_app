@@ -1,5 +1,6 @@
 package com.unibook.app.config;
 
+import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
 import com.unibook.app.model.User;
@@ -143,7 +144,7 @@ public class DataInitializer {
     @Order(4)
     CommandLineRunner initAdminUser(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            User user = userService.createUser(
+            UserResponse user = userService.createUser(
                 "Admin User",
                 "admin@admin.com",
                 "admin",

@@ -1,14 +1,28 @@
 ## Project Requirements
 > - JDK 21 (LTS)
 > - Postgresql 18
-> - Node 20
+> - Node 20+
 
 ## Install system 
 > - Install JDK 21 (LTS) [Here](https://www.oracle.com/br/java/technologies/downloads/#java21)
 > - Install PostgreSQL [Here](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 > - Copy .env.example to .env
 >   - ``` cp .env.example .env ```
-> - ./mvnw spring-boot:run
+> - Running on Docker
+>   - Build App:
+>       - ``` docker compose build ``` 
+>   - Start containers detached (without logs)
+>       - ``` docker compose up -d ```
+>   - Start containers attached (with logs)
+>       - ``` docker compose up ```
+> - Runnins Locally
+>   - Open terminal on `./backend` folder 
+>   - Run backend
+>       - ./mvnw spring-boot:run
+>   - Open terminal on `./frontend` folder 
+>       - npm install
+>       - npm run dev
+
 
 # Running on Docker
 ```

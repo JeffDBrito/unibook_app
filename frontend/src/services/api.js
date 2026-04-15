@@ -1,18 +1,14 @@
-const API_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8080";
 
-export async function getUsers() {
-  const response = await fetch(`${API_URL}/users`);
-  return response.json();
-}
+export async function api(path, options = {}) {
+  const token = localStorage.getItem("token");
 
-export async function createUser(user) {
-  const response = await fetch(`${API_URL}/users`, {
-    method: "POST",
+  return fetch(`${BASE_URL}${path}`, {
+    ...options,
     headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers
+    }
   });
-
-  return response.json();
 }

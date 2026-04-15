@@ -8,14 +8,21 @@
 > - Install PostgreSQL [Here](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 > - Copy .env.example to .env
 >   - ``` cp .env.example .env ```
-> - Running on Docker
+> - Run Command to copy .env to backend and frontend
+>   - ```make env```
+
+> - Run App Locally using make
+>   - ```make dev```
+
+> - Running App on Docker
 >   - Build App:
 >       - ``` docker compose build ``` 
 >   - Start containers detached (without logs)
 >       - ``` docker compose up -d ```
 >   - Start containers attached (with logs)
 >       - ``` docker compose up ```
-> - Runnins Locally
+
+> - Runnins App Manually
 >   - Open terminal on `./backend` folder 
 >   - Run backend
 >       - ./mvnw spring-boot:run
@@ -76,6 +83,9 @@ npm run dev
 nvm use 20
 ```
 
+## Kill processes
+```pkill -f spring```
+```pkill -f node```
 
 ## Known errors
 

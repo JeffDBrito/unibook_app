@@ -3,6 +3,7 @@ package com.unibook.app.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.unibook.app.dto.request.CreateUserRequest;
+import com.unibook.app.dto.request.LoginRequest;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.model.User;
 import com.unibook.app.service.UserService;
@@ -43,5 +44,11 @@ public class UserController {
                 request.getRoleId(),
                 request.isSuperuser()
         );
+    }
+
+    @PostMapping("/login")
+    public UserResponse login(@RequestBody LoginRequest request) {
+        System.out.println("Login request received for login: " + request.getLogin() + " with password: " + request.getPassword());
+        return userService.login(request.getLogin(), request.getPassword());
     }
 }

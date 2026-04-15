@@ -1,18 +1,17 @@
-const API_URL = "http://localhost:8080";
+import { ENV } from "../config/env";
 
-export async function getUsers() {
-  const response = await fetch(`${API_URL}/users`);
-  return response.json();
-}
+const BASE_URL = ENV.API_URL;
 
-export async function createUser(user) {
-  const response = await fetch(`${API_URL}/users`, {
-    method: "POST",
+export async function api(path, options = {}) {
+  console.log(BASE_URL);
+  const token = localStorage.getItem("token");
+
+  return fetch(`${BASE_URL}${path}`, {
+    ...options,
     headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers
+    }
   });
-
-  return response.json();
 }

@@ -1,7 +1,9 @@
 package com.unibook.app.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.config.SecurityConfig;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;
@@ -11,20 +13,18 @@ import com.unibook.app.repository.PersonRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
+    
     private final UserRepository userRepository;
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
-
-    public UserService(UserRepository userRepository, PersonRepository personRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.personRepository = personRepository;
-        this.roleRepository = roleRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(String name, String email, String login, String password, Long roleId, boolean superuser) {
 
@@ -47,7 +47,7 @@ public class UserService {
             login = email; // if login is empty, use email as login
         }
         user.setLogin(login);
-        user.setPassword(password); // TODO: hash password
+        user.setPassword(passwordEncoder.encode(password));
         user.setPerson(person);
         user.setRole(role);
         user.setSuperuser(superuser);
@@ -85,4 +85,17 @@ public class UserService {
 
         return response;
     }
+
+    public UserResponse login(String login, String password) {
+
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        return toResponse(user);
+    }
+
 }

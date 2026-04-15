@@ -10,6 +10,7 @@ export default function Login() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { login: doLogin } = useAuth();
   const navigate = useNavigate();
@@ -17,12 +18,16 @@ export default function Login() {
   async function handleLogin(e) {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       const data = await loginRequest(login, password);
       doLogin(data.token);
       navigate("/dashboard");
     } catch (err) {
-      setError("Credenciais inválidas");
+      setError("Invalid credentials");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -45,7 +50,9 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Button type="submit">Entrar</Button>
+        <Button type="submit">
+          {loading ? "Entrando..." : "Entrar"}
+        </Button>
       </form>
 
       {error && <p style={{ color: "red" }}>{error}</p>}

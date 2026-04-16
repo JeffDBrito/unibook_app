@@ -12,7 +12,7 @@
 >   - ```make env```
 
 > - Run App Locally using make
->   - ```make dev```
+>   - ```make up-dev```
 
 > - Running App on Docker
 >   - Build App:

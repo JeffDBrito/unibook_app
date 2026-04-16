@@ -1,6 +1,22 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  function login(newToken) {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    setToken(null);
+  }
+
+  return {
+    token,
+    isAuthenticated: !!token,
+    login,
+    logout
+  };
 }

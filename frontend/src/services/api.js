@@ -3,7 +3,6 @@ import { ENV } from "../config/env";
 const BASE_URL = ENV.API_URL;
 
 export async function api(path, options = {}) {
-  console.log(BASE_URL);
   const token = localStorage.getItem("token");
 
   return fetch(`${BASE_URL}${path}`, {

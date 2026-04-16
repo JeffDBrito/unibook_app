@@ -7,7 +7,7 @@ env:
 
 	@echo "Done ✅"
 
-dev:
+up-dev:
 	@echo "Starting backend and frontend..."
 
 	# Backend and frontend

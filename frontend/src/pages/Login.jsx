@@ -22,7 +22,12 @@ export default function Login() {
 
     try {
       const data = await loginRequest(login, password);
-      doLogin(data.token);
+
+      const token = data.token;
+      localStorage.setItem("token", token);
+
+      doLogin(token);
+
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid credentials");
@@ -51,7 +56,7 @@ export default function Login() {
         />
 
         <Button type="submit">
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
 

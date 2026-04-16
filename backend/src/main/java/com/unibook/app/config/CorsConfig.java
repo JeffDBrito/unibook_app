@@ -20,12 +20,12 @@ public class CorsConfig {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-
                 // Allow Frontend to access Backend
                 registry.addMapping("/**")
-                        .allowedOrigins(frontendUrl + ":" + frontendPort)
-                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
-                        .allowedHeaders("*");                
+                    .allowedOrigins("http://localhost:5173")
+                    .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);               
             }
         };
     }

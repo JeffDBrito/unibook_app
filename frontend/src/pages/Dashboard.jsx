@@ -1,16 +1,12 @@
 import { useAuth } from "../hooks/useAuth";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import AppLayout from "../components/layout/AppLayout";
 
-export default function Dashboard() {
-  const { logout } = useAuth();
-
+export default function Dashboard({ title }) {
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <div style={{ maxWidth: "300px", margin: "20px auto" }}>
-        <Button onClick={logout}>Logout</Button>
-      </div>
-    </div>
+    <AppLayout title={title}>
+      <p>Welcome!</p>
+    </AppLayout>
   );
 }

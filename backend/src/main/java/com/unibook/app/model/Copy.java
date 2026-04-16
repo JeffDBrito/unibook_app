@@ -1,8 +1,7 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.unibook.app.enums.CopyStatus;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,24 +9,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "permissions")
+@Table(name = "copies")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Permission {
+public class Copy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String code;
 
-    @Column(name = "group_name")
-    private String groupName;
+    private boolean available = true;
 
-    private String description;
+    private CopyStatus status;
 
+    @ManyToOne
     @JsonIgnore
-    @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles = new ArrayList<>();
+    @JoinColumn(name = "book_id")
+    private Book book;
 }

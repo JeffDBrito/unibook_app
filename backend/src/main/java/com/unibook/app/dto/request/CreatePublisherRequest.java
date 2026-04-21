@@ -8,6 +8,7 @@ import lombok.Setter;
 public class CreatePublisherRequest {
     
     private String title;
+    private String description;
 
     public CreatePublisherRequest() {}
 

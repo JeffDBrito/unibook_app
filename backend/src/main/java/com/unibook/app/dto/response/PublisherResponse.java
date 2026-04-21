@@ -9,5 +9,6 @@ public class PublisherResponse {
     
     private Long id;
     private String title;
+    private String description;
 
 }

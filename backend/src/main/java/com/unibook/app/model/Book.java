@@ -23,6 +23,8 @@ public class Book {
 
     private String title;
 
+    private String description;
+
     private String isbn;
 
     private Integer publicationYear;
@@ -35,8 +37,8 @@ public class Book {
     )
     private List<Author> authors = new ArrayList<>();
 
-    @OneToMany(mappedBy = "book")
     @JsonIgnore
+    @OneToMany(mappedBy = "book")
     private List<Copy> copies = new ArrayList<>();;
 
     @ManyToMany
@@ -50,8 +52,4 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
-
-    @ManyToOne
-    @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
 }

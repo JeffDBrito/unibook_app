@@ -18,13 +18,15 @@ public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+    @Value("${jwt.expiration}")
+    private long expirationTime;
 
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getLogin())
                 .claim("role", user.getRole().getTitle())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1h ttl
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * expirationTime)) // 1h ttl
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

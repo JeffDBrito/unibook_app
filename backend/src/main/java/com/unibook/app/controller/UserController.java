@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import com.unibook.app.dto.request.CreateUserRequest;
 import com.unibook.app.dto.request.LoginRequest;
 import com.unibook.app.dto.response.UserResponse;
-import com.unibook.app.model.User;
 import com.unibook.app.service.UserService;
 
 import java.util.List;

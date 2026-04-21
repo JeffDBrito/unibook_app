@@ -5,6 +5,10 @@ import com.unibook.app.model.Role;
 import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
+import com.unibook.app.service.AuthorService;
+import com.unibook.app.service.BookService;
+import com.unibook.app.service.CategoryService;
+import com.unibook.app.service.PublisherService;
 import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
 
@@ -153,4 +157,47 @@ public class DataInitializer {
             );
         };
     }
+
+    @Bean
+    @Order(5)
+    CommandLineRunner initAuthors(AuthorService authorService) {
+        return args -> {
+            authorService.createAuthor("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.");
+            authorService.createAuthor("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.");
+            authorService.createAuthor("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.");
+        };
+    }
+
+    @Bean
+    @Order(6)    
+    CommandLineRunner initCategories(CategoryService categoryService) {
+        return args -> {
+            categoryService.createCategory("Fiction", "Literary works invented by the imagination, such as novels or short stories.");
+            categoryService.createCategory("Non-Fiction", "Literary works based on facts, real events, and real people, such as biography or history.");
+            categoryService.createCategory("Science Fiction", "A genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life.");
+        };
+    }
+
+    @Bean
+    @Order(7)    
+    CommandLineRunner initPublishers(PublisherService publisherService) {
+        return args -> {
+            publisherService.createPublisher("Scribner", "An American publishing company based in New York City, known for publishing many classic and contemporary works of fiction.");
+            publisherService.createPublisher("J.B. Lippincott & Co.", "An American publishing house founded in Philadelphia in 1836, known for publishing many classic works of literature, including Harper Lee's To Kill a Mockingbird.");
+            publisherService.createPublisher("Secker & Warburg", "A British publishing company founded in 1935, known for publishing many influential works of literature, including George Orwell's 1984 and Animal Farm.");
+        };
+    }
+
+    @Bean
+    @Order(8)
+    CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
+        return args -> {
+            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()));
+            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()));
+            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()));
+        };
+    }
+
+
+
 }

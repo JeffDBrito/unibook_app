@@ -29,7 +29,4 @@ public class Role {
     )
     private List<Permission> permissions = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "role")
-    // private List<User> users = new ArrayList<User>();
-
 }

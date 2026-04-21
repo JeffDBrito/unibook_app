@@ -1,9 +1,7 @@
 package com.unibook.app.config;
 
-import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
-import com.unibook.app.model.User;
 import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
@@ -16,7 +14,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class DataInitializer {
@@ -144,7 +141,7 @@ public class DataInitializer {
     @Order(4)
     CommandLineRunner initAdminUser(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            UserResponse user = userService.createUser(
+            userService.createUser(
                 "Admin User",
                 "admin@admin.com",
                 "admin",

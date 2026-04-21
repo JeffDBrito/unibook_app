@@ -1,6 +1,5 @@
 package com.unibook.app.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unibook.app.enums.CopyStatus;
 
 import jakarta.persistence.*;

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "publishers")
+@Table(name = "categories")
 public class Category {
 
     @Id
@@ -25,6 +25,7 @@ public class Category {
     private Long id;
 
     private String title;
+    private String description;
     
     @ManyToMany(mappedBy = "categories")
     private List<Book> books = new ArrayList<>();

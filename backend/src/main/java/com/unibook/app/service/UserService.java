@@ -3,7 +3,6 @@ package com.unibook.app.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.unibook.app.config.SecurityConfig;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;

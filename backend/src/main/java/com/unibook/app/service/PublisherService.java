@@ -16,26 +16,27 @@ public class PublisherService {
     
     private final PublisherRepository publisherRepository;
 
-    public PublisherResponse createPublisher(String title) {
-        var publisher = new Publisher();
+    public PublisherResponse createPublisher(String title, String description) {
+        Publisher publisher = new Publisher();
         publisher.setTitle(title);
-        var savedPublisher = publisherRepository.save(publisher);
+        publisher.setDescription(description);
+        Publisher savedPublisher = publisherRepository.save(publisher);
         return toResponse(savedPublisher);
     }
 
     public List<PublisherResponse> findAll() {
-        var publishers = publisherRepository.findAll();
+        List<Publisher> publishers = publisherRepository.findAll();
         return publishers.stream().map(this::toResponse).toList();
     }
 
     public PublisherResponse findById(Long id) {
-        var publisher = publisherRepository.findById(id)
+        Publisher publisher = publisherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
         return toResponse(publisher);
     }
 
     public PublisherResponse findByTitle(String title) {
-        var publisher = publisherRepository.findByTitle(title)
+        Publisher publisher = publisherRepository.findByTitle(title)
                 .orElseThrow(() -> new RuntimeException("Publisher not found with title: " + title));
         return toResponse(publisher);
     }
@@ -44,6 +45,7 @@ public class PublisherService {
         PublisherResponse response = new PublisherResponse();
         response.setId(publisher.getId());
         response.setTitle(publisher.getTitle());
+        response.setDescription(publisher.getDescription());
         return response;
     }
 

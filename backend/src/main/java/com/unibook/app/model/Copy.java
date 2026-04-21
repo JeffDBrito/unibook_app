@@ -26,7 +26,10 @@ public class Copy {
     private CopyStatus status;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "book_id")
     private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventory;
 }

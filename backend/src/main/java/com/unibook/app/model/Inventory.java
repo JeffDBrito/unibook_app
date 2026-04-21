@@ -1,8 +1,5 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -31,8 +28,8 @@ public class Inventory {
     private String shelf;
     private int row;
 
-    @OneToMany(mappedBy = "inventory")
     @JsonIgnore
-    private List<Book> books = new ArrayList<>();;
+    @OneToMany(mappedBy = "inventory")
+    private java.util.List<Copy> copies;
         
 }

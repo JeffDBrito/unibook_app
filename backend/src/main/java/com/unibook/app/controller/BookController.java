@@ -35,7 +35,10 @@ public class BookController {
         return bookService.createBook(
             request.getTitle(), 
             request.getIsbn(), 
-            request.getPublicationYear()
+            request.getDescription(),
+            request.getPublicationYear(),
+            request.getPublisherId(),
+            request.getAuthorIds()
         );
     }
 

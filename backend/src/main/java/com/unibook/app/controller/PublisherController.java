@@ -33,7 +33,8 @@ public class PublisherController {
     @PostMapping
     public PublisherResponse createPublisher(@RequestBody CreatePublisherRequest request) {
         return publisherService.createPublisher(
-            request.getTitle()
+            request.getTitle(),
+            request.getDescription()
         );
     }
 

@@ -26,6 +26,7 @@ public class Publisher {
     private Long id;
 
     private String title;
+    private String description;
 
     @OneToMany(mappedBy = "publisher")
     @JsonIgnore

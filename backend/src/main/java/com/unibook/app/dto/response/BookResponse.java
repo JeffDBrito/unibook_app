@@ -9,7 +9,11 @@ public class BookResponse {
 
     private Long id;
     private String title;
+    private String description;
     private String isbn;
     private Integer publicationYear;
+    private String publisher;
+    private String authors;
+    // private List<CategoryResponse> categories;
 
 }

@@ -19,4 +19,10 @@ public class Person {
     private String name;
     private String email;
 
+    @OneToOne(mappedBy = "person")
+    private Author author;
+
+    @OneToOne(mappedBy = "person")
+    private User user;
+
 }

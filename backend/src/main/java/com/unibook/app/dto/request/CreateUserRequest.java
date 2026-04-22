@@ -1,5 +1,7 @@
 package com.unibook.app.dto.request;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,7 @@ public class CreateUserRequest {
     private String email;
     private String login;
     private String password;
-    private Long roleId;
+    private List<Long> roleIds;
     private boolean superuser;
 
     public CreateUserRequest() {}

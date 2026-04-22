@@ -39,8 +39,7 @@ public class UserController {
                 request.getEmail(),
                 request.getLogin(),
                 request.getPassword(),
-                request.getRoleId(),
-                request.isSuperuser()
+                request.getRoleIds()
         );
     }
 

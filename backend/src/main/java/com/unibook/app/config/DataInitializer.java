@@ -150,10 +150,10 @@ public class DataInitializer {
                 "admin@admin.com",
                 "admin",
                 "admin",
+                List.of(
                 roleRepository.findByTitle("ADMIN")
                     .orElseThrow(() -> new RuntimeException("Admin role not found"))
-                    .getId(),
-                true
+                    .getId())
             );
         };
     }

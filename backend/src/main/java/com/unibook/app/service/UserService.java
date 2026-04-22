@@ -25,20 +25,13 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse createUser(String name, String email, String login, String password, Long roleId, boolean superuser) {
+    public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
 
         // create Person
         Person person = new Person();
         person.setName(name);
         person.setEmail(email);
         personRepository.save(person);
-
-        // fetch Role (GUEST by default)
-        Role role = (roleId != null)
-        ? roleRepository.findById(roleId)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId))
-        : roleRepository.findByTitle("VISITANTE")
-            .orElseThrow(() -> new RuntimeException("Default role not found"));
 
         // create User
         User user = new User();
@@ -48,9 +41,14 @@ public class UserService {
         user.setLogin(login);
         user.setPassword(passwordEncoder.encode(password));
         user.setPerson(person);
-        user.setRole(role);
-        user.setSuperuser(superuser);
-        System.out.println("Creating user with login: " + login + ", role: " + role.getTitle() + ", superuser: " + superuser);
+        
+        for (Long rId : roleIds) {
+            Role r = roleRepository.findById(rId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + rId));
+            user.getRoles().add(r);
+        }
+        
+        System.out.println("Creating user with login: " + login + ", roles: " + user.getRoles().stream().map(Role::getTitle).toList());
 
         User savedUser = userRepository.save(user);
         
@@ -79,8 +77,14 @@ public class UserService {
         response.setName(user.getPerson().getName());
         response.setEmail(user.getPerson().getEmail());
 
-        response.setRole(user.getRole().getTitle());
         response.setSuperuser(user.isSuperuser());
+
+        String roleTitles = user.getRoles().stream()
+                .map(Role::getTitle)
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("No Roles");
+        System.out.println("Mapping user to response: " + user.getLogin() + ", roles: " + roleTitles);
+        response.setRoles(roleTitles);
 
         return response;
     }

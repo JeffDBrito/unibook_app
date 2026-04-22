@@ -79,7 +79,7 @@ public class BookService {
         );
 
         String authors = book.getAuthors().stream()
-            .map(Author::getName)
+            .map(author -> author.getPerson().getName())
             .collect(Collectors.joining(", "));
 
         response.setAuthors(authors);        

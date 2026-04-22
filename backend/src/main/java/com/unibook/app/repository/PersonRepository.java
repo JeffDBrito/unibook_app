@@ -6,4 +6,6 @@ import com.unibook.app.model.Person;
 
 public interface PersonRepository  extends JpaRepository<Person, Long> {
 
+    java.util.Optional<Person> findByName(String name);
+
 }

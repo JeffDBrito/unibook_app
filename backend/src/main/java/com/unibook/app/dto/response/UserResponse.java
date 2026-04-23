@@ -14,5 +14,4 @@ public class UserResponse {
     private String email;
 
     private String roles;
-    private boolean superuser;
 }

@@ -14,7 +14,6 @@ public class CreateUserRequest {
     private String login;
     private String password;
     private List<Long> roleIds;
-    private boolean superuser;
 
     public CreateUserRequest() {}
 

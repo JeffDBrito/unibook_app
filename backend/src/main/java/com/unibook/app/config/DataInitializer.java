@@ -72,7 +72,6 @@ public class DataInitializer {
             createPermissionIfNotExists(permissionRepository, "USER_UPDATE", "User", "Update user information");
             createPermissionIfNotExists(permissionRepository, "USER_DELETE", "User", "Delete a user");
             createPermissionIfNotExists(permissionRepository, "USER_VIEW_ALL", "User", "View all users");
-            createPermissionIfNotExists(permissionRepository, "USER_SET_SUPERUSER", "User", "Set user as superuser");
 
             // Person
             createPermissionIfNotExists(permissionRepository, "PERSON_CREATE", "Person", "Create a new person");

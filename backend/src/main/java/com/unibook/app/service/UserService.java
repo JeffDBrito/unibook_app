@@ -77,8 +77,6 @@ public class UserService {
         response.setName(user.getPerson().getName());
         response.setEmail(user.getPerson().getEmail());
 
-        response.setSuperuser(user.isSuperuser());
-
         String roleTitles = user.getRoles().stream()
                 .map(Role::getTitle)
                 .reduce((a, b) -> a + ", " + b)

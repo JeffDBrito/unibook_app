@@ -20,37 +20,31 @@ public class AuthorService {
 
     public AuthorResponse createAuthor(String name, String biography) {
 
-        var savedPerson = personService.createPerson(name);
+        Person savedPerson = personService.createPersonEntity(name, null);
 
-        var author = new Author();
+        Author author = new Author();
         author.setBiography(biography);
         author.setPerson(savedPerson);
-        var savedAuthor = authorRepository.save(author);
+        Author savedAuthor = authorRepository.save(author);
         return toResponse(savedAuthor);
     }
 
     public List<AuthorResponse> findAll() {
-        var authors = authorRepository.findAll();
+        List<Author> authors = authorRepository.findAll();
         return authors.stream().map(this::toResponse).toList();
     }
 
     public AuthorResponse findById(Long id) {
-        var author = authorRepository.findById(id)
+        Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
         return toResponse(author);
     }
 
     public AuthorResponse findByName(String name) {
-        
-        Person person = personService.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Author not found with name: " + name));
-        
-        Author author = person.getAuthor();
-        if (author == null) {
-            throw new RuntimeException("Author not found for person with name: " + name);
-        }
-        return toResponse(author);
+        Author author = authorRepository.findByPersonName(name)
+            .orElseThrow(() -> new RuntimeException("Author not found with name: " + name));
 
+        return toResponse(author);
     }
 
     private AuthorResponse toResponse(Author author) {

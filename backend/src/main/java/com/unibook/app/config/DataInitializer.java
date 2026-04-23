@@ -26,8 +26,8 @@ public class DataInitializer {
     @Order(1)
     CommandLineRunner initRoles(RoleRepository roleRepository) {
         return args -> {
-
             createRoleIfNotExists(roleRepository, "ADMIN"); // Can manage everything
+            createRoleIfNotExists(roleRepository, "SUPER_ADMIN"); // Can manage everything
             createRoleIfNotExists(roleRepository, "LIBRARIAN"); // Can view catalog, borrow books, borrow more books than students, borrow for longer periods, borrow restricted materials, manage inventory, process returns, etc.
             createRoleIfNotExists(roleRepository, "TEACHER"); // Can view catalog, borrow books, borrow more books than students, borrow for longer periods, borrow restricted materials
             createRoleIfNotExists(roleRepository, "STUDENT"); // Can view catalog, borrow books
@@ -37,11 +37,14 @@ public class DataInitializer {
     }
 
     private void createRoleIfNotExists(RoleRepository repo, String title) {
-        repo.findByTitle(title).orElseGet(() -> {
-            Role role = new Role();
-            role.setTitle(title);
-            return repo.save(role);
+        Role role = repo.findByTitle(title).orElseGet(() -> {
+            Role newRole = new Role();
+            newRole.setTitle(title);
+            return repo.save(newRole);
         });
+
+        System.out.println("Role '" + role.getTitle() + "' initialized with ID: " + role.getId());
+
     }
 
     @Bean
@@ -137,6 +140,7 @@ public class DataInitializer {
         return args -> {
             List<Permission> allPermissions = permissionRepository.findAll();
             roleService.assignPermissionsByRoleName("ADMIN", allPermissions);
+            roleService.assignPermissionsByRoleName("SUPER_ADMIN", allPermissions);
         };
     }
 
@@ -150,9 +154,13 @@ public class DataInitializer {
                 "admin",
                 "admin",
                 List.of(
-                roleRepository.findByTitle("ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Admin role not found"))
-                    .getId())
+                    roleRepository.findByTitle("ADMIN")
+                        .orElseThrow(() -> new RuntimeException("Admin role not found"))
+                        .getId(),                    
+                    roleRepository.findByTitle("SUPER_ADMIN")
+                        .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
+                        .getId()
+                )
             );
         };
     }

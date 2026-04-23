@@ -8,7 +8,6 @@ import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.AuthorRepository;
-import com.unibook.app.repository.PersonRepository;
 
 import lombok.RequiredArgsConstructor;
 

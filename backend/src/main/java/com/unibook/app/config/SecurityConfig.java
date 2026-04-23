@@ -32,7 +32,11 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthEntryPoint)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers(
+                    "/auth/login",
+                "/swagger-ui/**",
+                "/v3/api-docs/**"
+            ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

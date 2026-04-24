@@ -35,3 +35,6 @@ build/
 
 ### Environment ###
 .env
+
+### Documentation ###
+documentation/*.bkp

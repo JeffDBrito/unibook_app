@@ -13,6 +13,8 @@ import com.unibook.app.dto.request.CreateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
 import com.unibook.app.service.CategoryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -25,12 +27,14 @@ public class CategoryController {
     
     // List categories
     @GetMapping
+    @Operation(summary = "List categories", description = "Retrieves a list of all categories and returns their details.")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.findAll();
     }
 
     // Create category
     @PostMapping
+    @Operation(summary = "Create a new category", description = "Creates a new category with the provided details and returns the created category.")
     public CategoryResponse createCategory(@RequestBody CreateCategoryRequest request) {
         return categoryService.createCategory(
             request.getTitle(), 
@@ -40,12 +44,14 @@ public class CategoryController {
 
     // Get category by id
     @GetMapping("/{id}")
+    @Operation(summary = "Get category by id", description = "Retrieves a category by their id and returns the category details.")
     public CategoryResponse getCategoryById(@PathVariable Long id) {
         return categoryService.findById(id);
     }
 
     // Get category by title
     @GetMapping("/title/{title}")
+    @Operation(summary = "Get category by title", description = "Retrieves a category by their title and returns the category details.")
     public CategoryResponse getCategoryByTitle(@PathVariable String title) {
         return categoryService.findByTitle(title);
     }

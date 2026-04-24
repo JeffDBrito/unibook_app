@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.service.AuthorService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
@@ -24,12 +26,14 @@ public class AuthorController {
 
     // List authors
     @GetMapping
+    @Operation(summary = "List authors", description = "Retrieves a list of all authors and returns their details.")
     public List<AuthorResponse> getAllAuthors() {
         return authorService.findAll();
     }
 
     // Create author
     @PostMapping
+    @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.")
     public AuthorResponse createAuthor(@RequestBody AuthorResponse request) {
         return authorService.createAuthor(
             request.getName(), 
@@ -39,12 +43,14 @@ public class AuthorController {
 
     // Get author by id
     @GetMapping("/{id}")
+    @Operation(summary = "Get author by id", description = "Retrieves an author by their id and returns the author details.")
     public AuthorResponse getAuthorById(@PathVariable Long id) {
         return authorService.findById(id);
     }
 
     // Get author by name
     @GetMapping("/name/{name}")
+    @Operation(summary = "Get author by name", description = "Retrieves an author by their name and returns the author details.")
     public AuthorResponse getAuthorByName(@PathVariable String name) {
         return authorService.findByName(name);
     }

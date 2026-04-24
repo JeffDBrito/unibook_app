@@ -13,6 +13,8 @@ import com.unibook.app.dto.request.CreatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.service.PersonService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 
 @RestController
@@ -33,6 +35,7 @@ public class PersonController {
 
     // Create person
     @PostMapping
+    @Operation(summary = "Create a new person", description = "Creates a new person with the provided details and returns the created person.")
     public PersonResponse createPerson(@RequestBody CreatePersonRequest request) {
         return personService.createPerson(
             request.getName(),
@@ -42,12 +45,14 @@ public class PersonController {
 
     // Get person by id
     @GetMapping("/{id}")
+    @Operation(summary = "Get person by ID", description = "Retrieves a person by their unique ID and returns the person details.")
     public PersonResponse getPersonById(@PathVariable Long id) {
         return personService.findById(id);
     }
 
     // Get person by name
     @GetMapping("/name/{name}")
+    @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.")
     public PersonResponse getPersonByName(@PathVariable String name) {
         return personService.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Person not found with name: " + name));

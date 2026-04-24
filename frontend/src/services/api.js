@@ -5,7 +5,7 @@ const BASE_URL = ENV.API_URL;
 export async function api(path, options = {}) {
   const token = localStorage.getItem("token");
 
-  return fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${BASE_URL}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -13,4 +13,16 @@ export async function api(path, options = {}) {
       ...options.headers
     }
   });
+
+  if (response.status === 401) {
+    console.warn("Invalid or expired token, logging out...");
+
+    localStorage.removeItem("token");
+
+    window.location.href = "/";
+
+    return;
+  }
+
+  return response;
 }

@@ -3,6 +3,8 @@ package com.unibook.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class Category {
     private String title;
     private String description;
     
+    @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private List<Book> books = new ArrayList<>();
 }

@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
+import com.unibook.app.model.Category;
 import com.unibook.app.model.Publisher;
 import com.unibook.app.repository.AuthorRepository;
 import com.unibook.app.repository.BookRepository;
+import com.unibook.app.repository.CategoryRepository;
 import com.unibook.app.repository.PublisherRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,9 @@ public class BookService {
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
     private final AuthorRepository authorRepository;
+    private final CategoryRepository categoryRepository;
 
-    public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds) {
+    public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds, List<Long> categoryIds) {
         Book book = new Book();
         book.setTitle(title);
         book.setIsbn(isbn);
@@ -40,6 +43,12 @@ public class BookService {
         }
         book.setAuthors(authors);
         
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new RuntimeException("One or more categories not found");
+        }
+        book.setCategories(categories);
+
         Book savedBook = bookRepository.save(book);
         return toResponse(savedBook);
     }
@@ -83,6 +92,12 @@ public class BookService {
             .collect(Collectors.joining(", "));
 
         response.setAuthors(authors);        
+
+        String categories = book.getCategories().stream()
+            .map(Category::getTitle)
+            .collect(Collectors.joining(", "));
+
+        response.setCategories(categories);
 
         return response;
     }

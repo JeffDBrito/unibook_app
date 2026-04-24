@@ -42,7 +42,8 @@ public class BookController {
             request.getDescription(),
             request.getPublicationYear(),
             request.getPublisherId(),
-            request.getAuthorIds()
+            request.getAuthorIds(),
+            request.getCategoryIds()
         );
     }
 

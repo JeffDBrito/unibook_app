@@ -7,7 +7,6 @@ import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 

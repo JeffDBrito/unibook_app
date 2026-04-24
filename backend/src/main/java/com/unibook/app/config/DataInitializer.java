@@ -199,9 +199,9 @@ public class DataInitializer {
     @Order(8)
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
-            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()));
-            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()));
-            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()));
+            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
+            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()), List.of(categoryService.findByTitle("Fiction").getId()));
+            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
         };
     }
 

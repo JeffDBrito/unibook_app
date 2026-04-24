@@ -27,7 +27,9 @@ public class CreateBookRequest {
 
     @Schema(example = "[1, 2]")
     private List<Long> authorIds;
-    // private List<Long> categoryIds;
+
+    @Schema(example = "[1, 3]")
+    private List<Long> categoryIds;
 
     public CreateBookRequest() {}
 

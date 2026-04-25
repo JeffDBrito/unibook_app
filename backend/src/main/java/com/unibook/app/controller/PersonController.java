@@ -15,8 +15,6 @@ import com.unibook.app.service.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-
-
 @RestController
 @RequestMapping("/persons")
 public class PersonController {

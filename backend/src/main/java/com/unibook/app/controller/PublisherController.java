@@ -27,14 +27,14 @@ public class PublisherController {
 
     // List publishers
     @GetMapping
-    @Operation(summary = "List publishers", description = "Retrieves a list of all publishers and returns their details.")
+    @Operation(summary = "List publishers", description = "Retrieves a list of all publishers and returns their details.", tags = {"Publisher Endpoints"})
     public List<PublisherResponse> getAllPublishers() {
         return publisherService.findAll();
     }
 
     // Create publisher
     @PostMapping
-    @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the provided details and returns the created publisher.")
+    @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the provided details and returns the created publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse createPublisher(@RequestBody CreatePublisherRequest request) {
         return publisherService.createPublisher(
             request.getTitle(),
@@ -44,14 +44,14 @@ public class PublisherController {
 
     // Get publisher by id
     @GetMapping("/{id}")
-    @Operation(summary = "Get publisher by ID", description = "Retrieves a publisher by their unique ID and returns the publisher details.")
+    @Operation(summary = "Get publisher by ID", description = "Retrieves a publisher by their unique ID and returns the publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse getPublisherById(@PathVariable Long id) {
         return publisherService.findById(id);
     }
 
     // Get publisher by title
     @GetMapping("/title/{title}")
-    @Operation(summary = "Get publisher by title", description = "Retrieves a publisher by their title and returns the publisher details.")
+    @Operation(summary = "Get publisher by title", description = "Retrieves a publisher by their title and returns the publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse getPublisherByTitle(@PathVariable String title) {
         return publisherService.findByTitle(title);
     }

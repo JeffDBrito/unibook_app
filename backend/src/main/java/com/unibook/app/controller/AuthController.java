@@ -21,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    @Operation(summary = "Login", description = "Authenticates a user and returns a JWT token.")
+    @Operation(summary = "Login", description = "Authenticates a user and returns a JWT token.", tags = {"Authentication"})
     public Map<String, String> login(@RequestBody LoginRequest request) {
 
         String token = authService.login(request.getLogin(), request.getPassword());

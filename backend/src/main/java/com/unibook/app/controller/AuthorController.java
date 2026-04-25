@@ -26,14 +26,14 @@ public class AuthorController {
 
     // List authors
     @GetMapping
-    @Operation(summary = "List authors", description = "Retrieves a list of all authors and returns their details.")
+    @Operation(summary = "List authors", description = "Retrieves a list of all authors and returns their details.", tags = {"Author Endpoints"})
     public List<AuthorResponse> getAllAuthors() {
         return authorService.findAll();
     }
 
     // Create author
     @PostMapping
-    @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.")
+    @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.", tags = {"Author Endpoints"})
     public AuthorResponse createAuthor(@RequestBody AuthorResponse request) {
         return authorService.createAuthor(
             request.getName(), 
@@ -43,14 +43,14 @@ public class AuthorController {
 
     // Get author by id
     @GetMapping("/{id}")
-    @Operation(summary = "Get author by id", description = "Retrieves an author by their id and returns the author details.")
+    @Operation(summary = "Get author by id", description = "Retrieves an author by their id and returns the author details.", tags = {"Author Endpoints"})
     public AuthorResponse getAuthorById(@PathVariable Long id) {
         return authorService.findById(id);
     }
 
     // Get author by name
     @GetMapping("/name/{name}")
-    @Operation(summary = "Get author by name", description = "Retrieves an author by their name and returns the author details.")
+    @Operation(summary = "Get author by name", description = "Retrieves an author by their name and returns the author details.", tags = {"Author Endpoints"})
     public AuthorResponse getAuthorByName(@PathVariable String name) {
         return authorService.findByName(name);
     }

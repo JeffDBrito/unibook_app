@@ -27,14 +27,14 @@ public class BookController {
 
     // List books
     @GetMapping
-    @Operation(summary = "List books", description = "Retrieves a list of all books and returns their details.")
+    @Operation(summary = "List books", description = "Retrieves a list of all books and returns their details.", tags = {"Book Endpoints"})
     public List<BookResponse> getAllBooks() {
         return bookService.findAll();
     }
 
     // Create book
     @PostMapping
-    @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.")
+    @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.", tags = {"Book Endpoints"})
     public BookResponse createBook(@RequestBody CreateBookRequest request) {
         return bookService.createBook(
             request.getTitle(), 
@@ -49,21 +49,21 @@ public class BookController {
 
     // Get book by id
     @GetMapping("/{id}")
-    @Operation(summary = "Get book by id", description = "Retrieves a book by their id and returns the book details.")
+    @Operation(summary = "Get book by id", description = "Retrieves a book by their id and returns the book details.", tags = {"Book Endpoints"})
     public BookResponse getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
     // Get book by isbn
     @GetMapping("/isbn/{isbn}")
-    @Operation(summary = "Get book by ISBN", description = "Retrieves a book by their ISBN and returns the book details.")
+    @Operation(summary = "Get book by ISBN", description = "Retrieves a book by their ISBN and returns the book details.", tags = {"Book Endpoints"})
     public BookResponse getBookByIsbn(@PathVariable String isbn) {
         return bookService.findByIsbn(isbn);
     }
 
     // Get book by title
     @GetMapping("/title/{title}")
-    @Operation(summary = "Get book by title", description = "Retrieves a book by their title and returns the book details.")
+    @Operation(summary = "Get book by title", description = "Retrieves a book by their title and returns the book details.", tags = {"Book Endpoints"})
     public BookResponse getBookByTitle(@PathVariable String title) {
         return bookService.findByTitle(title);
     }

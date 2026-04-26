@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,13 @@ public class PublisherController {
     @Operation(summary = "Get publisher by ID", description = "Retrieves a publisher by their unique ID and returns the publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse getPublisherById(@PathVariable Long id) {
         return publisherService.findById(id);
+    }
+
+    // Delete by id
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete publisher by ID", description = "Deletes a publisher by their unique ID and returns a confirmation message.", tags = {"Publisher Endpoints"})
+    public void deletePublisher(@PathVariable Long id) {
+        publisherService.deleteById(id);        
     }
 
     // Get publisher by title

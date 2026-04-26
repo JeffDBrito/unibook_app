@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,13 @@ public class RoleController {
     @Operation(summary = "Get role by ID", description = "Retrieves a role by its ID and returns its details.", tags = {"Role Endpoints"})
     public RoleResponse getRoleById(@PathVariable Long id) {
         return roleService.findById(id);
+    }
+
+    // Delete by id
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete role by ID", description = "Deletes a role by its unique ID and returns a confirmation message.", tags = {"Role Endpoints"})
+    public void deleteRole(@PathVariable Long id) {
+        roleService.deleteById(id);        
     }
 
     // Get role by title

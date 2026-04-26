@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,13 @@ public class CategoryController {
             request.getTitle(), 
             request.getDescription()
         );
+    }
+
+    // Delete category by id
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete category by id", description = "Deletes a category by their id.", tags = {"Category Endpoints"})
+    public void deleteCategoryById(@PathVariable Long id) {
+        categoryService.deleteById(id);
     }
 
     // Get category by id

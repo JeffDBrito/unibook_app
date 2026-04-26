@@ -50,6 +50,13 @@ public class RoleService {
         return toResponse(roleRepository.save(role));
     }
 
+    public void deleteById(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+        
+        roleRepository.delete(role);
+    }
+
     private RoleResponse toResponse(Role role) {
         List<String> permissionNames = role.getPermissions().stream()
                 .map(Permission::getTitle)

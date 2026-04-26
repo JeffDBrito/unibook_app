@@ -41,6 +41,13 @@ public class CategoryService {
         return toResponse(category);
     }
 
+    public void deleteById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        
+        categoryRepository.delete(category);
+    }
+
     private CategoryResponse toResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());

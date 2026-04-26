@@ -51,6 +51,13 @@ public class PersonService {
         return personRepository.findByName(name).map(this::toResponse);
     }
 
+    public void deleteById(Long id) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
+        
+        personRepository.delete(person);
+    }
+
     private PersonResponse toResponse(Person person) {
         PersonResponse response = new PersonResponse();
         response.setName(person.getName());

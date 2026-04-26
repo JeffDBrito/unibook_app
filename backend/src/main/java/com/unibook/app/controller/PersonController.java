@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,13 @@ public class PersonController {
     @Operation(summary = "Get person by ID", description = "Retrieves a person by their unique ID and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonById(@PathVariable Long id) {
         return personService.findById(id);
+    }
+
+    // Delete by id
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete person by ID", description = "Deletes a person by their unique ID and returns a confirmation message.", tags = {"Person Endpoints"})
+    public void deletePerson(@PathVariable Long id) {
+        personService.deleteById(id);        
     }
 
     // Get person by name

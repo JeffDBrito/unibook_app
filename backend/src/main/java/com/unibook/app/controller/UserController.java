@@ -34,6 +34,13 @@ public class UserController {
         return userService.findById(id);
     }
 
+    // Delete by id
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user by ID", description = "Deletes a user by their unique ID and returns a confirmation message.", tags = {"User Endpoints"})
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);        
+    }
+
     // Create user
     @PostMapping
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details and returns the created user.", tags = {"User Endpoints"})

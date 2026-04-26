@@ -47,6 +47,13 @@ public class AuthorService {
         return toResponse(author);
     }
 
+    public void deleteById(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        
+        authorRepository.delete(author);
+    }
+
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());

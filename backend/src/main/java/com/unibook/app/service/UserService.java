@@ -87,16 +87,4 @@ public class UserService {
         return response;
     }
 
-    public UserResponse login(String login, String password) {
-
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return toResponse(user);
-    }
-
 }

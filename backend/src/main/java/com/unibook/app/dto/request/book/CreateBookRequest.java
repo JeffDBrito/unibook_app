@@ -1,4 +1,4 @@
-package com.unibook.app.dto.request;
+package com.unibook.app.dto.request.book;
 
 import java.util.List;
 

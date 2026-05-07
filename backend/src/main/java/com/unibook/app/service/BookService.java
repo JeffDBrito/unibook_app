@@ -64,7 +64,47 @@ public class BookService {
         
         bookRepository.delete(book);
     }
-    
+
+    public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
+
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        if (!partial || request.getTitle() != null) {
+            book.setTitle(request.getTitle());
+        }
+
+        if (!partial || request.getIsbn() != null) {
+            book.setIsbn(request.getIsbn());
+        }
+
+        if (!partial || request.getDescription() != null) {
+            book.setDescription(request.getDescription());
+        }
+
+        if (!partial || request.getPublicationYear() != null) {
+            book.setPublicationYear(request.getPublicationYear());
+        }
+
+        if (!partial || request.getPublisherId() != null) {
+
+            Publisher publisher = publisherRepository.findById(request.getPublisherId())
+                    .orElseThrow(() -> new RuntimeException("Publisher not found"));
+
+            book.setPublisher(publisher);
+        }
+
+        if (!partial || request.getAuthorIds() != null) {
+
+            List<Author> authors = authorRepository.findAllById(request.getAuthorIds());
+
+            book.setAuthors(authors);
+        }
+
+
+        return toResponse(bookRepository.save(book));
+    }
+
     /**
      * Search Operations
      */

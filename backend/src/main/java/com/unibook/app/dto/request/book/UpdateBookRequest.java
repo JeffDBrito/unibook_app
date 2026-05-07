@@ -1,5 +1,7 @@
 package com.unibook.app.dto.request.book;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +14,7 @@ public class UpdateBookRequest {
     private String description;
     private Integer publicationYear;
     private Long publisherId;
-    private java.util.List<Long> authorIds;
-    private java.util.List<Long> categoryIds;
+    private List<Long> authorIds;
+    private List<Long> categoryIds;
 
 }

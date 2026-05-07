@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
@@ -25,6 +26,10 @@ public class BookService {
     private final PublisherRepository publisherRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+
+    /**
+     * Management Operations
+     */
 
     public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds, List<Long> categoryIds) {
         Book book = new Book();
@@ -53,6 +58,17 @@ public class BookService {
         return toResponse(savedBook);
     }
 
+    public void deleteById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+        
+        bookRepository.delete(book);
+    }
+    
+    /**
+     * Search Operations
+     */
+
     public List<BookResponse> findAll() {
         List<Book> books = bookRepository.findAll();
         return books.stream().map(this::toResponse).toList();
@@ -76,12 +92,9 @@ public class BookService {
         return toResponse(book);
     }
 
-    public void deleteById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-        
-        bookRepository.delete(book);
-    }
+    /**
+     * Helper Methods
+     */
 
     private BookResponse toResponse(Book book) {
         BookResponse response = new BookResponse();

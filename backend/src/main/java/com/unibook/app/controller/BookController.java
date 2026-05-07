@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,6 +51,18 @@ public class BookController {
             request.getAuthorIds(),
             request.getCategoryIds()
         );
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partial update book", description = "Partially updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
+    public BookResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request ) {
+        return bookService.update(id, request, true);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update book", description = "Updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
+    public BookResponse updateBook( @PathVariable Long id, @RequestBody UpdateBookRequest request) {
+        return bookService.update(id, request, false);
     }
 
     // Get book by id

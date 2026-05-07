@@ -25,6 +25,10 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
     public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
 
         // create Person
@@ -55,6 +59,17 @@ public class UserService {
         return toResponse(savedUser);
     }
 
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        
+        userRepository.delete(user);
+    }
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
+
     public List<UserResponse> findAll() {
         return userRepository.findAll()
                 .stream()
@@ -68,12 +83,9 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
-    public void deleteById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        
-        userRepository.delete(user);
-    }
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
 
     private UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();

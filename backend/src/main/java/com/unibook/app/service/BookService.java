@@ -27,9 +27,9 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
 
-    /**
-     * Management Operations
-     */
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
 
     public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds, List<Long> categoryIds) {
         Book book = new Book();
@@ -105,9 +105,10 @@ public class BookService {
         return toResponse(bookRepository.save(book));
     }
 
-    /**
-     * Search Operations
-     */
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
 
     public List<BookResponse> findAll() {
         List<Book> books = bookRepository.findAll();
@@ -132,9 +133,9 @@ public class BookService {
         return toResponse(book);
     }
 
-    /**
-     * Helper Methods
-     */
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
 
     private BookResponse toResponse(Book book) {
         BookResponse response = new BookResponse();

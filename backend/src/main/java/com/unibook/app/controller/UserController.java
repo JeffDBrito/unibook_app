@@ -2,7 +2,7 @@ package com.unibook.app.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.unibook.app.dto.request.CreateUserRequest;
+import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.service.UserService;
 

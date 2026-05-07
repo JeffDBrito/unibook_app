@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unibook.app.dto.request.CreateBookRequest;
+import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.service.BookService;
 

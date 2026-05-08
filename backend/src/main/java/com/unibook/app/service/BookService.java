@@ -125,14 +125,15 @@ public class BookService {
     }
 
     /**
-     * Delete Book by id
+     * Soft Delete a Book by id
      * @param id
      */
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-        
-        bookRepository.delete(book);
+
+        book.softDelete();
+        bookRepository.save(book);
     }
 
     /**
@@ -144,7 +145,7 @@ public class BookService {
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
 
-        book.setDeletedAt(null);
+        book.restore();
 
         bookRepository.save(book);
 

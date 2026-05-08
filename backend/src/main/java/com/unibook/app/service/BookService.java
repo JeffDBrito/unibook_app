@@ -58,13 +58,6 @@ public class BookService {
         return toResponse(savedBook);
     }
 
-    public void deleteById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-        
-        bookRepository.delete(book);
-    }
-
     public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
 
         Book book = bookRepository.findById(id)
@@ -101,10 +94,33 @@ public class BookService {
             book.setAuthors(authors);
         }
 
+        if (!partial || request.getCategoryIds() != null) {
+
+            List<Category> categories = categoryRepository.findAllById(request.getCategoryIds());
+
+            book.setCategories(categories);
+        }
 
         return toResponse(bookRepository.save(book));
     }
 
+    public void deleteById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+        
+        bookRepository.delete(book);
+    }
+
+    public BookResponse restoreById(Long id){
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+
+        book.setDeletedAt(null);
+
+        bookRepository.save(book);
+
+        return toResponse(book);
+    }
 
     // ----------------- //
     // Search Operations //

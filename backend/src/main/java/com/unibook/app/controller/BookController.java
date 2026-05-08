@@ -53,12 +53,14 @@ public class BookController {
         );
     }
 
+    // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update book", description = "Partially updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
     public BookResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request ) {
         return bookService.update(id, request, true);
     }
 
+    // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update book", description = "Updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
     public BookResponse updateBook( @PathVariable Long id, @RequestBody UpdateBookRequest request) {
@@ -92,6 +94,13 @@ public class BookController {
     @Operation(summary = "Delete book by id", description = "Deletes a book by their id and returns no content.", tags = {"Book Endpoints"})
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteById(id);
+    }
+
+    // Restore book by id
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore book by id", description = "Restores a previously deleted book by their id and returns the restored book details.", tags = {"Book Endpoints"})
+    public BookResponse restoreBookById(@PathVariable Long id) {
+        return bookService.restoreById(id);
     }
 
 }

@@ -31,6 +31,18 @@ public class BookService {
     // Management Operations //
     // --------------------- //
 
+    /**
+     * Create Book
+     * @param title
+     * @param isbn
+     * @param description
+     * @param publicationYear
+     * @param publisherId
+     * @param authorIds
+     * @param categoryIds
+     * @return BookResponse
+     * @throws RuntimeException
+     */
     public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds, List<Long> categoryIds) {
         Book book = new Book();
         book.setTitle(title);
@@ -58,6 +70,14 @@ public class BookService {
         return toResponse(savedBook);
     }
 
+    /**
+     * Update Book
+     * @param id
+     * @param request
+     * @param partial
+     * @return BookResponse
+     * @throws RuntimeException
+     */
     public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
 
         Book book = bookRepository.findById(id)
@@ -104,6 +124,10 @@ public class BookService {
         return toResponse(bookRepository.save(book));
     }
 
+    /**
+     * Delete Book by id
+     * @param id
+     */
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
@@ -111,6 +135,11 @@ public class BookService {
         bookRepository.delete(book);
     }
 
+    /**
+     * Restore Book by id
+     * @param id
+     * @return BookResponse
+     */
     public BookResponse restoreById(Long id){
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
@@ -126,23 +155,45 @@ public class BookService {
     // Search Operations //
     // ----------------- //
 
+    /**
+     * List all Books
+     * @return List<BookResponse>
+     */
     public List<BookResponse> findAll() {
         List<Book> books = bookRepository.findAll();
         return books.stream().map(this::toResponse).toList();
     }
 
+    /**
+     * Find Book by id
+     * @param id
+     * @return BookResponse
+     * @throws RuntimeException
+     */
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
         return toResponse(book);
     }
 
+    /**
+     * Find Book by isbn
+     * @param isbn
+     * @return BookResponse
+     * @throws RuntimeException
+     */
     public BookResponse findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
                 .orElseThrow(() -> new RuntimeException("Book not found with ISBN: " + isbn));
         return toResponse(book);
     }
 
+    /**
+     * Find Book by title
+     * @param title
+     * @return BookResponse
+     * @throws RuntimeException
+     */
     public BookResponse findByTitle(String title) {
         Book book = bookRepository.findByTitle(title)
                 .orElseThrow(() -> new RuntimeException("Book not found with title: " + title));
@@ -153,6 +204,11 @@ public class BookService {
     // Helper Methods //
     // -------------- //
 
+    /**
+     * Convert Book instance to BookResponse dto
+     * @param book
+     * @return BookResponse
+     */
     private BookResponse toResponse(Book book) {
         BookResponse response = new BookResponse();
         response.setId(book.getId());

@@ -3,6 +3,7 @@ package com.unibook.app.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.unibook.app.dto.request.user.CreateUserRequest;
+import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.service.UserService;
 
@@ -36,9 +37,15 @@ public class UserController {
 
     // Delete by id
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete user by ID", description = "Deletes a user by their unique ID and returns a confirmation message.", tags = {"User Endpoints"})
+    @Operation(summary = "Delete user by ID", description = "Deletes a user by their unique ID", tags = {"User Endpoints"})
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);        
+    }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore user by ID", description = "Restore a user by their unique ID and returns the restored user.", tags = {"User Endpoints"})
+    public UserResponse restoreUser(@PathVariable Long id){
+        return userService.restoreById(id);
     }
 
     // Create user
@@ -53,4 +60,19 @@ public class UserController {
                 request.getRoleIds()
         );
     }
+
+    // Partial update
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partial update User", description = "Partially updates an existing user with the provided details and returns the updated user.", tags = {"User Endpoints"})
+    public UserResponse partialUpdate(@PathVariable Long id, @RequestBody UpdateUserRequest request){
+        return userService.update(id, request, true);
+    }
+
+    // Full update
+    @PutMapping("/{id}")
+    @Operation(summary = "Update User", description = "Updates an existing user with the provided details and returns the updated user.", tags = {"User Endpoints"})
+    public UserResponse fullUpdate(@PathVariable Long id, @RequestBody UpdateUserRequest request){
+        return userService.update(id, request, false);
+    }
+
 }

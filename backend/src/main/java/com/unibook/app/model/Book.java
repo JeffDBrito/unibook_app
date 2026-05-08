@@ -3,8 +3,6 @@ package com.unibook.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.SQLDelete;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -17,7 +15,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "books")
-@SQLDelete(sql = "UPDATE books SET deleted_at = now() WHERE id = ?")
 public class Book extends BaseEntity {
 
     @Id

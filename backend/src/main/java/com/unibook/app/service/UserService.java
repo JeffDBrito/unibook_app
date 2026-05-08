@@ -97,6 +97,18 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public UserResponse restoreById(Long id){
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found with id: "+id));
+
+        user.setDeletedAt(null);
+
+        userRepository.save(user);
+
+        return toResponse(user);
+            
+    }
+
     // ----------------- //
     // Search Operations //
     // ----------------- //

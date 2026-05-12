@@ -1,4 +1,4 @@
-package com.unibook.app.dto.request;
+package com.unibook.app.dto.request.role;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 public class CreateRoleRequest {
     
     @Schema(example = "Admin")
-    private String name;
+    private String title;
 
     @Schema(example = "[1, 2, 3]")
     private List<Long> permissionIds;

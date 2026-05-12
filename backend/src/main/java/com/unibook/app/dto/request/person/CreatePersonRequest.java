@@ -1,4 +1,4 @@
-package com.unibook.app.dto.request;
+package com.unibook.app.dto.request.person;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

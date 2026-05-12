@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.PersonRepository;
@@ -57,7 +58,42 @@ public class PersonService {
     public void deleteById(Long id) {
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
-        personRepository.delete(person);
+        person.softDelete();
+        personRepository.save(person);
+    }
+
+    /**
+     * Restore Person by id
+     * @param id
+     * @return PersonResponse
+     */
+    public PersonResponse restoreById(Long id) {
+        Person person = personRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
+        person.restore();
+        return toResponse(personRepository.save(person));
+    }
+
+    /**
+     * Update person
+     * @param id
+     * @param request
+     * @param partial
+     * @return PersonResponse
+     */
+    public PersonResponse update(Long id, UpdatePersonRequest request, boolean partial){
+        Person person = personRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Person not Found"));
+        
+        if(!partial || request.getName() != null){
+            person.setName(request.getName());
+        }
+
+        if(!partial || request.getEmail() != null){
+            person.setEmail(request.getEmail());
+        }
+
+        return toResponse(personRepository.save(person));
     }
 
     // ----------------- //

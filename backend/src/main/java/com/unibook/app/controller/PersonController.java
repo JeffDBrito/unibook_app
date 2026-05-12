@@ -4,13 +4,16 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unibook.app.dto.request.CreatePersonRequest;
+import com.unibook.app.dto.request.person.CreatePersonRequest;
+import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.service.PersonService;
 
@@ -62,6 +65,26 @@ public class PersonController {
     @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonByName(@PathVariable String name) {
         return personService.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Person not found with name: " + name));
+            .orElseThrow(() -> new RuntimeException("Person not found with name: " + name));
+    }
+
+    // Partial update
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partial update Person", description = "Partially updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
+    public PersonResponse partialUpdate(@PathVariable Long id, @RequestBody UpdatePersonRequest request){
+        return personService.update(id, request, true);
+    }
+
+    // Full update
+    @PutMapping("/{id}")
+    @Operation(summary = "Partial update Person", description = "Updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
+    public PersonResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePersonRequest request){
+        return personService.update(id, request, false);
+    }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Person by id", description = "Restores a previously deleted Person by their id and returns the restored Person details.", tags = {"Person Endpoints"})
+    public PersonResponse restore(@PathVariable Long id){
+        return personService.restoreById(id);
     }
 }

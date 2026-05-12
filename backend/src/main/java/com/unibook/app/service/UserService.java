@@ -78,32 +78,30 @@ public class UserService {
      */
     public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
         
-            User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-    
-            if (!partial || request.getName() != null) {
-                user.getPerson().setName(request.getName());
-            }
-            if (!partial || request.getEmail() != null) {
-                user.getPerson().setEmail(request.getEmail());
-            }
-            if (!partial || request.getLogin() != null) {
-                user.setLogin(request.getLogin());
-            }
-            if (!partial || request.getPassword() != null) {
-                user.setPassword(passwordEncoder.encode(request.getPassword()));
-            }
-            if (!partial || request.getRoleIds() != null) {
-                List<Role> roles = roleRepository.findAllById(request.getRoleIds());
-                if (roles.size() != request.getRoleIds().size()) {
-                    throw new RuntimeException("One or more roles not found");
-                }
-                user.setRoles(roles.stream().collect(java.util.stream.Collectors.toSet()));
-            }
-    
-            User updatedUser = userRepository.save(user);
-            return toResponse(updatedUser);
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
+        if (!partial || request.getName() != null) {
+            user.getPerson().setName(request.getName());
+        }
+        if (!partial || request.getEmail() != null) {
+            user.getPerson().setEmail(request.getEmail());
+        }
+        if (!partial || request.getLogin() != null) {
+            user.setLogin(request.getLogin());
+        }
+        if (!partial || request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (!partial || request.getRoleIds() != null) {
+            List<Role> roles = roleRepository.findAllById(request.getRoleIds());
+            if (roles.size() != request.getRoleIds().size()) {
+                throw new RuntimeException("One or more roles not found");
+            }
+            user.setRoles(roles.stream().collect(java.util.stream.Collectors.toSet()));
+        }
+
+        return toResponse(userRepository.save(user));
     }
 
     /**

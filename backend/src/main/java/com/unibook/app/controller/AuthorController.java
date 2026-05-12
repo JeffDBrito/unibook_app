@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.service.AuthorService;
 
@@ -61,6 +64,26 @@ public class AuthorController {
     @Operation(summary = "Get author by name", description = "Retrieves an author by their name and returns the author details.", tags = {"Author Endpoints"})
     public AuthorResponse getAuthorByName(@PathVariable String name) {
         return authorService.findByName(name);
+    }
+
+    // Partial update
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partially update Author", description = "Partially updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
+    public AuthorResponse partialUpdate(@PathVariable Long id, UpdateAuthorRequest request){
+        return authorService.update(id, request, true);
+    }
+
+    // Full update
+    @PutMapping("/{id}")
+    @Operation(summary = "Update Author", description = "Updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
+    public AuthorResponse fullUpdate(@PathVariable Long id, UpdateAuthorRequest request){
+        return authorService.update(id, request, true);
+    }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Author by id", description = "Restores a previously deleted Author by their id and returns the restored Author details.", tags = {"Author Endpoints"})
+    public AuthorResponse restore(@PathVariable Long id){
+        return authorService.restoreById(id);
     }
 
 }

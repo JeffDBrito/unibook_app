@@ -1,8 +1,10 @@
 package com.unibook.app.service;
 
+import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
+import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
     // --------------------- //
     // Management Operations //
@@ -49,8 +52,44 @@ public class RoleService {
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
-                    
-        roleRepository.delete(role);
+        role.softDelete();
+        roleRepository.save(role);        
+    }
+
+    /**
+     * Restore Role by id
+     * @param id
+     * @return RoleResponse
+     */
+    public RoleResponse restoreById(Long id){
+        Role role = roleRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+        role.restore();
+        return toResponse(roleRepository.save(role));
+    }
+
+    /**
+     * Update Role
+     * @param id
+     * @param request
+     * @param partial
+     * @return RoleResponse
+     */
+    public RoleResponse update(Long id, UpdateRoleRequest request, boolean partial){
+
+        Role role = roleRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        if(!partial || request.getTitle() != null){
+            role.setTitle(request.getTitle());
+        }
+
+        if(!partial || request.getPermissionIds() != null){
+            List<Permission> permissions = permissionRepository.findAllById(request.getPermissionIds());
+            role.setPermissions(permissions);
+        }
+
+        return toResponse(roleRepository.save(role));
     }
 
     // ----------------- //

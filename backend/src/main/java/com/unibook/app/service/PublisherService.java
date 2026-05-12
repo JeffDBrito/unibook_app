@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
 import com.unibook.app.model.Publisher;
 import com.unibook.app.repository.PublisherRepository;
@@ -43,6 +44,41 @@ public class PublisherService {
             .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
         publisher.softDelete();
         publisherRepository.save(publisher);
+    }
+
+    /**
+     * Restore Publisher by id
+     * @param id
+     * @return PublisherResponse
+     */
+    public PublisherResponse restoreById(Long id){
+        Publisher publisher = publisherRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+        publisher.restore();
+        return toResponse(publisherRepository.save(publisher));
+    }
+
+    /**
+     * Update Publisher
+     * @param id
+     * @param request
+     * @param partial
+     * @return PublisherResponse
+     */
+    public PublisherResponse update(Long id, UpdatePublisherRequest request, boolean partial){
+
+        Publisher publisher = publisherRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Publisher not found"));
+
+        if(!partial || request.getTitle() != null){
+            publisher.setTitle(request.getTitle());
+        }
+
+        if(!partial || request.getDescription() != null){
+            publisher.setDescription(request.getDescription());
+        }
+
+        return toResponse(publisherRepository.save(publisher));
     }
 
     // ----------------- //

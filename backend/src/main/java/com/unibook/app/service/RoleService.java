@@ -49,8 +49,20 @@ public class RoleService {
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
-                    
-        roleRepository.delete(role);
+        role.softDelete();
+        roleRepository.save(role);        
+    }
+
+    /**
+     * Restore Role by id
+     * @param id
+     * @return RoleResponse
+     */
+    public RoleResponse restoreById(Long id){
+        Role role = roleRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+        role.restore();
+        return toResponse(roleRepository.save(role));
     }
 
     // ----------------- //

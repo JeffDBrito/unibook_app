@@ -30,6 +30,15 @@ public class UserService {
     // Management Operations //
     // --------------------- //
 
+    /**
+     * Create User
+     * @param name
+     * @param email
+     * @param login
+     * @param password
+     * @param roleIds
+     * @return UserResponse
+     */
     public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
 
         // create Person
@@ -60,10 +69,17 @@ public class UserService {
         return toResponse(savedUser);
     }
 
+    /**
+     * Update User
+     * @param id
+     * @param request
+     * @param partial
+     * @return UserResponse
+     */
     public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
         
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     
             if (!partial || request.getName() != null) {
                 user.getPerson().setName(request.getName());
@@ -90,21 +106,28 @@ public class UserService {
 
     }
 
+    /**
+     * Delete User by id
+     * @param id
+     */
     public void deleteById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        
-        userRepository.delete(user);
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.softDelete();
+        userRepository.save(user);
     }
 
+    /**
+     * Restore User by id
+     * @param id
+     * @return UserResponse
+     */
     public UserResponse restoreById(Long id){
         User user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found with id: "+id));
 
-        user.setDeletedAt(null);
-
+        user.restore();
         userRepository.save(user);
-
         return toResponse(user);
             
     }
@@ -113,36 +136,49 @@ public class UserService {
     // Search Operations //
     // ----------------- //
 
+    /**
+     * Fetch all users
+     * @return List<UserResponse>
+     */
     public List<UserResponse> findAll() {
         return userRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
     
+    /**
+     * Find User by id
+     * @param id
+     * @return UserResponse
+     */
     public UserResponse findById(Long id) {
         return userRepository.findById(id)
-                .map(this::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+            .map(this::toResponse)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     // -------------- //
     // Helper Methods //
     // -------------- //
 
+    /**
+     * Convert User instance to UserResponse
+     * @param user
+     * @return UserResponse
+     */
     private UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
 
         response.setId(user.getId());
         response.setLogin(user.getLogin());
-
         response.setName(user.getPerson().getName());
         response.setEmail(user.getPerson().getEmail());
 
         String roleTitles = user.getRoles().stream()
-                .map(Role::getTitle)
-                .reduce((a, b) -> a + ", " + b)
-                .orElse("No Roles");
+            .map(Role::getTitle)
+            .reduce((a, b) -> a + ", " + b)
+            .orElse("No Roles");
         System.out.println("Mapping user to response: " + user.getLogin() + ", roles: " + roleTitles);
         response.setRoles(roleTitles);
 

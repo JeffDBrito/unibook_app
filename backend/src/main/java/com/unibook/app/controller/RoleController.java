@@ -61,5 +61,10 @@ public class RoleController {
         return roleService.findByTitle(title);
     }
 
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Role by id", description = "Restores a previously deleted Role by their id and returns the restored Role details.", tags = {"Role Endpoints"})
+    public RoleResponse restore(@PathVariable Long id){
+        return roleService.restoreById(id);
+    }
 
 }

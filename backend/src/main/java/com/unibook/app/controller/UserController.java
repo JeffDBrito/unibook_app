@@ -42,6 +42,7 @@ public class UserController {
         userService.deleteById(id);        
     }
 
+    // Restore user
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore user by ID", description = "Restore a user by their unique ID and returns the restored user.", tags = {"User Endpoints"})
     public UserResponse restoreUser(@PathVariable Long id){

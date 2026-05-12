@@ -4,13 +4,16 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unibook.app.dto.request.CreateRoleRequest;
+import com.unibook.app.dto.request.role.CreateRoleRequest;
+import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
 import com.unibook.app.service.RoleService;
 
@@ -37,7 +40,7 @@ public class RoleController {
     @PostMapping
     @Operation(summary = "Create a new role", description = "Creates a new role with the provided details and returns the created role.", tags = {"Role Endpoints"})
     public RoleResponse createRole(@RequestBody CreateRoleRequest request) {
-        return roleService.createRole(request.getName(), request.getPermissionIds());
+        return roleService.createRole(request.getTitle(), request.getPermissionIds());
     }
 
     // Get role by ID
@@ -65,6 +68,18 @@ public class RoleController {
     @Operation(summary = "Restore Role by id", description = "Restores a previously deleted Role by their id and returns the restored Role details.", tags = {"Role Endpoints"})
     public RoleResponse restore(@PathVariable Long id){
         return roleService.restoreById(id);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partially update Role", description = "Partially updates an existing Role with the provided details and returns the updated Role.", tags = {"Role Endpoints"})
+    public RoleResponse partialUpdate(@PathVariable Long id, @RequestBody UpdateRoleRequest request){
+        return roleService.update(id, request, true);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update Role", description = "Updates an existing Role with the provided details and returns the updated Role.", tags = {"Role Endpoints"})
+    public RoleResponse fullUpdate(@PathVariable Long id, @RequestBody UpdateRoleRequest request){
+        return roleService.update(id, request, false);
     }
 
 }

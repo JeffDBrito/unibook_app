@@ -16,6 +16,16 @@ public class PublisherService {
     
     private final PublisherRepository publisherRepository;
 
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
+    /**
+     * Create Publisher
+     * @param title
+     * @param description
+     * @return PublisherResponse
+     */
     public PublisherResponse createPublisher(String title, String description) {
         Publisher publisher = new Publisher();
         publisher.setTitle(title);
@@ -24,30 +34,61 @@ public class PublisherService {
         return toResponse(savedPublisher);
     }
 
+    /**
+     * Soft Delete Publisher by id
+     * @param id
+     */
+    public void deleteById(Long id) {
+        Publisher publisher = publisherRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+        publisher.softDelete();
+        publisherRepository.save(publisher);
+    }
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
+
+    /**
+     * Fetch all Publishers
+     * @return List<PublisherResponse>
+     */
     public List<PublisherResponse> findAll() {
         List<Publisher> publishers = publisherRepository.findAll();
         return publishers.stream().map(this::toResponse).toList();
     }
 
+    /**
+     * Find Publisher by id
+     * @param id
+     * @return PublisherResponse
+     */
     public PublisherResponse findById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
         return toResponse(publisher);
     }
 
+    /**
+     * Find Publisher by title
+     * @param title
+     * @return PublisherResponse
+     */
     public PublisherResponse findByTitle(String title) {
         Publisher publisher = publisherRepository.findByTitle(title)
-                .orElseThrow(() -> new RuntimeException("Publisher not found with title: " + title));
+            .orElseThrow(() -> new RuntimeException("Publisher not found with title: " + title));
         return toResponse(publisher);
     }
 
-    public void deleteById(Long id) {
-        Publisher publisher = publisherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
-        
-        publisherRepository.delete(publisher);
-    }
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
 
+    /**
+     * Convert Publisher instance to PublisherResponse
+     * @param publisher
+     * @return PublisherResponse
+     */
     private PublisherResponse toResponse(Publisher publisher) {
         PublisherResponse response = new PublisherResponse();
         response.setId(publisher.getId());

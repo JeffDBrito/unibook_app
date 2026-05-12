@@ -16,24 +16,16 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    public List<RoleResponse> findAll() {
-        return roleRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(java.util.stream.Collectors.toList());
-    }
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
 
-    public RoleResponse findById(Long id) {
-        return roleRepository.findById(id)
-                .map(this::toResponse)
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
-    }
-
-    public RoleResponse findByTitle(String title) {
-        return roleRepository.findByTitle(title)
-                .map(this::toResponse)
-                .orElseThrow(() -> new RuntimeException("Role not found with title: " + title));
-    }
-
+    /**
+     * Create Role
+     * @param title
+     * @param permissionIds
+     * @return RoleResponse
+     */
     public RoleResponse createRole(String title, List<Long> permissionIds) {
         Role role = new Role();
         role.setTitle(title);
@@ -50,13 +42,62 @@ public class RoleService {
         return toResponse(roleRepository.save(role));
     }
 
+    /**
+     * Delete Role by id
+     * @param id
+     */
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
-        
+            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+                    
         roleRepository.delete(role);
     }
 
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
+
+    /**
+     * Fetch all Roles
+     * @return List<RoleResponse>
+     */
+    public List<RoleResponse> findAll() {
+        return roleRepository.findAll().stream()
+            .map(this::toResponse)
+            .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Find Role by id
+     * @param id
+     * @return RoleResponse
+     */
+    public RoleResponse findById(Long id) {
+        return roleRepository.findById(id)
+            .map(this::toResponse)
+            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+    }
+
+    /**
+     * Find Role by title
+     * @param title
+     * @return RoleResponse
+     */
+    public RoleResponse findByTitle(String title) {
+        return roleRepository.findByTitle(title)
+            .map(this::toResponse)
+            .orElseThrow(() -> new RuntimeException("Role not found with title: " + title));
+    }
+
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
+
+    /**
+     * Convert Role instance to RoleResponse
+     * @param role
+     * @return RoleResponse
+     */
     private RoleResponse toResponse(Role role) {
         List<String> permissionNames = role.getPermissions().stream()
                 .map(Permission::getTitle)
@@ -68,6 +109,11 @@ public class RoleService {
         return response;
     }
 
+    /**
+     * Assign permissions to Role
+     * @param role
+     * @param permissions
+    */
     @Transactional
     public void assignPermissions(Role role, List<Permission> permissions) {
         permissions.forEach(permission -> {
@@ -75,15 +121,18 @@ public class RoleService {
                 role.getPermissions().add(permission);
             }
         });
-
         roleRepository.save(role);
     }
 
+    /**
+     * Assign permissions to Role by Role Name
+     * @param roleName
+     * @param permissions
+     */
     @Transactional
     public void assignPermissionsByRoleName(String roleName, List<Permission> permissions) {
         Role role = roleRepository.findByTitle(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-
+            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
         assignPermissions(role, permissions);
     }
 }

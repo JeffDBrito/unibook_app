@@ -17,15 +17,22 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public String login(String login, String password) {
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
 
+    /**
+     * Process login request
+     * @param login
+     * @param password
+     * @return String
+     */
+    public String login(String login, String password) {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new BadCredentialsException("Invalid Credentials")); // User not found
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
-
         return jwtService.generateToken(user);
     }
 }

@@ -16,6 +16,16 @@ public class CategoryService {
     
     private final CategoryRepository categoryRepository;
 
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
+    /**
+     * Create Category
+     * @param title
+     * @param description
+     * @return CategoryResponse
+     */
     public CategoryResponse createCategory(String title, String description) {
         Category category = new Category();
         category.setTitle(title);
@@ -24,30 +34,60 @@ public class CategoryService {
         return toResponse(savedCategory);
     }
 
+    /**
+     * Delete Category by id
+     * @param id
+     */
+    public void deleteById(Long id) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        categoryRepository.delete(category);
+    }
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
+
+    /**
+     * Fetch all Categories
+     * @return List<CategoryResponse>
+     */
     public List<CategoryResponse> findAll() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(this::toResponse).toList();
     }
 
+    /**
+     * Find Category by id
+     * @param id
+     * @return CategoryResponse
+     */
     public CategoryResponse findById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
         return toResponse(category);
     }
 
+    /**
+     * Find Category title
+     * @param title
+     * @return CategoryResponse
+     */
     public CategoryResponse findByTitle(String title) {
         Category category = categoryRepository.findByTitle(title)
-                .orElseThrow(() -> new RuntimeException("Category not found with title: " + title));
+            .orElseThrow(() -> new RuntimeException("Category not found with title: " + title));
         return toResponse(category);
     }
 
-    public void deleteById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-        
-        categoryRepository.delete(category);
-    }
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
 
+    /**
+     * Convert Category instance to CategoryResponse dto
+     * @param category
+     * @return CategoryResponse
+     */
     private CategoryResponse toResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());

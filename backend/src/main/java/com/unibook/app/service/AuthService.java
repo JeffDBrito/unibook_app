@@ -17,6 +17,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
     public String login(String login, String password) {
 
         User user = userRepository.findByLogin(login)

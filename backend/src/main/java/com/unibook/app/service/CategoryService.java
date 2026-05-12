@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.category.UpdateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
 import com.unibook.app.model.Category;
 import com.unibook.app.repository.CategoryRepository;
@@ -55,6 +56,28 @@ public class CategoryService {
             .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));   
         category.restore();     
         return toResponse(categoryRepository.save(category));
+    }
+
+    /**
+     * Update Category
+     * @param id
+     * @param request
+     * @param partial
+     * @return CategoryResponse
+     */
+    public CategoryResponse update(Long id, UpdateCategoryRequest request, boolean partial){
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        if(!partial || request.getTitle() != null){
+            category.setTitle(request.getTitle());
+        }
+
+        if(!partial || request.getDescription() != null){
+            category.setDescription(request.getDescription());
+        }
+
+        return toResponse(category);
     }
 
     // ----------------- //

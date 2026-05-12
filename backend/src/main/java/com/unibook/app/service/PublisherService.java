@@ -78,8 +78,7 @@ public class PublisherService {
             publisher.setDescription(request.getDescription());
         }
 
-        publisherRepository.save(publisher);
-        return toResponse(publisher);
+        return toResponse(publisherRepository.save(publisher));
     }
 
     // ----------------- //

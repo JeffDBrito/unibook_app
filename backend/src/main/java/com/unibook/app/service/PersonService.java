@@ -93,7 +93,7 @@ public class PersonService {
             person.setEmail(request.getEmail());
         }
 
-        return toResponse(person);
+        return toResponse(personRepository.save(person));
     }
 
     // ----------------- //

@@ -83,11 +83,10 @@ public class AuthorService {
         if(!partial || request.getBiography() != null){
             author.setBiography(request.getBiography());
         }
-
-        authorRepository.save(author);
+        
         personRepository.save(person);
 
-        return toResponse(author);
+        return toResponse(authorRepository.save(author));
     }
 
     // ----------------- //

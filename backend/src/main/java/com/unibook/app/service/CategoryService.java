@@ -77,7 +77,7 @@ public class CategoryService {
             category.setDescription(request.getDescription());
         }
 
-        return toResponse(category);
+        return toResponse(categoryRepository.save(category));
     }
 
     // ----------------- //

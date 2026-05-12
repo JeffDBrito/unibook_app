@@ -16,17 +16,39 @@ public class PermissionService {
     
     private final PermissionRepository permissionRepository;
 
-    public PermissionResponse findById(Long id) {
-        return toResponse(permissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Permission not found with id: " + id)));
-    }
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
 
+    /**
+     * Fetch all Permissions
+     * @return List<PermissionResponse>
+     */
     public List<PermissionResponse> findAll() {
         return permissionRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(java.util.stream.Collectors.toList());
+            .map(this::toResponse)
+            .collect(java.util.stream.Collectors.toList());
     }
 
+    /**
+     * Find Permission by id
+     * @param id
+     * @return PermissionResponse
+     */
+    public PermissionResponse findById(Long id) {
+        return toResponse(permissionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Permission not found with id: " + id)));
+    }
+
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
+
+    /**
+     * Convert Permission instance to PermissionResponse
+     * @param permission
+     * @return PermissionResponse
+     */
     public PermissionResponse toResponse(Permission permission) {
         PermissionResponse response = new PermissionResponse();
         response.setTitle(permission.getTitle());

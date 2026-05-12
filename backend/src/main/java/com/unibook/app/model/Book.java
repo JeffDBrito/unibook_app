@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "books")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Book {
+@Table(name = "books")
+public class Book extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class Book {
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories = new ArrayList<>();;
+    private List<Category> categories = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")

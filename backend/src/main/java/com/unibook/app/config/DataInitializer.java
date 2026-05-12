@@ -26,8 +26,8 @@ public class DataInitializer {
     @Order(1)
     CommandLineRunner initRoles(RoleRepository roleRepository) {
         return args -> {
-
             createRoleIfNotExists(roleRepository, "ADMIN"); // Can manage everything
+            createRoleIfNotExists(roleRepository, "SUPER_ADMIN"); // Can manage everything
             createRoleIfNotExists(roleRepository, "LIBRARIAN"); // Can view catalog, borrow books, borrow more books than students, borrow for longer periods, borrow restricted materials, manage inventory, process returns, etc.
             createRoleIfNotExists(roleRepository, "TEACHER"); // Can view catalog, borrow books, borrow more books than students, borrow for longer periods, borrow restricted materials
             createRoleIfNotExists(roleRepository, "STUDENT"); // Can view catalog, borrow books
@@ -37,11 +37,14 @@ public class DataInitializer {
     }
 
     private void createRoleIfNotExists(RoleRepository repo, String title) {
-        repo.findByTitle(title).orElseGet(() -> {
-            Role role = new Role();
-            role.setTitle(title);
-            return repo.save(role);
+        Role role = repo.findByTitle(title).orElseGet(() -> {
+            Role newRole = new Role();
+            newRole.setTitle(title);
+            return repo.save(newRole);
         });
+
+        System.out.println("Role '" + role.getTitle() + "' initialized with ID: " + role.getId());
+
     }
 
     @Bean
@@ -72,7 +75,6 @@ public class DataInitializer {
             createPermissionIfNotExists(permissionRepository, "USER_UPDATE", "User", "Update user information");
             createPermissionIfNotExists(permissionRepository, "USER_DELETE", "User", "Delete a user");
             createPermissionIfNotExists(permissionRepository, "USER_VIEW_ALL", "User", "View all users");
-            createPermissionIfNotExists(permissionRepository, "USER_SET_SUPERUSER", "User", "Set user as superuser");
 
             // Person
             createPermissionIfNotExists(permissionRepository, "PERSON_CREATE", "Person", "Create a new person");
@@ -138,6 +140,7 @@ public class DataInitializer {
         return args -> {
             List<Permission> allPermissions = permissionRepository.findAll();
             roleService.assignPermissionsByRoleName("ADMIN", allPermissions);
+            roleService.assignPermissionsByRoleName("SUPER_ADMIN", allPermissions);
         };
     }
 
@@ -150,10 +153,14 @@ public class DataInitializer {
                 "admin@admin.com",
                 "admin",
                 "admin",
-                roleRepository.findByTitle("ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Admin role not found"))
-                    .getId(),
-                true
+                List.of(
+                    roleRepository.findByTitle("ADMIN")
+                        .orElseThrow(() -> new RuntimeException("Admin role not found"))
+                        .getId(),                    
+                    roleRepository.findByTitle("SUPER_ADMIN")
+                        .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
+                        .getId()
+                )
             );
         };
     }
@@ -192,9 +199,9 @@ public class DataInitializer {
     @Order(8)
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
-            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()));
-            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()));
-            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()));
+            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
+            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()), List.of(categoryService.findByTitle("Fiction").getId()));
+            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
         };
     }
 

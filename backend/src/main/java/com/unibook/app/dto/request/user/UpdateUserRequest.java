@@ -1,19 +1,18 @@
-package com.unibook.app.dto.request;
+package com.unibook.app.dto.request.user;
+
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserRequest {
+public class UpdateUserRequest {
 
     private String name;
     private String email;
     private String login;
     private String password;
-    private Long roleId;
-    private boolean superuser;
-
-    public CreateUserRequest() {}
-
+    private List<Long> roleIds;
+    
 }

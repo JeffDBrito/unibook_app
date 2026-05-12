@@ -83,6 +83,11 @@ npm run dev
 nvm use 20
 ```
 
+# Swagger available at
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
 ## Kill processes
 ```pkill -f spring```
 ```pkill -f node```

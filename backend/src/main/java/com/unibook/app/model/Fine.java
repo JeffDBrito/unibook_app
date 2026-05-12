@@ -2,6 +2,8 @@ package com.unibook.app.model;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +15,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "fines")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Fine {
+@Table(name = "fines")
+@SQLDelete(sql = "UPDATE fines SET deleted_at = now() WHERE id = ?")
+public class Fine extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

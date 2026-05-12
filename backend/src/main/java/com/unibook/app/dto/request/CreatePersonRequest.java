@@ -6,14 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateAuthorRequest {
+public class CreatePersonRequest {
     
     @Schema(example = "John Doe")
     private String name;
     
-    @Schema(example = "John Doe is a renowned author known for his compelling storytelling.")
-    private String biography;
-
-    public CreateAuthorRequest() {}
+    @Schema(example = "john@email.com")
+    private String email;
 
 }

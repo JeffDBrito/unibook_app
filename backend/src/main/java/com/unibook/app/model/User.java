@@ -1,17 +1,23 @@
 package com.unibook.app.model;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+@Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET deleted_at = now() WHERE id = ?")
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +26,15 @@ public class User {
     private String login;
     private String password;
 
-    @Column(nullable = false)
-    private boolean superuser;
-
     @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
 
-    @ManyToOne
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 }

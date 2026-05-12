@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.model.Author;
+import com.unibook.app.model.Person;
 import com.unibook.app.repository.AuthorRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,36 +16,48 @@ import lombok.RequiredArgsConstructor;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final PersonService personService;
 
     public AuthorResponse createAuthor(String name, String biography) {
-        var author = new Author();
-        author.setName(name);
+
+        Person savedPerson = personService.createPersonEntity(name, null);
+
+        Author author = new Author();
         author.setBiography(biography);
-        var savedAuthor = authorRepository.save(author);
+        author.setPerson(savedPerson);
+        Author savedAuthor = authorRepository.save(author);
         return toResponse(savedAuthor);
     }
 
     public List<AuthorResponse> findAll() {
-        var authors = authorRepository.findAll();
+        List<Author> authors = authorRepository.findAll();
         return authors.stream().map(this::toResponse).toList();
     }
 
     public AuthorResponse findById(Long id) {
-        var author = authorRepository.findById(id)
+        Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
         return toResponse(author);
     }
 
     public AuthorResponse findByName(String name) {
-        var author = authorRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Author not found with name: " + name));
+        Author author = authorRepository.findByPersonName(name)
+            .orElseThrow(() -> new RuntimeException("Author not found with name: " + name));
+
         return toResponse(author);
+    }
+
+    public void deleteById(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        
+        authorRepository.delete(author);
     }
 
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());
-        response.setName(author.getName());
+        response.setName(author.getPerson().getName());
         response.setBiography(author.getBiography());
         return response;   
     }

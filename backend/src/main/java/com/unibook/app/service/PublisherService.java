@@ -41,6 +41,13 @@ public class PublisherService {
         return toResponse(publisher);
     }
 
+    public void deleteById(Long id) {
+        Publisher publisher = publisherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+        
+        publisherRepository.delete(publisher);
+    }
+
     private PublisherResponse toResponse(Publisher publisher) {
         PublisherResponse response = new PublisherResponse();
         response.setId(publisher.getId());

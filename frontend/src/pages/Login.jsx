@@ -21,6 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
+      localStorage.removeItem("token");
       const data = await loginRequest(login, password);
 
       const token = data.token;

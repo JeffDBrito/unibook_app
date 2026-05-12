@@ -3,6 +3,7 @@ package com.unibook.app.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;
@@ -25,20 +26,17 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse createUser(String name, String email, String login, String password, Long roleId, boolean superuser) {
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
+    public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
 
         // create Person
         Person person = new Person();
         person.setName(name);
         person.setEmail(email);
         personRepository.save(person);
-
-        // fetch Role (GUEST by default)
-        Role role = (roleId != null)
-        ? roleRepository.findById(roleId)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId))
-        : roleRepository.findByTitle("VISITANTE")
-            .orElseThrow(() -> new RuntimeException("Default role not found"));
 
         // create User
         User user = new User();
@@ -48,14 +46,72 @@ public class UserService {
         user.setLogin(login);
         user.setPassword(passwordEncoder.encode(password));
         user.setPerson(person);
-        user.setRole(role);
-        user.setSuperuser(superuser);
-        System.out.println("Creating user with login: " + login + ", role: " + role.getTitle() + ", superuser: " + superuser);
+        
+        for (Long rId : roleIds) {
+            Role r = roleRepository.findById(rId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + rId));
+            user.getRoles().add(r);
+        }
+        
+        System.out.println("Creating user with login: " + login + ", roles: " + user.getRoles().stream().map(Role::getTitle).toList());
 
         User savedUser = userRepository.save(user);
         
         return toResponse(savedUser);
     }
+
+    public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
+        
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    
+            if (!partial || request.getName() != null) {
+                user.getPerson().setName(request.getName());
+            }
+            if (!partial || request.getEmail() != null) {
+                user.getPerson().setEmail(request.getEmail());
+            }
+            if (!partial || request.getLogin() != null) {
+                user.setLogin(request.getLogin());
+            }
+            if (!partial || request.getPassword() != null) {
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+            }
+            if (!partial || request.getRoleIds() != null) {
+                List<Role> roles = roleRepository.findAllById(request.getRoleIds());
+                if (roles.size() != request.getRoleIds().size()) {
+                    throw new RuntimeException("One or more roles not found");
+                }
+                user.setRoles(roles.stream().collect(java.util.stream.Collectors.toSet()));
+            }
+    
+            User updatedUser = userRepository.save(user);
+            return toResponse(updatedUser);
+
+    }
+
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        
+        userRepository.delete(user);
+    }
+
+    public UserResponse restoreById(Long id){
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found with id: "+id));
+
+        user.setDeletedAt(null);
+
+        userRepository.save(user);
+
+        return toResponse(user);
+            
+    }
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
 
     public List<UserResponse> findAll() {
         return userRepository.findAll()
@@ -70,6 +126,10 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
+
     private UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
 
@@ -79,22 +139,14 @@ public class UserService {
         response.setName(user.getPerson().getName());
         response.setEmail(user.getPerson().getEmail());
 
-        response.setRole(user.getRole().getTitle());
-        response.setSuperuser(user.isSuperuser());
+        String roleTitles = user.getRoles().stream()
+                .map(Role::getTitle)
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("No Roles");
+        System.out.println("Mapping user to response: " + user.getLogin() + ", roles: " + roleTitles);
+        response.setRoles(roleTitles);
 
         return response;
-    }
-
-    public UserResponse login(String login, String password) {
-
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return toResponse(user);
     }
 
 }

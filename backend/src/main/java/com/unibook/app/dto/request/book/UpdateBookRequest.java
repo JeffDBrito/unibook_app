@@ -1,4 +1,4 @@
-package com.unibook.app.dto.request;
+package com.unibook.app.dto.request.book;
 
 import java.util.List;
 
@@ -7,16 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateBookRequest {
+public class UpdateBookRequest {
     
     private String title;
     private String isbn;
-    private Integer publicationYear;
     private String description;
+    private Integer publicationYear;
     private Long publisherId;
     private List<Long> authorIds;
-    // private List<Long> categoryIds;
-
-    public CreateBookRequest() {}
+    private List<Long> categoryIds;
 
 }

@@ -3,6 +3,8 @@ package com.unibook.app.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +32,7 @@ class UserServiceTest {
             "test@email.com",
             "test",
             "123",
-            role.getId(),
-            false
+            List.of(role.getId())
         );
 
         assertNotNull(user);

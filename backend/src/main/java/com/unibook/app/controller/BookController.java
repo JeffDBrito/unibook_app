@@ -2,16 +2,24 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unibook.app.dto.request.CreateBookRequest;
+import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.service.BookService;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/books")
@@ -25,40 +33,74 @@ public class BookController {
 
     // List books
     @GetMapping
-    public List<BookResponse> getAllBooks() {
+    @Operation(summary = "List books", description = "Retrieves a list of all books and returns their details.", tags = {"Book Endpoints"})
+    public List<BookResponse> getAll() {
         return bookService.findAll();
     }
 
     // Create book
     @PostMapping
-    public BookResponse createBook(@RequestBody CreateBookRequest request) {
+    @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.", tags = {"Book Endpoints"})
+    public BookResponse create(@RequestBody CreateBookRequest request) {
         return bookService.createBook(
             request.getTitle(), 
             request.getIsbn(), 
             request.getDescription(),
             request.getPublicationYear(),
             request.getPublisherId(),
-            request.getAuthorIds()
+            request.getAuthorIds(),
+            request.getCategoryIds()
         );
+    }
+
+    // Partial update
+    @PatchMapping("/{id}")
+    @Operation(summary = "Partial update book", description = "Partially updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
+    public BookResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request ) {
+        return bookService.update(id, request, true);
+    }
+
+    // Full update
+    @PutMapping("/{id}")
+    @Operation(summary = "Update book", description = "Updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
+    public BookResponse fullUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request) {
+        return bookService.update(id, request, false);
     }
 
     // Get book by id
     @GetMapping("/{id}")
-    public BookResponse getBookById(@PathVariable Long id) {
+    @Operation(summary = "Get book by id", description = "Retrieves a book by their id and returns the book details.", tags = {"Book Endpoints"})
+    public BookResponse getById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
     // Get book by isbn
     @GetMapping("/isbn/{isbn}")
-    public BookResponse getBookByIsbn(@PathVariable String isbn) {
+    @Operation(summary = "Get book by ISBN", description = "Retrieves a book by their ISBN and returns the book details.", tags = {"Book Endpoints"})
+    public BookResponse getByIsbn(@PathVariable String isbn) {
         return bookService.findByIsbn(isbn);
     }
 
     // Get book by title
     @GetMapping("/title/{title}")
-    public BookResponse getBookByTitle(@PathVariable String title) {
+    @Operation(summary = "Get book by title", description = "Retrieves a book by their title and returns the book details.", tags = {"Book Endpoints"})
+    public BookResponse getByTitle(@PathVariable String title) {
         return bookService.findByTitle(title);
     }
 
+    // Delete book by id
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete book by id", description = "Deletes a book by their id and returns no content.", tags = {"Book Endpoints"})
+    public void deleteById(@PathVariable Long id) {
+        bookService.deleteById(id);
+    }
+
+    // Restore book by id
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore book by id", description = "Restores a previously deleted book by their id and returns the restored book details.", tags = {"Book Endpoints"})
+    public BookResponse restoreById(@PathVariable Long id) {
+        return bookService.restoreById(id);
+    }
 
 }

@@ -21,6 +21,12 @@ public class AuthService {
     // Management Operations //
     // --------------------- //
 
+    /**
+     * Process login request
+     * @param login
+     * @param password
+     * @return String
+     */
     public String login(String login, String password) {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new BadCredentialsException("Invalid Credentials")); // User not found

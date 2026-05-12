@@ -80,4 +80,10 @@ public class AuthorController {
         return authorService.update(id, request, true);
     }
 
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Author by id", description = "Restores a previously deleted Author by their id and returns the restored Author details.", tags = {"Author Endpoints"})
+    public AuthorResponse restore(@PathVariable Long id){
+        return authorService.restoreById(id);
+    }
+
 }

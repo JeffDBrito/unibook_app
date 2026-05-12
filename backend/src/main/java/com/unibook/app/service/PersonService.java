@@ -63,6 +63,18 @@ public class PersonService {
     }
 
     /**
+     * Restore Person by id
+     * @param id
+     * @return PersonResponse
+     */
+    public PersonResponse restoreById(Long id) {
+        Person person = personRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
+        person.restore();
+        return toResponse(personRepository.save(person));
+    }
+
+    /**
      * Update person
      * @param id
      * @param request

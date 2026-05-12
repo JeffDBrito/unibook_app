@@ -81,4 +81,10 @@ public class PersonController {
     public PersonResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePersonRequest request){
         return personService.update(id, request, false);
     }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Person by id", description = "Restores a previously deleted Person by their id and returns the restored Person details.", tags = {"Person Endpoints"})
+    public PersonResponse restore(@PathVariable Long id){
+        return personService.restoreById(id);
+    }
 }

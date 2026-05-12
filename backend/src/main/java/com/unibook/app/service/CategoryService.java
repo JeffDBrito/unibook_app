@@ -45,6 +45,18 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
+    /**
+     * Restore Category by id
+     * @param id
+     * @return
+     */
+    public CategoryResponse restoreById(Long id) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));   
+        category.restore();     
+        return toResponse(categoryRepository.save(category));
+    }
+
     // ----------------- //
     // Search Operations //
     // ----------------- //

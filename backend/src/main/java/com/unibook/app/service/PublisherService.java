@@ -47,6 +47,18 @@ public class PublisherService {
     }
 
     /**
+     * Restore Publisher by id
+     * @param id
+     * @return PublisherResponse
+     */
+    public PublisherResponse restoreById(Long id){
+        Publisher publisher = publisherRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+        publisher.restore();
+        return toResponse(publisherRepository.save(publisher));
+    }
+
+    /**
      * Update Publisher
      * @param id
      * @param request

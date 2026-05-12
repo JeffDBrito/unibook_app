@@ -62,6 +62,13 @@ public class PersonService {
         personRepository.save(person);
     }
 
+    /**
+     * Update person
+     * @param id
+     * @param request
+     * @param partial
+     * @return PersonResponse
+     */
     public PersonResponse update(Long id, UpdatePersonRequest request, boolean partial){
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Person not Found"));

@@ -67,12 +67,14 @@ public class PublisherController {
         return publisherService.findByTitle(title);
     }
 
+    // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Publisher", description = "Partially updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse partialUpdate(@PathVariable Long id, @RequestBody UpdatePublisherRequest request){
         return publisherService.update(id, request, true);
     }
 
+    // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update Publisher", description = "Updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePublisherRequest request){

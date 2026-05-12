@@ -80,4 +80,10 @@ public class PublisherController {
     public PublisherResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePublisherRequest request){
         return publisherService.update(id, request, false);
     }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Publisher by id", description = "Restores a previously deleted Publisher by their id and returns the restored Publisher details.", tags = {"Publisher Endpoints"})
+    public PublisherResponse restore(@PathVariable Long id){
+        return publisherService.restoreById(id);
+    }
 }

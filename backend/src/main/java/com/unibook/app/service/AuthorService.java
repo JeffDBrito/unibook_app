@@ -29,9 +29,7 @@ public class AuthorService {
      * @return AuthorResponse
      */
     public AuthorResponse createAuthor(String name, String biography) {
-
         Person savedPerson = personService.createPersonEntity(name, null);
-
         Author author = new Author();
         author.setBiography(biography);
         author.setPerson(savedPerson);
@@ -45,8 +43,7 @@ public class AuthorService {
      */
     public void deleteById(Long id) {
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        
+            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
         authorRepository.delete(author);
     }
 

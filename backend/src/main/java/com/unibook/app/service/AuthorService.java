@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.AuthorRepository;
+import com.unibook.app.repository.PersonRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final PersonRepository personRepository;
     private final PersonService personService;
 
     // --------------------- //
@@ -46,6 +49,33 @@ public class AuthorService {
             .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
         author.softDelete();
         authorRepository.save(author);
+    }
+
+    /**
+     * Partially update Author and return the Author updated
+     * @param id
+     * @param request
+     * @param partial
+     * @return
+     */
+    public AuthorResponse update(Long id, UpdateAuthorRequest request, boolean partial){
+        Author author = authorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Author not found"));
+
+        Person person = author.getPerson();
+
+        if(!partial || request.getName() != null){
+            person.setName(request.getName());
+        }
+
+        if(!partial || request.getBiography() != null){
+            author.setBiography(request.getBiography());
+        }
+
+        authorRepository.save(author);
+        personRepository.save(person);
+
+        return toResponse(author);
     }
 
     // ----------------- //

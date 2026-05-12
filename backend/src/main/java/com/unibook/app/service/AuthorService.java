@@ -52,6 +52,18 @@ public class AuthorService {
     }
 
     /**
+     * Restore Author by id
+     * @param id
+     * @return AuthorResponse
+     */
+    public AuthorResponse restoreById(Long id) {
+        Author author = authorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
+        author.restore();
+        return toResponse(authorRepository.save(author));
+    }
+
+    /**
      * Partially update Author and return the Author updated
      * @param id
      * @param request

@@ -18,6 +18,10 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final PersonService personService;
 
+    // --------------------- //
+    // Management Operations //
+    // --------------------- //
+
     public AuthorResponse createAuthor(String name, String biography) {
 
         Person savedPerson = personService.createPersonEntity(name, null);
@@ -28,6 +32,17 @@ public class AuthorService {
         Author savedAuthor = authorRepository.save(author);
         return toResponse(savedAuthor);
     }
+
+    public void deleteById(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        
+        authorRepository.delete(author);
+    }
+
+    // ----------------- //
+    // Search Operations //
+    // ----------------- //
 
     public List<AuthorResponse> findAll() {
         List<Author> authors = authorRepository.findAll();
@@ -47,12 +62,9 @@ public class AuthorService {
         return toResponse(author);
     }
 
-    public void deleteById(Long id) {
-        Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        
-        authorRepository.delete(author);
-    }
+    // -------------- //
+    // Helper Methods //
+    // -------------- //
 
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();

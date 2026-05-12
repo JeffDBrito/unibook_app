@@ -79,4 +79,10 @@ public class CategoryController {
         return categoryService.update(id, request, false);
     }
 
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore Category by id", description = "Restores a previously deleted Category by their id and returns the restored Category details.", tags = {"Category Endpoints"})
+    public CategoryResponse restore(@PathVariable Long id){
+        return categoryService.restoreById(id);
+    }
+
 }

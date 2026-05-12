@@ -44,7 +44,8 @@ public class AuthorService {
     public void deleteById(Long id) {
         Author author = authorRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
-        authorRepository.delete(author);
+        author.softDelete();
+        authorRepository.save(author);
     }
 
     // ----------------- //
@@ -89,7 +90,7 @@ public class AuthorService {
     /**
      * Convert Author instance to AuthorResponse dto
      * @param author
-     * @return
+     * @return AuthorResponse
      */
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();

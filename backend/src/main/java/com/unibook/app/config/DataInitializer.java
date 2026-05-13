@@ -1,5 +1,6 @@
 package com.unibook.app.config;
 
+import com.unibook.app.dto.request.book.CreateBookRequest;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
 import com.unibook.app.repository.PermissionRepository;
@@ -199,12 +200,68 @@ public class DataInitializer {
     @Order(8)
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
-            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
-            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()), List.of(categoryService.findByTitle("Fiction").getId()));
-            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
+            Long publisherId = publisherService.findByTitle("Scribner").getId(); 
+            List<Long> authorIds = List.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
+            List<Long> categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            
+            bookService.createBook(buildBook(
+                "The Great Gatsby",
+                "978-0743273565",
+                "A novel by F. Scott Fitzgerald",
+                1925,
+                publisherId,
+                authorIds,
+                categoryIds));
+
+            publisherId = publisherService.findByTitle("J.B. Lippincott & Co.").getId();
+            authorIds = List.of(authorService.findByName("Harper Lee").getId());
+            categoryIds = List.of(categoryService.findByTitle("Fiction").getId());
+
+            bookService.createBook(buildBook(
+                "To Kill a Mockingbird",
+                "978-0061120084",
+                "A novel by Harper Lee",
+                1960,
+                publisherId,
+                authorIds,
+                categoryIds));
+
+            publisherId = publisherService.findByTitle("Secker & Warburg").getId();
+            authorIds = List.of(authorService.findByName("George Orwell").getId());
+            categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+
+            bookService.createBook(buildBook(
+                "1984",
+                "978-0451524935",
+                "A novel by George Orwell",
+                1949,
+                publisherId,
+                authorIds,
+                categoryIds));
         };
     }
 
+    private CreateBookRequest buildBook(
+        String title,
+        String isbn,
+        String description,
+        Integer year,
+        Long publisherId,
+        List<Long> authorIds,
+        List<Long> categoryIds
+    ){
+        CreateBookRequest request = CreateBookRequest.builder()
+        .title(title)
+        .isbn(isbn)
+        .description(description)
+        .publicationYear(year)
+        .publisherId(publisherId)
+        .authorIds(authorIds)
+        .categoryIds(categoryIds)
+        .build();
+
+        return request;
+    }
 
 
 }

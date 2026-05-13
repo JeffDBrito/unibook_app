@@ -26,7 +26,7 @@ public class CategoryService {
      * @param title
      * @param description
      * @return CategoryResponse
-     */
+     */ //TODO: User CreateRequest dto
     public CategoryResponse createCategory(String title, String description) {
         Category category = new Category();
         category.setTitle(title);

@@ -26,7 +26,7 @@ public class PublisherService {
      * @param title
      * @param description
      * @return PublisherResponse
-     */
+     */ //TODO: User CreateRequest dto
     public PublisherResponse createPublisher(String title, String description) {
         Publisher publisher = new Publisher();
         publisher.setTitle(title);

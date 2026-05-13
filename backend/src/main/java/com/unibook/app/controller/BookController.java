@@ -42,15 +42,7 @@ public class BookController {
     @PostMapping
     @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.", tags = {"Book Endpoints"})
     public BookResponse create(@RequestBody CreateBookRequest request) {
-        return bookService.createBook(
-            request.getTitle(), 
-            request.getIsbn(), 
-            request.getDescription(),
-            request.getPublicationYear(),
-            request.getPublisherId(),
-            request.getAuthorIds(),
-            request.getCategoryIds()
-        );
+        return bookService.createBook(request);
     }
 
     // Partial update

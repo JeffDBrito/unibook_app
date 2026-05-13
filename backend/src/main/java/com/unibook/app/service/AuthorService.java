@@ -32,10 +32,15 @@ public class AuthorService {
      * @return AuthorResponse
      */
     public AuthorResponse createAuthor(String name, String biography) {
-        Person savedPerson = personService.createPersonEntity(name, null);
+        Person person = new Person();
+        person.setName(name);
+        
+        person = personRepository.save(person);
+        
         Author author = new Author();
         author.setBiography(biography);
-        author.setPerson(savedPerson);
+        author.setPerson(person);
+        
         Author savedAuthor = authorRepository.save(author);
         return toResponse(savedAuthor);
     }

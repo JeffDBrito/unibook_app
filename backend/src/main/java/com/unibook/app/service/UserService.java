@@ -164,7 +164,7 @@ public class UserService {
      * Convert User instance to UserResponse
      * @param user
      * @return UserResponse
-     */
+     */ // TODO: Create a Mapper
     private UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
 

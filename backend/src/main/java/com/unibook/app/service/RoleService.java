@@ -136,7 +136,7 @@ public class RoleService {
      * Convert Role instance to RoleResponse
      * @param role
      * @return RoleResponse
-     */
+     */ // TODO: Create a Mapper
     private RoleResponse toResponse(Role role) {
         List<String> permissionNames = role.getPermissions().stream()
                 .map(Permission::getTitle)

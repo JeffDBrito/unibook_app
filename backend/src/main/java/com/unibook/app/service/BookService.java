@@ -209,7 +209,7 @@ public class BookService {
      * Convert Book instance to BookResponse dto
      * @param book
      * @return BookResponse
-     */
+     */ // TODO: Create a Mapper
     private BookResponse toResponse(Book book) {
         BookResponse response = new BookResponse();
         response.setId(book.getId());

@@ -19,7 +19,6 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final PersonRepository personRepository;
-    private final PersonService personService;
 
     // --------------------- //
     // Management Operations //
@@ -137,7 +136,7 @@ public class AuthorService {
      * Convert Author instance to AuthorResponse dto
      * @param author
      * @return AuthorResponse
-     */
+     */ // TODO: Create a Mapper
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());

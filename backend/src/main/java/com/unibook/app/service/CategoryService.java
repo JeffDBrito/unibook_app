@@ -123,7 +123,7 @@ public class CategoryService {
      * Convert Category instance to CategoryResponse dto
      * @param category
      * @return CategoryResponse
-     */
+     */ // TODO: Create a Mapper
     private CategoryResponse toResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());

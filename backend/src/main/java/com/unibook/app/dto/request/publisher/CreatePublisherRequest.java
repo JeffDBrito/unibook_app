@@ -14,6 +14,4 @@ public class CreatePublisherRequest {
     @Schema(example = "Penguin Random House is a global book publishing company that publishes a wide range of fiction and non-fiction books across various genres.")
     private String description;
 
-    public CreatePublisherRequest() {}
-
 }

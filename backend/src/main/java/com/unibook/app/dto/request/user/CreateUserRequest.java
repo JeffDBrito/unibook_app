@@ -25,6 +25,4 @@ public class CreateUserRequest {
     @Schema(example = "[1, 2]")
     private List<Long> roleIds;
 
-    public CreateUserRequest() {}
-
 }

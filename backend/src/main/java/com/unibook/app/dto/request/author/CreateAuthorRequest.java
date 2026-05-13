@@ -14,6 +14,4 @@ public class CreateAuthorRequest {
     @Schema(example = "John Doe is a renowned author known for his compelling storytelling.")
     private String biography;
 
-    public CreateAuthorRequest() {}
-
 }

@@ -31,6 +31,4 @@ public class CreateBookRequest {
     @Schema(example = "[1, 3]")
     private List<Long> categoryIds;
 
-    public CreateBookRequest() {}
-
 }

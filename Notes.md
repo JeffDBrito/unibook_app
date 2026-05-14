@@ -11,7 +11,6 @@
 - A implementação do CRUD de toda a arquitetura na parte backend, com os repositories, services e controllers; ✅
 - Mostrar o funcionamento do backend usando postman ou insomnia (ou outra ferramenta que preferir); ✅
 
-
 ## Regras MUITO importantes para adicionar
 
 - impedir empréstimo duplicado da mesma copy
@@ -20,3 +19,5 @@
 - limite de empréstimos por usuário
 - renovar empréstimo
 - histórico de empréstimos
+- gerar multa automaticamente (if today > dueDate) e calcular dias de atraso * valor diário
+- impedir empréstimos se usuário tiver multa pendente

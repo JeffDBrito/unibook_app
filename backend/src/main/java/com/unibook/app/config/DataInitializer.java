@@ -12,6 +12,7 @@ import com.unibook.app.service.CategoryService;
 import com.unibook.app.service.PublisherService;
 import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -19,9 +20,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
 @Configuration
+@RequiredArgsConstructor
 public class DataInitializer {
+
+    private final Environment env;
 
     @Bean
     @Order(1)
@@ -238,6 +243,27 @@ public class DataInitializer {
                 publisherId,
                 authorIds,
                 categoryIds));
+        };
+
+    }
+
+    @Bean
+    @Order(9)
+    CommandLineRunner logVars(){
+        return args -> {
+            System.out.println("\n===============================\n");
+            System.out.println("PRINT VARS: "+env.getProperty("vars.print")+"\n");
+            if(Boolean.parseBoolean(env.getProperty("vars.print")) == true){
+                System.out.println("APP NAME: "+env.getProperty("spring.application.name"));
+                System.out.println("JWT EXPIRATION TIME: "+env.getProperty("jwt.expiration"));
+                System.out.println("FRONTEND URL: "+env.getProperty("frontend.url"));
+                System.out.println("FRONTEND URL: "+env.getProperty("frontend.port"));
+                System.out.println("SERVER PORT: "+env.getProperty("server.port"));
+                System.out.println("POSTGRES url: "+env.getProperty("spring.datasource.url"));
+                System.out.println("POSTGRES username: "+env.getProperty("spring.datasource.username"));
+                System.out.println("POSTGRES password: "+env.getProperty("spring.datasource.password"));
+            }
+            System.out.println("\n===============================\n");
         };
     }
 

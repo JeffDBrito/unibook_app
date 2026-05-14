@@ -17,7 +17,6 @@ import com.unibook.app.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service

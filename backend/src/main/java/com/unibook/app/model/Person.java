@@ -1,5 +1,7 @@
 package com.unibook.app.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ public class Person extends BaseEntity{
 
     private String name;
     private String email;
+    private LocalDate birthDate;
 
     @OneToOne(mappedBy = "person")
     private Author author;

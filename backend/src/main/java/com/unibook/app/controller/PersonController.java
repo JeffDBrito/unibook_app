@@ -42,7 +42,8 @@ public class PersonController {
     public PersonResponse createPerson(@RequestBody CreatePersonRequest request) {
         return personService.createPerson(
             request.getName(),
-            request.getEmail()
+            request.getEmail(),
+            request.getBirthDate()
         );
     }
 

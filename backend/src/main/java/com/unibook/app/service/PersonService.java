@@ -1,6 +1,7 @@
 package com.unibook.app.service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +30,11 @@ public class PersonService {
      * @param email
      * @return PersonResponse
     **/ //TODO: User CreateRequest dto
-    public PersonResponse createPerson(String name, String email) {
+    public PersonResponse createPerson(String name, String email, LocalDate birthDate) {
         var person = new Person();
         person.setName(name);
         person.setEmail(email);
+        person.setBirthDate(birthDate);
         return toResponse(personRepository.save(person));
     }
 
@@ -76,6 +78,10 @@ public class PersonService {
 
         if(!partial || request.getEmail() != null){
             person.setEmail(request.getEmail());
+        }
+
+        if(!partial || request.getBirthDate() != null){
+            person.setBirthDate(request.getBirthDate());
         }
 
         return toResponse(personRepository.save(person));

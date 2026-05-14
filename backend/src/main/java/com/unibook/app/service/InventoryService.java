@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
+import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -24,18 +26,15 @@ public class InventoryService {
 
     /**
      * Create inventory
-     * @param sector
-     * @param shelf
-     * @param row
-     * @param slot
+     * @param request
      * @return InventoryResponse
-     */ //TODO: User CreateRequest dto
-    public InventoryResponse createInventory(String sector, String shelf, int row, int slot){
+     */
+    public InventoryResponse createInventory(CreateInventoryRequest request){
         Inventory inventory = new Inventory();
-        inventory.setSector(sector);
-        inventory.setShelf(shelf);
-        inventory.setRow(row);
-        inventory.setSlot(slot);
+        inventory.setSector(request.getSector());
+        inventory.setShelf(request.getShelf());
+        inventory.setRow(request.getRow());
+        inventory.setSlot(request.getSlot());
 
         return toResponse(inventoryRepository.save(inventory));
     }
@@ -52,7 +51,50 @@ public class InventoryService {
         inventoryRepository.save(inventory);
     }
 
+    /**
+     * Restore Inventory by id
+     * @param id
+     * @return InventoryResponse
+     */
+    public InventoryResponse restoreById(Long id){
+        Inventory inventory = inventoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
+        inventory.restore();
+        return toResponse(inventoryRepository.save(inventory));
+    }
+
+    /**
+     * Update Inventory
+     * @param id
+     * @param request
+     * @param partial
+     * @return InventoryResponse
+     */
+    public InventoryResponse update(Long id, UpdateInventoryRequest request, boolean partial){
+
+        Inventory inventory = inventoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        if(!partial || request.getSector() != null){
+            inventory.setSector(request.getSector());
+        }
+
+        if(!partial || request.getShelf() != null){
+            inventory.setShelf(request.getShelf());
+        }
+
+        if(!partial || request.getRow() != null){
+            inventory.setRow(request.getRow());
+        }
+
+        if(!partial || request.getSlot() != null){
+            inventory.setSlot(request.getSlot());
+        }
+
+        return toResponse(inventoryRepository.save(inventory));
+
+    }
 
     // ----------------- //
     // Search Operations //

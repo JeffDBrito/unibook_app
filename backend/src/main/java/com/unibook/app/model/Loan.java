@@ -12,7 +12,7 @@ import lombok.Setter;
 @Table(name = "loans")
 @Getter
 @Setter
-public class Loan {
+public class Loan extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,7 @@ public class Loan {
 
     private LocalDate returnDate;
 
+    @Enumerated(EnumType.STRING)
     private LoanStatus status;
 
     @ManyToOne

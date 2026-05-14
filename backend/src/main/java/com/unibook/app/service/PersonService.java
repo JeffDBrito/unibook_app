@@ -28,27 +28,12 @@ public class PersonService {
      * @param name
      * @param email
      * @return PersonResponse
-    **/
+    **/ //TODO: User CreateRequest dto
     public PersonResponse createPerson(String name, String email) {
         var person = new Person();
         person.setName(name);
         person.setEmail(email);
         return toResponse(personRepository.save(person));
-    }
-
-    // TODO: Review if this method is really necessary
-
-    /**
-     * Create Person and return their entity
-     * @param name
-     * @param email
-     * @return Person
-     */
-    public Person createPersonEntity(String name, String email) {
-        Person person = new Person();
-        person.setName(name);
-        person.setEmail(email);
-        return personRepository.save(person);
     }
 
     /**
@@ -111,14 +96,6 @@ public class PersonService {
     }
 
     /**
-     * Fetch All "Persons"
-     * @return List<Person>
-     */
-    public List<Person> getAllPersons() {
-        return personRepository.findAll();
-    }
-
-    /**
      * Find Person by id
      * @param id 
      * @return PersonResponse
@@ -145,7 +122,7 @@ public class PersonService {
      * Convert Person instance to PersonResponse
      * @param person
      * @return PersonResponse
-     */
+     */ // TODO: Create a Mapper
     private PersonResponse toResponse(Person person) {
         PersonResponse response = new PersonResponse();
         response.setName(person.getName());

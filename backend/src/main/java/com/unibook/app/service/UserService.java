@@ -38,7 +38,7 @@ public class UserService {
      * @param password
      * @param roleIds
      * @return UserResponse
-     */
+     */ //TODO: User CreateRequest dto
     public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
 
         // create Person
@@ -164,7 +164,7 @@ public class UserService {
      * Convert User instance to UserResponse
      * @param user
      * @return UserResponse
-     */
+     */ // TODO: Create a Mapper
     private UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
 

@@ -4,8 +4,6 @@ package com.unibook.app.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.SQLDelete;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +14,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE users SET deleted_at = now() WHERE id = ?")
 public class User extends BaseEntity {
 
     @Id

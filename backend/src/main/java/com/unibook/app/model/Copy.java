@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Copy {
+public class Copy extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,14 @@ public class Copy {
 
     private String code;
 
-    private boolean available = true;
-
+    @Enumerated(EnumType.STRING)
     private CopyStatus status;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @ManyToOne
-    @JoinColumn(name = "inventory_id")
+    @OneToOne
+    @JoinColumn(name = "inventory_id", unique = true)
     private Inventory inventory;
 }

@@ -1,7 +1,15 @@
 package com.unibook.app.config;
 
+import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.model.Book;
+import com.unibook.app.model.Copy;
+import com.unibook.app.model.Inventory;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
+import com.unibook.app.repository.BookRepository;
+import com.unibook.app.repository.CopyRepository;
+import com.unibook.app.repository.InventoryRepository;
 import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
@@ -11,6 +19,7 @@ import com.unibook.app.service.CategoryService;
 import com.unibook.app.service.PublisherService;
 import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -18,9 +27,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
 @Configuration
+@RequiredArgsConstructor
 public class DataInitializer {
+
+    private final Environment env;
 
     @Bean
     @Order(1)
@@ -199,12 +212,159 @@ public class DataInitializer {
     @Order(8)
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
-            bookService.createBook("The Great Gatsby", "978-0743273565", "A novel by F. Scott Fitzgerald", 1925, publisherService.findByTitle("Scribner").getId(), List.of(authorService.findByName("F. Scott Fitzgerald").getId(), authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
-            bookService.createBook("To Kill a Mockingbird", "978-0061120084", "A novel by Harper Lee", 1960, publisherService.findByTitle("J.B. Lippincott & Co.").getId(), List.of(authorService.findByName("Harper Lee").getId()), List.of(categoryService.findByTitle("Fiction").getId()));
-            bookService.createBook("1984", "978-0451524935", "A novel by George Orwell", 1949, publisherService.findByTitle("Secker & Warburg").getId(), List.of(authorService.findByName("George Orwell").getId()), List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId()));
+            Long publisherId = publisherService.findByTitle("Scribner").getId(); 
+            List<Long> authorIds = List.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
+            List<Long> categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            
+            bookService.createBook(buildBook(
+                "The Great Gatsby",
+                "978-0743273565",
+                "A novel by F. Scott Fitzgerald",
+                1925,
+                publisherId,
+                authorIds,
+                categoryIds));
+
+            publisherId = publisherService.findByTitle("J.B. Lippincott & Co.").getId();
+            authorIds = List.of(authorService.findByName("Harper Lee").getId());
+            categoryIds = List.of(categoryService.findByTitle("Fiction").getId());
+
+            bookService.createBook(buildBook(
+                "To Kill a Mockingbird",
+                "978-0061120084",
+                "A novel by Harper Lee",
+                1960,
+                publisherId,
+                authorIds,
+                categoryIds));
+
+            publisherId = publisherService.findByTitle("Secker & Warburg").getId();
+            authorIds = List.of(authorService.findByName("George Orwell").getId());
+            categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+
+            bookService.createBook(buildBook(
+                "1984",
+                "978-0451524935",
+                "A novel by George Orwell",
+                1949,
+                publisherId,
+                authorIds,
+                categoryIds));
+        };
+
+    }
+
+    @Bean
+    @Order(9)
+    CommandLineRunner initCopies(
+        CopyRepository copyRepository,
+        InventoryRepository inventoryRepository,
+        BookRepository bookRepository
+    ) {
+        return args -> {
+            // The Great Gatsby
+            Book gatsby = bookRepository.findByTitle("The Great Gatsby")
+                .orElseThrow();
+            Inventory inventory1 = inventoryRepository.save(
+                buildInventory("A", "1", 1, 1)
+            );            
+            Copy copy1 = buildCopy(
+                "GATSBY-001",
+                CopyStatus.AVAILABLE,
+                gatsby,
+                inventory1
+            );
+            copyRepository.save(copy1);
+
+            // To Kill a Mockingbird
+            Book mockingbird = bookRepository.findByTitle("To Kill a Mockingbird")
+                .orElseThrow();
+            Inventory inventory2 = inventoryRepository.save(
+                buildInventory("A", "1", 1, 2)
+            );
+            Copy copy2 = buildCopy(
+                "MOCK-001",
+                CopyStatus.AVAILABLE,
+                mockingbird,
+                inventory2
+            );
+            copyRepository.save(copy2);
         };
     }
 
+    @Bean
+    @Order(99)
+    CommandLineRunner logVars(){
+        return args -> {
+            System.out.println("\n===============================\n");
+            System.out.println("PRINT VARS: "+env.getProperty("vars.print")+"\n");
+            if(env.getProperty("vars.print", Boolean.class) == true){
+                System.out.println("APP NAME: "+env.getProperty("spring.application.name"));
+                System.out.println("JWT EXPIRATION TIME: "+env.getProperty("jwt.expiration"));
+                System.out.println("FRONTEND URL: "+env.getProperty("frontend.url"));
+                System.out.println("FRONTEND URL: "+env.getProperty("frontend.port"));
+                System.out.println("SERVER PORT: "+env.getProperty("server.port"));
+                System.out.println("POSTGRES url: "+env.getProperty("spring.datasource.url"));
+                System.out.println("POSTGRES username: "+env.getProperty("spring.datasource.username"));
+                System.out.println("POSTGRES password: "+env.getProperty("spring.datasource.password"));
+            }
+            System.out.println("\n===============================\n");
+        };
+    }
 
+    private CreateBookRequest buildBook(
+        String title,
+        String isbn,
+        String description,
+        Integer year,
+        Long publisherId,
+        List<Long> authorIds,
+        List<Long> categoryIds
+    ){
+        CreateBookRequest request = CreateBookRequest.builder()
+        .title(title)
+        .isbn(isbn)
+        .description(description)
+        .publicationYear(year)
+        .publisherId(publisherId)
+        .authorIds(authorIds)
+        .categoryIds(categoryIds)
+        .build();
+
+        return request;
+    }
+
+    private Inventory buildInventory(
+        String sector,
+        String shelf,
+        int row,
+        int slot
+    ) {
+        Inventory inventory = new Inventory();
+
+        inventory.setSector(sector);
+        inventory.setShelf(shelf);
+        inventory.setRow(row);
+        inventory.setSlot(slot);
+
+        return inventory;
+    }
+
+    private Copy buildCopy(
+        String code,
+        CopyStatus status,
+        Book book,
+        Inventory inventory
+    ) {
+        Copy copy = new Copy();
+
+        copy.setCode(code);
+        copy.setStatus(status); 
+
+        copy.setBook(book);
+        copy.setInventory(inventory);
+
+        return copy;
+    }
 
 }

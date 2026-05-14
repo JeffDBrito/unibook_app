@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.book.CreateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.model.Author;
@@ -33,35 +34,29 @@ public class BookService {
 
     /**
      * Create Book
-     * @param title
-     * @param isbn
-     * @param description
-     * @param publicationYear
-     * @param publisherId
-     * @param authorIds
-     * @param categoryIds
+     * @param request
      * @return BookResponse
      * @throws RuntimeException
      */
-    public BookResponse createBook(String title, String isbn, String description, Integer publicationYear, Long publisherId, List<Long> authorIds, List<Long> categoryIds) {
+    public BookResponse createBook(CreateBookRequest request) {
         Book book = new Book();
-        book.setTitle(title);
-        book.setIsbn(isbn);
-        book.setDescription(description);
-        book.setPublicationYear(publicationYear);
+        book.setTitle(request.getTitle());
+        book.setIsbn(request.getIsbn());
+        book.setDescription(request.getDescription());
+        book.setPublicationYear(request.getPublicationYear());
 
-        Publisher publisher = publisherRepository.findById(publisherId)
-                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + publisherId));
+        Publisher publisher = publisherRepository.findById(request.getPublisherId())
+                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + request.getPublisherId()));
         book.setPublisher(publisher);
 
-        List<Author> authors = authorRepository.findAllById(authorIds);
-        if (authors.size() != authorIds.size()) {
+        List<Author> authors = authorRepository.findAllById(request.getAuthorIds());
+        if (authors.size() != request.getAuthorIds().size()) {
             throw new RuntimeException("One or more authors not found");
         }
         book.setAuthors(authors);
         
-        List<Category> categories = categoryRepository.findAllById(categoryIds);
-        if (categories.size() != categoryIds.size()) {
+        List<Category> categories = categoryRepository.findAllById(request.getCategoryIds());
+        if (categories.size() != request.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
         book.setCategories(categories);
@@ -209,7 +204,7 @@ public class BookService {
      * Convert Book instance to BookResponse dto
      * @param book
      * @return BookResponse
-     */
+     */ // TODO: Create a Mapper
     private BookResponse toResponse(Book book) {
         BookResponse response = new BookResponse();
         response.setId(book.getId());

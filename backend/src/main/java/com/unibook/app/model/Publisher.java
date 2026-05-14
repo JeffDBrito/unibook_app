@@ -2,8 +2,6 @@ package com.unibook.app.model;
 
 import java.util.List;
 
-import org.hibernate.annotations.SQLDelete;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -21,7 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "publishers")
-@SQLDelete(sql = "UPDATE publishers SET deleted_at = now() WHERE id = ?")
 public class Publisher extends BaseEntity {
 
     @Id

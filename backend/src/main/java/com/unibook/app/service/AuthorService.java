@@ -19,7 +19,6 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final PersonRepository personRepository;
-    private final PersonService personService;
 
     // --------------------- //
     // Management Operations //
@@ -30,12 +29,17 @@ public class AuthorService {
      * @param name
      * @param biography
      * @return AuthorResponse
-     */
+     */ //TODO: User CreateRequest dto
     public AuthorResponse createAuthor(String name, String biography) {
-        Person savedPerson = personService.createPersonEntity(name, null);
+        Person person = new Person();
+        person.setName(name);
+        
+        person = personRepository.save(person);
+        
         Author author = new Author();
         author.setBiography(biography);
-        author.setPerson(savedPerson);
+        author.setPerson(person);
+        
         Author savedAuthor = authorRepository.save(author);
         return toResponse(savedAuthor);
     }
@@ -132,7 +136,7 @@ public class AuthorService {
      * Convert Author instance to AuthorResponse dto
      * @param author
      * @return AuthorResponse
-     */
+     */ // TODO: Create a Mapper
     private AuthorResponse toResponse(Author author) {
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());

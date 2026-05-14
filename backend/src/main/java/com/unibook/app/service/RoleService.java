@@ -28,7 +28,7 @@ public class RoleService {
      * @param title
      * @param permissionIds
      * @return RoleResponse
-     */
+     */ //TODO: User CreateRequest dto
     public RoleResponse createRole(String title, List<Long> permissionIds) {
         Role role = new Role();
         role.setTitle(title);
@@ -136,7 +136,7 @@ public class RoleService {
      * Convert Role instance to RoleResponse
      * @param role
      * @return RoleResponse
-     */
+     */ // TODO: Create a Mapper
     private RoleResponse toResponse(Role role) {
         List<String> permissionNames = role.getPermissions().stream()
                 .map(Permission::getTitle)

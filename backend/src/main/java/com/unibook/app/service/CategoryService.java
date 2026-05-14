@@ -26,7 +26,7 @@ public class CategoryService {
      * @param title
      * @param description
      * @return CategoryResponse
-     */
+     */ //TODO: User CreateRequest dto
     public CategoryResponse createCategory(String title, String description) {
         Category category = new Category();
         category.setTitle(title);
@@ -123,7 +123,7 @@ public class CategoryService {
      * Convert Category instance to CategoryResponse dto
      * @param category
      * @return CategoryResponse
-     */
+     */ // TODO: Create a Mapper
     private CategoryResponse toResponse(Category category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());

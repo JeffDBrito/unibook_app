@@ -26,7 +26,7 @@ public class PublisherService {
      * @param title
      * @param description
      * @return PublisherResponse
-     */
+     */ //TODO: User CreateRequest dto
     public PublisherResponse createPublisher(String title, String description) {
         Publisher publisher = new Publisher();
         publisher.setTitle(title);
@@ -124,7 +124,7 @@ public class PublisherService {
      * Convert Publisher instance to PublisherResponse
      * @param publisher
      * @return PublisherResponse
-     */
+     */ // TODO: Create a Mapper
     private PublisherResponse toResponse(Publisher publisher) {
         PublisherResponse response = new PublisherResponse();
         response.setId(publisher.getId());

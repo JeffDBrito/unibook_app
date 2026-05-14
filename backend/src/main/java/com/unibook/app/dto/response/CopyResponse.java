@@ -14,9 +14,6 @@ public class CopyResponse {
     @Schema(example = "A12B45")
     private String code;
 
-    @Schema(example = "true")
-    private boolean available = true;
-
     @Schema(example = "AVAILABLE")
     private String status;
 
@@ -26,13 +23,15 @@ public class CopyResponse {
 
     // Book Details
 
-    @Schema(example = "The Great Gatsby")
-    private String bookTitle;
+    // @Schema(example = "The Great Gatsby")
+    // private String bookTitle;
 
-    @Schema(example = "1")
-    private Long bookId;
+    // @Schema(example = "1")
+    // private Long bookId;
 
-    @Schema(example = "F. Scott Fitzgerald")
-    private String authors;
+    // @Schema(example = "F. Scott Fitzgerald")
+    // private String authors;
+
+    private BookResponse book;
 
 }

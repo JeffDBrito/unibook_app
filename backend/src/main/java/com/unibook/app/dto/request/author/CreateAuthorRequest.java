@@ -1,11 +1,15 @@
 package com.unibook.app.dto.request.author;
 
+import java.time.LocalDate;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CreateAuthorRequest {
     
     @Schema(example = "John Doe")
@@ -13,5 +17,8 @@ public class CreateAuthorRequest {
     
     @Schema(example = "John Doe is a renowned author known for his compelling storytelling.")
     private String biography;
+
+    @Schema(example = "2000-12-24")
+    private LocalDate birthDate;
 
 }

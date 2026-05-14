@@ -145,6 +145,7 @@ public class RoleService {
                 .collect(java.util.stream.Collectors.toList());
 
         RoleResponse response = new RoleResponse();
+        response.setId(role.getId());
         response.setName(role.getTitle());
         response.setPermissions(permissionNames);
         return response;

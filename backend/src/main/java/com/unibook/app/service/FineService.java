@@ -21,6 +21,7 @@ public class FineService {
 
     private final FineRepository fineRepository;
     private final LoanRepository loanRepository;
+    private final LoanService loanService;
 
     // --------------------- //
     // Management Operations //
@@ -102,6 +103,8 @@ public class FineService {
         response.setIssuedDate(fine.getIssuedDate());
         response.setPaidDate(fine.getPaidDate());
         response.setStatus(fine.getStatus().name());
+        
+        response.setLoan(loanService.toResponse(fine.getLoan()));
 
         return response;
     }

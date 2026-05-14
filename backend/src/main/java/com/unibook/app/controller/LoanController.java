@@ -36,7 +36,7 @@ public class LoanController {
 
     // Find Loan by id
     @GetMapping("/{id}")
-    @Operation(summary = "List loans", description = "Retrieves a list of all loans and returns their details.", tags = {"Loan Endpoints"})
+    @Operation(summary = "Find loan", description = "Retrieves a list of all loans and returns their details.", tags = {"Loan Endpoints"})
     public LoanResponse findById(@PathVariable Long id) {
         return loanService.findById(id);
     }

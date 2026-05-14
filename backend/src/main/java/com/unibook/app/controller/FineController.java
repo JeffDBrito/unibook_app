@@ -1,5 +1,8 @@
 package com.unibook.app.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,16 +23,30 @@ public class FineController {
 
     private final FineService fineService;
 
+    // Create Fine
     @PostMapping
     @Operation(summary = "Create a fine",description = "Creates a new fine.", tags = {"Fine Endpoints"})
     public FineResponse create(@RequestBody CreateFineRequest request) {
         return fineService.createFine(request);
     }
 
+    // Pay Fine
     @PostMapping("/{id}/pay")
     @Operation(summary = "Pay fine",description = "Marks a fine as paid.", tags = {"Fine Endpoints"})
     public FineResponse pay(@PathVariable Long id) {
         return fineService.payFine(id);
+    }
+
+    @GetMapping
+    @Operation(summary = "List Fines",description = "Retrieves a list of all Fines and returns their details", tags = {"Fine Endpoints"})
+    public List<FineResponse> findAll(){
+        return fineService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "List Fines",description = "Retrieves a list of all Fines and returns their details", tags = {"Fine Endpoints"})
+    public FineResponse findById(@PathVariable Long id){
+        return fineService.findById(id);
     }
 
 }

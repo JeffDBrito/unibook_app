@@ -1,6 +1,8 @@
 package com.unibook.app.config;
 
+import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
@@ -163,12 +165,12 @@ public class DataInitializer {
     CommandLineRunner initAdminUser(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
             LocalDate birthDate = LocalDate.of(2000, 12, 24);
-            userService.createUser(
+            userService.createUser(new CreateUserRequest(
                 "Admin User",
                 "admin@admin.com",
-                "admin",
-                "admin",
                 birthDate,
+                "admin",
+                "admin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
                         .orElseThrow(() -> new RuntimeException("Admin role not found"))
@@ -176,7 +178,7 @@ public class DataInitializer {
                     roleRepository.findByTitle("SUPER_ADMIN")
                         .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
                         .getId()
-                )
+                ))
             );
         };
     }
@@ -186,13 +188,13 @@ public class DataInitializer {
     CommandLineRunner initAuthors(AuthorService authorService) {
         return args -> {
             LocalDate date1 = LocalDate.of(1940, 2, 15);
-            authorService.createAuthor("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.", date1);
+            authorService.createAuthor(new CreateAuthorRequest("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.", date1));
 
             LocalDate date2 = LocalDate.of(1950, 4, 17);
-            authorService.createAuthor("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.", date2);
+            authorService.createAuthor(new CreateAuthorRequest("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.", date2));
 
             LocalDate date3 = LocalDate.of(1954, 11, 21);
-            authorService.createAuthor("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.", date3);
+            authorService.createAuthor(new CreateAuthorRequest("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.", date3));
         };
     }
 

@@ -26,6 +26,8 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final UserRepository userRepository;
     private final CopyRepository copyRepository;
+    private final UserService userService;
+    private final CopyService copyService;
 
 
     // --------------------- //
@@ -60,6 +62,7 @@ public class LoanService {
         loan.setStatus(LoanStatus.ACTIVE);
 
         copy.setStatus(CopyStatus.RENTED);
+        copy.setInventory(null);
 
         copyRepository.save(copy);
 
@@ -169,7 +172,7 @@ public class LoanService {
      * @param loan
      * @return
      */ // TODO: Create a Mapper
-    private LoanResponse toResponse(Loan loan) {
+    public LoanResponse toResponse(Loan loan) {
 
         LoanResponse response = new LoanResponse();
 
@@ -177,6 +180,9 @@ public class LoanService {
         response.setLoanDate(loan.getLoanDate());
         response.setDueDate(loan.getDueDate());
         response.setReturnDate(loan.getReturnDate());
+        
+        response.setCopy(copyService.toResponse(loan.getCopy()));
+        response.setUser(userService.toResponse(loan.getUser()));
 
         response.setStatus(loan.getStatus().name());
 

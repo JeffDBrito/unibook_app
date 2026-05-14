@@ -131,6 +131,7 @@ public class PersonService {
      */ // TODO: Create a Mapper
     private PersonResponse toResponse(Person person) {
         PersonResponse response = new PersonResponse();
+        response.setBirthDate(person.getBirthDate());
         response.setName(person.getName());
         response.setEmail(person.getEmail());
         return response;

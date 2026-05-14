@@ -3,6 +3,7 @@ package com.unibook.app.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
@@ -41,13 +42,17 @@ public class UserService {
      * @param roleIds
      * @return UserResponse
      */ //TODO: User CreateRequest dto
-    public UserResponse createUser(String name, String email, String login, String password, LocalDate birthDate, List<Long> roleIds) {
+    public UserResponse createUser(CreateUserRequest request) {
+
+        String login = request.getLogin();
+        String email = request.getEmail();
+        String password = request.getPassword();
 
         // create Person
         Person person = new Person();
-        person.setName(name);
-        person.setEmail(email);
-        person.setBirthDate(birthDate);
+        person.setName(request.getName());
+        person.setEmail(request.getEmail());
+        person.setBirthDate(request.getBirthDate());
         personRepository.save(person);
 
         // create User
@@ -59,7 +64,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setPerson(person);
         
-        for (Long rId : roleIds) {
+        for (Long rId : request.getRoleIds()) {
             Role r = roleRepository.findById(rId)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + rId));
             user.getRoles().add(r);
@@ -168,7 +173,7 @@ public class UserService {
      * @param user
      * @return UserResponse
      */ // TODO: Create a Mapper
-    private UserResponse toResponse(User user) {
+    public UserResponse toResponse(User user) {
         PersonResponse person = new PersonResponse();
         person.setName(user.getPerson().getName());
         person.setEmail(user.getPerson().getEmail());

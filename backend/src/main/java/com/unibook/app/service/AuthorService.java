@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.dto.response.PersonResponse;
@@ -32,15 +33,15 @@ public class AuthorService {
      * @param biography
      * @return AuthorResponse
      */ //TODO: User CreateRequest dto
-    public AuthorResponse createAuthor(String name, String biography, LocalDate birthDate) {
+    public AuthorResponse createAuthor(CreateAuthorRequest request) {
         Person person = new Person();
-        person.setName(name);
-        person.setBirthDate(birthDate);
+        person.setName(request.getName());
+        person.setBirthDate(request.getBirthDate());
         
         person = personRepository.save(person);
         
         Author author = new Author();
-        author.setBiography(biography);
+        author.setBiography(request.getBiography());
         author.setPerson(person);
         
         Author savedAuthor = authorRepository.save(author);

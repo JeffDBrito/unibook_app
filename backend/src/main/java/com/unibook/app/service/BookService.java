@@ -34,13 +34,7 @@ public class BookService {
 
     /**
      * Create Book
-     * @param title
-     * @param isbn
-     * @param description
-     * @param publicationYear
-     * @param publisherId
-     * @param authorIds
-     * @param categoryIds
+     * @param request
      * @return BookResponse
      * @throws RuntimeException
      */

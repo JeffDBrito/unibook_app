@@ -6,5 +6,6 @@ public enum CopyStatus {
     AVAILABLE,
     LOST,
     DAMAGED,
+    REASSIGNED
     
 }

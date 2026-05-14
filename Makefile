@@ -1,3 +1,6 @@
+include .env
+export
+
 env:
 	@echo "Copying env to backend..."
 	cp .env backend/.env

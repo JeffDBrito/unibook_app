@@ -23,7 +23,16 @@ public class CopyResponse {
     @Schema(example = "section_A1, shelf_2, row_4, slot_12")
     private String inventoryAddress;
     
-    // Nested Object (Doesn't need a specific schema example)
-    private BookResponse book;
+
+    // Book Details
+
+    @Schema(example = "The Great Gatsby")
+    private String bookTitle;
+
+    @Schema(example = "1")
+    private Long bookId;
+
+    @Schema(example = "F. Scott Fitzgerald")
+    private String authors;
 
 }

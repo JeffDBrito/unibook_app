@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +35,13 @@ public class RoleService {
         Role role = new Role();
         role.setTitle(title);
 
-        List<Permission> permissions = permissionIds.stream()
+        Set<Permission> permissions = new HashSet<>(permissionIds.stream()
                 .map(id -> {
                     Permission permission = new Permission();
                     permission.setId(id);
                     return permission;
                 })
-                .collect(java.util.stream.Collectors.toList());
+                .collect(java.util.stream.Collectors.toList()));
 
         role.setPermissions(permissions);
         return toResponse(roleRepository.save(role));
@@ -85,7 +87,7 @@ public class RoleService {
         }
 
         if(!partial || request.getPermissionIds() != null){
-            List<Permission> permissions = permissionRepository.findAllById(request.getPermissionIds());
+            Set<Permission> permissions = new HashSet<>(permissionRepository.findAllById(request.getPermissionIds()));
             role.setPermissions(permissions);
         }
 

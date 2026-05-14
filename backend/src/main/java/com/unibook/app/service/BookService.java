@@ -1,6 +1,8 @@
 package com.unibook.app.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -49,13 +51,13 @@ public class BookService {
                 .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + request.getPublisherId()));
         book.setPublisher(publisher);
 
-        List<Author> authors = authorRepository.findAllById(request.getAuthorIds());
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
         if (authors.size() != request.getAuthorIds().size()) {
             throw new RuntimeException("One or more authors not found");
         }
         book.setAuthors(authors);
         
-        List<Category> categories = categoryRepository.findAllById(request.getCategoryIds());
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
         if (categories.size() != request.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
@@ -104,14 +106,14 @@ public class BookService {
 
         if (!partial || request.getAuthorIds() != null) {
 
-            List<Author> authors = authorRepository.findAllById(request.getAuthorIds());
+            Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
 
             book.setAuthors(authors);
         }
 
         if (!partial || request.getCategoryIds() != null) {
 
-            List<Category> categories = categoryRepository.findAllById(request.getCategoryIds());
+            Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
 
             book.setCategories(categories);
         }

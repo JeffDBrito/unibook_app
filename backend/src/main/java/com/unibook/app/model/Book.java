@@ -1,7 +1,7 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,11 +35,11 @@ public class Book extends BaseEntity {
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "book")
-    private List<Copy> copies = new ArrayList<>();;
+    private Set<Copy> copies = new HashSet<>();;
 
     @ManyToMany
     @JoinTable(
@@ -47,7 +47,7 @@ public class Book extends BaseEntity {
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories = new ArrayList<>();
+    private Set<Category> categories = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")

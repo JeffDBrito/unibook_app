@@ -1,7 +1,8 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -29,5 +30,5 @@ public class Permission {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 }

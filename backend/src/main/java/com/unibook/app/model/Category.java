@@ -1,7 +1,7 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,5 +31,5 @@ public class Category extends BaseEntity{
     
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")
-    private List<Book> books = new ArrayList<>();
+    private Set<Book> books = new HashSet<>();
 }

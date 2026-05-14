@@ -3,8 +3,6 @@ package com.unibook.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.SQLDelete;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +20,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "authors")
-@SQLDelete(sql = "UPDATE authors SET deleted_at = now() WHERE id = ?")
 public class Author extends BaseEntity {
 
     @Id

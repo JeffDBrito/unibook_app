@@ -31,7 +31,7 @@ public class AuthorService {
      * @param name
      * @param biography
      * @return AuthorResponse
-     */ //TODO: User CreateRequest dto
+     */
     public AuthorResponse createAuthor(CreateAuthorRequest request) {
         Person person = new Person();
         person.setName(request.getName());

@@ -21,6 +21,7 @@ import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -161,11 +162,13 @@ public class DataInitializer {
     @Order(4)
     CommandLineRunner initAdminUser(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
+            LocalDate birthDate = LocalDate.of(2000, 12, 24);
             userService.createUser(
                 "Admin User",
                 "admin@admin.com",
                 "admin",
                 "admin",
+                birthDate,
                 List.of(
                     roleRepository.findByTitle("ADMIN")
                         .orElseThrow(() -> new RuntimeException("Admin role not found"))
@@ -182,9 +185,14 @@ public class DataInitializer {
     @Order(5)
     CommandLineRunner initAuthors(AuthorService authorService) {
         return args -> {
-            authorService.createAuthor("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.");
-            authorService.createAuthor("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.");
-            authorService.createAuthor("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.");
+            LocalDate date1 = LocalDate.of(1940, 2, 15);
+            authorService.createAuthor("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.", date1);
+
+            LocalDate date2 = LocalDate.of(1950, 4, 17);
+            authorService.createAuthor("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.", date2);
+
+            LocalDate date3 = LocalDate.of(1954, 11, 21);
+            authorService.createAuthor("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.", date3);
         };
     }
 

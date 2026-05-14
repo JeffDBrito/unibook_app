@@ -37,10 +37,6 @@ public class CopyService {
      */
     public CopyResponse createCopy(CreateCopyRequest request){
 
-        System.out.println("\nCODE: "+request.getCode());
-        System.out.println("\nSTATUS: "+request.getStatus());
-        System.out.println("\nBOOK ID: "+request.getBookId()+"\n");
-
         Copy copy = new Copy();
         copy.setCode(request.getCode());
         copy.setStatus(request.getStatus());

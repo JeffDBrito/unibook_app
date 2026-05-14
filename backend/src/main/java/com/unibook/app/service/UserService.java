@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.user.UpdateUserRequest;
+import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;
@@ -15,6 +16,7 @@ import com.unibook.app.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,12 +41,13 @@ public class UserService {
      * @param roleIds
      * @return UserResponse
      */ //TODO: User CreateRequest dto
-    public UserResponse createUser(String name, String email, String login, String password, List<Long> roleIds) {
+    public UserResponse createUser(String name, String email, String login, String password, LocalDate birthDate, List<Long> roleIds) {
 
         // create Person
         Person person = new Person();
         person.setName(name);
         person.setEmail(email);
+        person.setBirthDate(birthDate);
         personRepository.save(person);
 
         // create User
@@ -166,12 +169,16 @@ public class UserService {
      * @return UserResponse
      */ // TODO: Create a Mapper
     private UserResponse toResponse(User user) {
+        PersonResponse person = new PersonResponse();
+        person.setName(user.getPerson().getName());
+        person.setEmail(user.getPerson().getEmail());
+        person.setBirthDate(user.getPerson().getBirthDate());
+
         UserResponse response = new UserResponse();
 
         response.setId(user.getId());
         response.setLogin(user.getLogin());
-        response.setName(user.getPerson().getName());
-        response.setEmail(user.getPerson().getEmail());
+        response.setPerson(person);
 
         String roleTitles = user.getRoles().stream()
             .map(Role::getTitle)

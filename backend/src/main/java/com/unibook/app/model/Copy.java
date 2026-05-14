@@ -20,6 +20,7 @@ public class Copy extends BaseEntity{
 
     private String code;
 
+    @Enumerated(EnumType.STRING)
     private CopyStatus status;
 
     @ManyToOne

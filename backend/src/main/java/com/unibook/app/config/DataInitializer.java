@@ -1,8 +1,15 @@
 package com.unibook.app.config;
 
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.model.Book;
+import com.unibook.app.model.Copy;
+import com.unibook.app.model.Inventory;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
+import com.unibook.app.repository.BookRepository;
+import com.unibook.app.repository.CopyRepository;
+import com.unibook.app.repository.InventoryRepository;
 import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
@@ -249,11 +256,49 @@ public class DataInitializer {
 
     @Bean
     @Order(9)
+    CommandLineRunner initCopies(
+        CopyRepository copyRepository,
+        InventoryRepository inventoryRepository,
+        BookRepository bookRepository
+    ) {
+        return args -> {
+            // The Great Gatsby
+            Book gatsby = bookRepository.findByTitle("The Great Gatsby")
+                .orElseThrow();
+            Inventory inventory1 = inventoryRepository.save(
+                buildInventory("A", "1", 1, 1)
+            );            
+            Copy copy1 = buildCopy(
+                "GATSBY-001",
+                CopyStatus.AVAILABLE,
+                gatsby,
+                inventory1
+            );
+            copyRepository.save(copy1);
+
+            // To Kill a Mockingbird
+            Book mockingbird = bookRepository.findByTitle("To Kill a Mockingbird")
+                .orElseThrow();
+            Inventory inventory2 = inventoryRepository.save(
+                buildInventory("A", "1", 1, 2)
+            );
+            Copy copy2 = buildCopy(
+                "MOCK-001",
+                CopyStatus.AVAILABLE,
+                mockingbird,
+                inventory2
+            );
+            copyRepository.save(copy2);
+        };
+    }
+
+    @Bean
+    @Order(99)
     CommandLineRunner logVars(){
         return args -> {
             System.out.println("\n===============================\n");
             System.out.println("PRINT VARS: "+env.getProperty("vars.print")+"\n");
-            if(Boolean.parseBoolean(env.getProperty("vars.print")) == true){
+            if(env.getProperty("vars.print", Boolean.class) == true){
                 System.out.println("APP NAME: "+env.getProperty("spring.application.name"));
                 System.out.println("JWT EXPIRATION TIME: "+env.getProperty("jwt.expiration"));
                 System.out.println("FRONTEND URL: "+env.getProperty("frontend.url"));
@@ -289,5 +334,37 @@ public class DataInitializer {
         return request;
     }
 
+    private Inventory buildInventory(
+        String sector,
+        String shelf,
+        int row,
+        int slot
+    ) {
+        Inventory inventory = new Inventory();
+
+        inventory.setSector(sector);
+        inventory.setShelf(shelf);
+        inventory.setRow(row);
+        inventory.setSlot(slot);
+
+        return inventory;
+    }
+
+    private Copy buildCopy(
+        String code,
+        CopyStatus status,
+        Book book,
+        Inventory inventory
+    ) {
+        Copy copy = new Copy();
+
+        copy.setCode(code);
+        copy.setStatus(status); 
+
+        copy.setBook(book);
+        copy.setInventory(inventory);
+
+        return copy;
+    }
 
 }

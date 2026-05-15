@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
   <diagram name="Página-1" id="NeztETP3vbkpMINfoN8F">
-    <mxGraphModel dx="1678" dy="2161" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="815" dy="1635" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -171,7 +171,7 @@
         <mxCell id="ihofgC1JYxLhZAGk6ZU8-105" value="Inventory" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontColor=default;labelBackgroundColor=default;" parent="ihofgC1JYxLhZAGk6ZU8-113" vertex="1">
           <mxGeometry x="29" width="160" height="149.56521739130434" as="geometry" />
         </mxCell>
-        <mxCell id="ihofgC1JYxLhZAGk6ZU8-106" value="&lt;div&gt;- book: Book&lt;/div&gt;&lt;div&gt;- total_quantity: int&lt;/div&gt;&lt;div&gt;-&amp;nbsp;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;sector: String&lt;/span&gt;&lt;/div&gt;- shelf: String&lt;br&gt;- row: int" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;fontFamily=Helvetica;fontColor=default;labelBackgroundColor=default;" parent="ihofgC1JYxLhZAGk6ZU8-105" vertex="1">
+        <mxCell id="ihofgC1JYxLhZAGk6ZU8-106" value="&lt;div&gt;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- total_quantity: int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;-&amp;nbsp;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;sector: String&lt;/span&gt;&lt;/div&gt;- shelf: String&lt;br&gt;- row: int" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;fontFamily=Helvetica;fontColor=default;labelBackgroundColor=default;" parent="ihofgC1JYxLhZAGk6ZU8-105" vertex="1">
           <mxGeometry y="50" width="160" height="99.56521739130434" as="geometry" />
         </mxCell>
         <mxCell id="ihofgC1JYxLhZAGk6ZU8-111" value="&lt;span&gt;(0,1)&lt;/span&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="ihofgC1JYxLhZAGk6ZU8-113" vertex="1">

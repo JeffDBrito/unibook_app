@@ -40,10 +40,7 @@ public class PersonController {
     @PostMapping
     @Operation(summary = "Create a new person", description = "Creates a new person with the provided details and returns the created person.", tags = {"Person Endpoints"})
     public PersonResponse createPerson(@RequestBody CreatePersonRequest request) {
-        return personService.createPerson(
-            request.getName(),
-            request.getEmail()
-        );
+        return personService.createPerson(request);
     }
 
     // Get person by id

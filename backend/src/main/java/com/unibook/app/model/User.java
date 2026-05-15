@@ -29,9 +29,9 @@ public class User extends BaseEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    ) // Set doesn't allow duplicated items
     private Set<Role> roles = new HashSet<>();
 }

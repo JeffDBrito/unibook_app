@@ -17,4 +17,6 @@ public class AuthorResponse {
     @Schema(example = "John Doe is a renowned author known for his compelling storytelling.")
     private String biography;
 
+    private PersonResponse person;
+
 }

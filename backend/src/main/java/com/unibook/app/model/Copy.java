@@ -1,5 +1,9 @@
 package com.unibook.app.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unibook.app.enums.CopyStatus;
 
 import jakarta.persistence.*;
@@ -30,4 +34,9 @@ public class Copy extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "inventory_id", unique = true)
     private Inventory inventory;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "copy")
+    private Set<Loan> loans = new HashSet<>();
+    
 }

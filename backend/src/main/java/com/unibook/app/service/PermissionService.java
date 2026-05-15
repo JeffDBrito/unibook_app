@@ -51,6 +51,7 @@ public class PermissionService {
      */ // TODO: Create a Mapper
     public PermissionResponse toResponse(Permission permission) {
         PermissionResponse response = new PermissionResponse();
+        response.setId(permission.getId());
         response.setTitle(permission.getTitle());
         response.setDescription(permission.getDescription());
         return response;

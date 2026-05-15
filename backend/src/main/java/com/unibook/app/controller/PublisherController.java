@@ -40,10 +40,7 @@ public class PublisherController {
     @PostMapping
     @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the provided details and returns the created publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse createPublisher(@RequestBody CreatePublisherRequest request) {
-        return publisherService.createPublisher(
-            request.getTitle(),
-            request.getDescription()
-        );
+        return publisherService.createPublisher(request);
     }
 
     // Get publisher by id

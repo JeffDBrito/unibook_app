@@ -1,5 +1,6 @@
 package com.unibook.app.service;
 
+import com.unibook.app.dto.request.role.CreateRoleRequest;
 import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
 import com.unibook.app.model.Permission;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,18 +31,18 @@ public class RoleService {
      * @param title
      * @param permissionIds
      * @return RoleResponse
-     */ //TODO: User CreateRequest dto
-    public RoleResponse createRole(String title, List<Long> permissionIds) {
+     */
+    public RoleResponse createRole(CreateRoleRequest request) {
         Role role = new Role();
-        role.setTitle(title);
+        role.setTitle(request.getTitle());
 
-        List<Permission> permissions = permissionIds.stream()
+        Set<Permission> permissions = new HashSet<>(request.getPermissionIds().stream()
                 .map(id -> {
                     Permission permission = new Permission();
                     permission.setId(id);
                     return permission;
                 })
-                .collect(java.util.stream.Collectors.toList());
+                .collect(java.util.stream.Collectors.toList()));
 
         role.setPermissions(permissions);
         return toResponse(roleRepository.save(role));
@@ -85,7 +88,7 @@ public class RoleService {
         }
 
         if(!partial || request.getPermissionIds() != null){
-            List<Permission> permissions = permissionRepository.findAllById(request.getPermissionIds());
+            Set<Permission> permissions = new HashSet<>(permissionRepository.findAllById(request.getPermissionIds()));
             role.setPermissions(permissions);
         }
 
@@ -143,6 +146,7 @@ public class RoleService {
                 .collect(java.util.stream.Collectors.toList());
 
         RoleResponse response = new RoleResponse();
+        response.setId(role.getId());
         response.setName(role.getTitle());
         response.setPermissions(permissionNames);
         return response;

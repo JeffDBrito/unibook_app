@@ -10,16 +10,12 @@ public class UserResponse {
 
     private Long id;
 
-    @Schema(example = "John Doe")
-    private String name;
-
-    @Schema(example = "john@email.com")
-    private String email;
-
     @Schema(example = "john123")
     private String login;
-
+    
     @Schema(example = "[Admin, Teacher]")
     private String roles;
+
+    private PersonResponse person;
     
 }

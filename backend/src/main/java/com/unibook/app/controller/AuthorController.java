@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.service.AuthorService;
@@ -38,11 +39,8 @@ public class AuthorController {
     // Create author
     @PostMapping
     @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.", tags = {"Author Endpoints"})
-    public AuthorResponse createAuthor(@RequestBody AuthorResponse request) {
-        return authorService.createAuthor(
-            request.getName(), 
-            request.getBiography()
-        );
+    public AuthorResponse createAuthor(@RequestBody CreateAuthorRequest request) {
+        return authorService.createAuthor(request);
     }   
 
     // Get author by id

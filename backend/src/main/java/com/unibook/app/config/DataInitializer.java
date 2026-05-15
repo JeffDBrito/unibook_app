@@ -1,6 +1,10 @@
 package com.unibook.app.config;
 
+import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.category.CreateCategoryRequest;
+import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
+import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
@@ -21,6 +25,7 @@ import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -161,9 +166,11 @@ public class DataInitializer {
     @Order(4)
     CommandLineRunner initAdminUser(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            userService.createUser(
+            LocalDate birthDate = LocalDate.of(2000, 12, 24);
+            userService.createUser(new CreateUserRequest(
                 "Admin User",
                 "admin@admin.com",
+                birthDate,
                 "admin",
                 "admin",
                 List.of(
@@ -173,7 +180,7 @@ public class DataInitializer {
                     roleRepository.findByTitle("SUPER_ADMIN")
                         .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
                         .getId()
-                )
+                ))
             );
         };
     }
@@ -182,9 +189,14 @@ public class DataInitializer {
     @Order(5)
     CommandLineRunner initAuthors(AuthorService authorService) {
         return args -> {
-            authorService.createAuthor("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.");
-            authorService.createAuthor("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.");
-            authorService.createAuthor("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.");
+            LocalDate date1 = LocalDate.of(1940, 2, 15);
+            authorService.createAuthor(new CreateAuthorRequest("F. Scott Fitzgerald", "American novelist and short story writer, widely regarded as one of the greatest American writers of the 20th century.", date1));
+
+            LocalDate date2 = LocalDate.of(1950, 4, 17);
+            authorService.createAuthor(new CreateAuthorRequest("Harper Lee", "American novelist best known for her 1960 novel To Kill a Mockingbird, which won the Pulitzer Prize.", date2));
+
+            LocalDate date3 = LocalDate.of(1954, 11, 21);
+            authorService.createAuthor(new CreateAuthorRequest("George Orwell", "English novelist, essayist, journalist and critic, whose work is marked by lucid prose, biting social criticism, opposition to totalitarianism, and outspoken support of democratic socialism.", date3));
         };
     }
 
@@ -192,9 +204,9 @@ public class DataInitializer {
     @Order(6)    
     CommandLineRunner initCategories(CategoryService categoryService) {
         return args -> {
-            categoryService.createCategory("Fiction", "Literary works invented by the imagination, such as novels or short stories.");
-            categoryService.createCategory("Non-Fiction", "Literary works based on facts, real events, and real people, such as biography or history.");
-            categoryService.createCategory("Science Fiction", "A genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life.");
+            categoryService.createCategory(new CreateCategoryRequest("Fiction", "Literary works invented by the imagination, such as novels or short stories."));
+            categoryService.createCategory(new CreateCategoryRequest("Non-Fiction", "Literary works based on facts, real events, and real people, such as biography or history."));
+            categoryService.createCategory(new CreateCategoryRequest("Science Fiction", "A genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life."));
         };
     }
 
@@ -202,9 +214,9 @@ public class DataInitializer {
     @Order(7)    
     CommandLineRunner initPublishers(PublisherService publisherService) {
         return args -> {
-            publisherService.createPublisher("Scribner", "An American publishing company based in New York City, known for publishing many classic and contemporary works of fiction.");
-            publisherService.createPublisher("J.B. Lippincott & Co.", "An American publishing house founded in Philadelphia in 1836, known for publishing many classic works of literature, including Harper Lee's To Kill a Mockingbird.");
-            publisherService.createPublisher("Secker & Warburg", "A British publishing company founded in 1935, known for publishing many influential works of literature, including George Orwell's 1984 and Animal Farm.");
+            publisherService.createPublisher(new CreatePublisherRequest("Scribner", "An American publishing company based in New York City, known for publishing many classic and contemporary works of fiction."));
+            publisherService.createPublisher(new CreatePublisherRequest("J.B. Lippincott & Co.", "An American publishing house founded in Philadelphia in 1836, known for publishing many classic works of literature, including Harper Lee's To Kill a Mockingbird."));
+            publisherService.createPublisher(new CreatePublisherRequest("Secker & Warburg", "A British publishing company founded in 1935, known for publishing many influential works of literature, including George Orwell's 1984 and Animal Farm."));
         };
     }
 

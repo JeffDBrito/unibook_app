@@ -1,11 +1,13 @@
 package com.unibook.app.service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.person.CreatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.model.Person;
@@ -28,11 +30,12 @@ public class PersonService {
      * @param name
      * @param email
      * @return PersonResponse
-    **/ //TODO: User CreateRequest dto
-    public PersonResponse createPerson(String name, String email) {
+    **/ //TODO: Use CreateRequest dto
+    public PersonResponse createPerson(CreatePersonRequest request) {
         var person = new Person();
-        person.setName(name);
-        person.setEmail(email);
+        person.setName(request.getName());
+        person.setEmail(request.getEmail());
+        person.setBirthDate(request.getBirthDate());
         return toResponse(personRepository.save(person));
     }
 
@@ -76,6 +79,10 @@ public class PersonService {
 
         if(!partial || request.getEmail() != null){
             person.setEmail(request.getEmail());
+        }
+
+        if(!partial || request.getBirthDate() != null){
+            person.setBirthDate(request.getBirthDate());
         }
 
         return toResponse(personRepository.save(person));
@@ -125,6 +132,7 @@ public class PersonService {
      */ // TODO: Create a Mapper
     private PersonResponse toResponse(Person person) {
         PersonResponse response = new PersonResponse();
+        response.setBirthDate(person.getBirthDate());
         response.setName(person.getName());
         response.setEmail(person.getEmail());
         return response;

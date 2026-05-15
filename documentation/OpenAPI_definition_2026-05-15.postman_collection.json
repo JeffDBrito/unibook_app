@@ -1,0 +1,2872 @@
+{
+  "info": {
+    "name": "OpenAPI definition",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Endpoints",
+      "item": [
+        {
+          "name": "Get user by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a user by their unique ID and returns the user details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing user with the provided details and returns the updated user.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"login\": \"john123\",\n  \"password\": \"123456\",\n  \"roleIds\": [\n    1,\n    2\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a user by their unique ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing user with the provided details and returns the updated user.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"login\": \"john123\",\n  \"password\": \"123456\",\n  \"roleIds\": [\n    1,\n    2\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Retrieves a list of all users and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Creates a new user with the provided details and returns the created user.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"birthDate\": \"2000-12-24\",\n  \"login\": \"john123\",\n  \"password\": \"123456\",\n  \"roleIds\": [\n    1,\n    2\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore user by ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restore a user by their unique ID and returns the restored user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Role Endpoints",
+      "item": [
+        {
+          "name": "Get role by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a role by its ID and returns its details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing Role with the provided details and returns the updated Role.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Admin\",\n  \"permissionIds\": [\n    1,\n    2,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete role by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a role by its unique ID and returns a confirmation message."
+          },
+          "response": []
+        },
+        {
+          "name": "Partially update Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing Role with the provided details and returns the updated Role.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Admin\",\n  \"permissionIds\": [\n    1,\n    2,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List roles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            },
+            "description": "Retrieves a list of all roles and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            },
+            "description": "Creates a new role with the provided details and returns the created role.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Admin\",\n  \"permissionIds\": [\n    1,\n    2,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Role by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted Role by their id and returns the restored Role details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get role by title",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/title/:title",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                "title",
+                ":title"
+              ],
+              "variable": [
+                {
+                  "key": "title",
+                  "value": "title_example"
+                }
+              ]
+            },
+            "description": "Retrieves a role by its title and returns its details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Publisher Endpoints",
+      "item": [
+        {
+          "name": "Get publisher by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a publisher by their unique ID and returns the publisher details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Publisher",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing Publisher with the provided details and returns the updated Publisher.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Penguin Random House\",\n  \"description\": \"Penguin Random House is a global book publishing company that publishes a wide range of fiction and non-fiction books across various genres.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete publisher by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a publisher by their unique ID and returns a confirmation message."
+          },
+          "response": []
+        },
+        {
+          "name": "Partially update Publisher",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing Publisher with the provided details and returns the updated Publisher.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Penguin Random House\",\n  \"description\": \"Penguin Random House is a global book publishing company that publishes a wide range of fiction and non-fiction books across various genres.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List publishers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers"
+              ]
+            },
+            "description": "Retrieves a list of all publishers and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new publisher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers"
+              ]
+            },
+            "description": "Creates a new publisher with the provided details and returns the created publisher.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Penguin Random House\",\n  \"description\": \"Penguin Random House is a global book publishing company that publishes a wide range of fiction and non-fiction books across various genres.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Publisher by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted Publisher by their id and returns the restored Publisher details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get publisher by title",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/publishers/title/:title",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "publishers",
+                "title",
+                ":title"
+              ],
+              "variable": [
+                {
+                  "key": "title",
+                  "value": "title_example"
+                }
+              ]
+            },
+            "description": "Retrieves a publisher by their title and returns the publisher details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Person Endpoints",
+      "item": [
+        {
+          "name": "Get person by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a person by their unique ID and returns the person details."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update Person",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing Person with the provided details and returns the updated Person.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"birthDate\": \"2000-12-24\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete person by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a person by their unique ID and returns a confirmation message."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update Person",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing Person with the provided details and returns the updated Person.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"birthDate\": \"2000-12-24\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List persons",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons"
+              ]
+            },
+            "description": "Retrieves a list of all persons and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new person",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons"
+              ]
+            },
+            "description": "Creates a new person with the provided details and returns the created person.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@email.com\",\n  \"birthDate\": \"2000-12-24\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Person by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted Person by their id and returns the restored Person details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get person by name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/persons/name/:name",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "persons",
+                "name",
+                ":name"
+              ],
+              "variable": [
+                {
+                  "key": "name",
+                  "value": "name_example"
+                }
+              ]
+            },
+            "description": "Retrieves a person by their name and returns the person details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory Endpoints",
+      "item": [
+        {
+          "name": "Get inventory by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a inventory by their id and returns the inventory details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing inventory with the provided details and returns the updated inventory.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sector\": \"A\",\n  \"shelf\": \"2\",\n  \"row\": 4,\n  \"slot\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete inventory by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a inventory by their id and returns no content."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update inventory",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing inventory with the provided details and returns the updated inventory.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sector\": \"A\",\n  \"shelf\": \"2\",\n  \"row\": 4,\n  \"slot\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List inventories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory"
+              ]
+            },
+            "description": "Retrieves a list of all inventories and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new inventory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory"
+              ]
+            },
+            "description": "Creates a new inventory with the provided details and returns the created inventory.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sector\": \"A\",\n  \"shelf\": \"2\",\n  \"row\": 4,\n  \"slot\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore inventory by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted inventory by their id and returns the restored inventory details."
+          },
+          "response": []
+        },
+        {
+          "name": "Find inventory by location",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/location",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inventory",
+                "location"
+              ],
+              "query": [
+                {
+                  "key": "sector",
+                  "value": "sector_example",
+                  "disabled": false
+                },
+                {
+                  "key": "shelf",
+                  "value": "shelf_example",
+                  "disabled": false
+                },
+                {
+                  "key": "row",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "slot",
+                  "value": "1",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Finds an inventory by sector, shelf, row and slot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Copy Endpoints",
+      "item": [
+        {
+          "name": "Get copy by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a copy by their id and returns the copy details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update copy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing copy with the provided details and returns the updated copy.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"code\": \"123AS-ASD123\",\n  \"status\": \"AVAILABLE\",\n  \"inventoryId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete copy by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a copy by their id and returns no content."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update copy",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing copy with the provided details and returns the updated copy.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"code\": \"123AS-ASD123\",\n  \"status\": \"AVAILABLE\",\n  \"inventoryId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List copies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy"
+              ]
+            },
+            "description": "Retrieves a list of all copies and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new copy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy"
+              ]
+            },
+            "description": "Creates a new copy with the provided details and returns the created copy.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123AS-ASD123\",\n  \"status\": \"AVAILABLE\",\n  \"bookId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore copy by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/copy/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "copy",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted copy by their id and returns the restored copy details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category Endpoints",
+      "item": [
+        {
+          "name": "Get category by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a category by their id and returns the category details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing Category with the provided details and returns the updated Category.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fiction\",\n  \"description\": \"Fiction is a literary genre that includes imaginative or invented stories, often featuring characters and events that are not based on real life.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete category by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a category by their id."
+          },
+          "response": []
+        },
+        {
+          "name": "Partially update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing Category with the provided details and returns the updated Category.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fiction\",\n  \"description\": \"Fiction is a literary genre that includes imaginative or invented stories, often featuring characters and events that are not based on real life.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            },
+            "description": "Retrieves a list of all categories and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            },
+            "description": "Creates a new category with the provided details and returns the created category.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fiction\",\n  \"description\": \"Fiction is a literary genre that includes imaginative or invented stories, often featuring characters and events that are not based on real life.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Category by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted Category by their id and returns the restored Category details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get category by title",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories/title/:title",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                "title",
+                ":title"
+              ],
+              "variable": [
+                {
+                  "key": "title",
+                  "value": "title_example"
+                }
+              ]
+            },
+            "description": "Retrieves a category by their title and returns the category details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Book Endpoints",
+      "item": [
+        {
+          "name": "Get book by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a book by their id and returns the book details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update book",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing book with the provided details and returns the updated book.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Great Gatsby\",\n  \"isbn\": \"978-0-7432-7356-5\",\n  \"publicationYear\": 1925,\n  \"description\": \"A classic American novel set in the Jazz Age.\",\n  \"publisherId\": 1,\n  \"authorIds\": [\n    1,\n    2\n  ],\n  \"categoryIds\": [\n    1,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete book by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a book by their id and returns no content."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update book",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing book with the provided details and returns the updated book.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Great Gatsby\",\n  \"isbn\": \"978-0-7432-7356-5\",\n  \"publicationYear\": 1925,\n  \"description\": \"A classic American novel set in the Jazz Age.\",\n  \"publisherId\": 1,\n  \"authorIds\": [\n    1,\n    2\n  ],\n  \"categoryIds\": [\n    1,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List books",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books"
+              ]
+            },
+            "description": "Retrieves a list of all books and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new book",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books"
+              ]
+            },
+            "description": "Creates a new book with the provided details and returns the created book.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Great Gatsby\",\n  \"isbn\": \"978-0-7432-7356-5\",\n  \"publicationYear\": 1925,\n  \"description\": \"A classic American novel set in the Jazz Age.\",\n  \"publisherId\": 1,\n  \"authorIds\": [\n    1,\n    2\n  ],\n  \"categoryIds\": [\n    1,\n    3\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore book by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted book by their id and returns the restored book details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get book by title",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/title/:title",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                "title",
+                ":title"
+              ],
+              "variable": [
+                {
+                  "key": "title",
+                  "value": "title_example"
+                }
+              ]
+            },
+            "description": "Retrieves a book by their title and returns the book details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get book by ISBN",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/books/isbn/:isbn",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "books",
+                "isbn",
+                ":isbn"
+              ],
+              "variable": [
+                {
+                  "key": "isbn",
+                  "value": "isbn_example"
+                }
+              ]
+            },
+            "description": "Retrieves a book by their ISBN and returns the book details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Author Endpoints",
+      "item": [
+        {
+          "name": "Get author by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves an author by their id and returns the author details."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Author",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                ":id"
+              ],
+              "query": [
+                {
+                  "key": "request",
+                  "value": "request_example",
+                  "disabled": false
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing author with the provided details and returns the updated author."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete author by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes an author by their unique ID and returns a confirmation message."
+          },
+          "response": []
+        },
+        {
+          "name": "Partially update Author",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                ":id"
+              ],
+              "query": [
+                {
+                  "key": "request",
+                  "value": "request_example",
+                  "disabled": false
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing author with the provided details and returns the updated author."
+          },
+          "response": []
+        },
+        {
+          "name": "List authors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            },
+            "description": "Retrieves a list of all authors and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new author",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            },
+            "description": "Creates a new author with the provided details and returns the created author.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"biography\": \"John Doe is a renowned author known for his compelling storytelling.\",\n  \"birthDate\": \"2000-12-24\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Author by id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Restores a previously deleted Author by their id and returns the restored Author details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get author by name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authors/name/:name",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authors",
+                "name",
+                ":name"
+              ],
+              "variable": [
+                {
+                  "key": "name",
+                  "value": "name_example"
+                }
+              ]
+            },
+            "description": "Retrieves an author by their name and returns the author details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Loan Endpoints",
+      "item": [
+        {
+          "name": "List loans",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/loan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loan"
+              ]
+            },
+            "description": "Retrieves a list of all loans and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Create a loan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/loan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loan"
+              ]
+            },
+            "description": "Creates a new loan.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"copyId\": 1,\n  \"dueDate\": \"2026-05-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Return a loan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/loan/:id/return",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loan",
+                ":id",
+                "return"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Marks a loan as returned."
+          },
+          "response": []
+        },
+        {
+          "name": "Find loan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/loan/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loan",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a list of all loans and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Partial update loan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/loan/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loan",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an existing loan with the provided details and returns the updated loan.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RETURNED\",\n  \"returnDate\": \"2026-05-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fine Endpoints",
+      "item": [
+        {
+          "name": "List Fines",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fines"
+              ]
+            },
+            "description": "Retrieves a list of all Fines and returns their details"
+          },
+          "response": []
+        },
+        {
+          "name": "Create a fine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fines"
+              ]
+            },
+            "description": "Creates a new fine.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 15.5,\n  \"reason\": \"Late return\",\n  \"loanId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pay fine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fines/:id/pay",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fines",
+                ":id",
+                "pay"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Marks a fine as paid."
+          },
+          "response": []
+        },
+        {
+          "name": "List Fines",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fines/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fines",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a list of all Fines and returns their details"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticates a user and returns a JWT token.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"admin\",\n  \"password\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Permission Endpoints",
+      "item": [
+        {
+          "name": "List permissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/permissions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "permissions"
+              ]
+            },
+            "description": "Retrieves a list of all permissions and returns their details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get permission by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/permissions/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "permissions",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a permission by its unique ID and returns the permission details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get permission by title",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/permissions/title/:title",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "permissions",
+                "title",
+                ":title"
+              ],
+              "variable": [
+                {
+                  "key": "title",
+                  "value": "title_example"
+                }
+              ]
+            },
+            "description": "Retrieves a permission by its title and returns the permission details."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/"
+    },
+    {
+      "key": "bearerToken",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  }
+}

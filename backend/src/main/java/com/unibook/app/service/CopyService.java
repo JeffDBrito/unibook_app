@@ -163,10 +163,7 @@ public class CopyService {
         if (copy.getBook() != null) {
             BookResponse bookResponse = bookService.findById(copy.getBook().getId());
             
-            response.setBookTitle(bookResponse.getTitle());
-            response.setAuthors(bookResponse.getAuthors());
-            response.setBookId(bookResponse.getId());
-
+            response.setBook(bookResponse);
 
         }
 

@@ -40,7 +40,7 @@ public class RoleController {
     @PostMapping
     @Operation(summary = "Create a new role", description = "Creates a new role with the provided details and returns the created role.", tags = {"Role Endpoints"})
     public RoleResponse createRole(@RequestBody CreateRoleRequest request) {
-        return roleService.createRole(request.getTitle(), request.getPermissionIds());
+        return roleService.createRole(request);
     }
 
     // Get role by ID

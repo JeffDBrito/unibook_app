@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
+import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.AuthorRepository;
@@ -29,15 +31,16 @@ public class AuthorService {
      * @param name
      * @param biography
      * @return AuthorResponse
-     */ //TODO: User CreateRequest dto
-    public AuthorResponse createAuthor(String name, String biography) {
+     */
+    public AuthorResponse createAuthor(CreateAuthorRequest request) {
         Person person = new Person();
-        person.setName(name);
+        person.setName(request.getName());
+        person.setBirthDate(request.getBirthDate());
         
         person = personRepository.save(person);
         
         Author author = new Author();
-        author.setBiography(biography);
+        author.setBiography(request.getBiography());
         author.setPerson(person);
         
         Author savedAuthor = authorRepository.save(author);
@@ -138,10 +141,16 @@ public class AuthorService {
      * @return AuthorResponse
      */ // TODO: Create a Mapper
     private AuthorResponse toResponse(Author author) {
+        
+        PersonResponse person = new PersonResponse();
+        person.setName(author.getPerson().getName());
+        person.setEmail(author.getPerson().getEmail());
+        
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());
-        response.setName(author.getPerson().getName());
         response.setBiography(author.getBiography());
+        response.setPerson(person);
+        
         return response;   
     }
     

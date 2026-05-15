@@ -53,13 +53,7 @@ public class UserController {
     @PostMapping
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details and returns the created user.", tags = {"User Endpoints"})
     public UserResponse createUser(@RequestBody CreateUserRequest request) {
-        return userService.createUser(
-                request.getName(),
-                request.getEmail(),
-                request.getLogin(),
-                request.getPassword(),
-                request.getRoleIds()
-        );
+        return userService.createUser(request);
     }
 
     // Partial update

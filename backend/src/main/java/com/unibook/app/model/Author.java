@@ -1,7 +1,7 @@
 package com.unibook.app.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,5 +33,5 @@ public class Author extends BaseEntity {
     private String biography;
 
     @ManyToMany(mappedBy = "authors")
-    private List<Book> books = new ArrayList<>();
+    private Set<Book> books = new HashSet<>();
 }

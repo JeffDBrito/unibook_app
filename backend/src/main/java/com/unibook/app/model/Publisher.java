@@ -1,6 +1,7 @@
 package com.unibook.app.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +31,6 @@ public class Publisher extends BaseEntity {
 
     @OneToMany(mappedBy = "publisher")
     @JsonIgnore
-    private List<Book> books;
+    private Set<Book> books = new HashSet<>();
     
 }

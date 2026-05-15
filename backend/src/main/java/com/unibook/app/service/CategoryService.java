@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.category.CreateCategoryRequest;
 import com.unibook.app.dto.request.category.UpdateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
 import com.unibook.app.model.Category;
@@ -26,11 +27,11 @@ public class CategoryService {
      * @param title
      * @param description
      * @return CategoryResponse
-     */ //TODO: User CreateRequest dto
-    public CategoryResponse createCategory(String title, String description) {
+     */
+    public CategoryResponse createCategory(CreateCategoryRequest request) {
         Category category = new Category();
-        category.setTitle(title);
-        category.setDescription(description);
+        category.setTitle(request.getTitle());
+        category.setDescription(request.getDescription());
         Category savedCategory = categoryRepository.save(category);
         return toResponse(savedCategory);
     }

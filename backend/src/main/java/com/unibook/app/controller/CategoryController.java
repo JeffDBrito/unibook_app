@@ -40,10 +40,7 @@ public class CategoryController {
     @PostMapping
     @Operation(summary = "Create a new category", description = "Creates a new category with the provided details and returns the created category.", tags = {"Category Endpoints"})
     public CategoryResponse createCategory(@RequestBody CreateCategoryRequest request) {
-        return categoryService.createCategory(
-            request.getTitle(), 
-            request.getDescription()
-        );
+        return categoryService.createCategory(request);
     }
 
     // Delete category by id

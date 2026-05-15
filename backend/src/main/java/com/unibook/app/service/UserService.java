@@ -40,7 +40,7 @@ public class UserService {
      * @param password
      * @param roleIds
      * @return UserResponse
-     */ //TODO: User CreateRequest dto
+     */
     public UserResponse createUser(CreateUserRequest request) {
 
         String login = request.getLogin();

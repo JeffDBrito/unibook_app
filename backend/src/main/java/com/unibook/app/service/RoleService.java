@@ -1,5 +1,6 @@
 package com.unibook.app.service;
 
+import com.unibook.app.dto.request.role.CreateRoleRequest;
 import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
 import com.unibook.app.model.Permission;
@@ -30,12 +31,12 @@ public class RoleService {
      * @param title
      * @param permissionIds
      * @return RoleResponse
-     */ //TODO: User CreateRequest dto
-    public RoleResponse createRole(String title, List<Long> permissionIds) {
+     */
+    public RoleResponse createRole(CreateRoleRequest request) {
         Role role = new Role();
-        role.setTitle(title);
+        role.setTitle(request.getTitle());
 
-        Set<Permission> permissions = new HashSet<>(permissionIds.stream()
+        Set<Permission> permissions = new HashSet<>(request.getPermissionIds().stream()
                 .map(id -> {
                     Permission permission = new Permission();
                     permission.setId(id);

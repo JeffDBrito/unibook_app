@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
 import com.unibook.app.model.Publisher;
@@ -26,11 +27,11 @@ public class PublisherService {
      * @param title
      * @param description
      * @return PublisherResponse
-     */ //TODO: User CreateRequest dto
-    public PublisherResponse createPublisher(String title, String description) {
+     */ 
+    public PublisherResponse createPublisher(CreatePublisherRequest request) {
         Publisher publisher = new Publisher();
-        publisher.setTitle(title);
-        publisher.setDescription(description);
+        publisher.setTitle(request.getTitle());
+        publisher.setDescription(request.getDescription());
         Publisher savedPublisher = publisherRepository.save(publisher);
         return toResponse(savedPublisher);
     }

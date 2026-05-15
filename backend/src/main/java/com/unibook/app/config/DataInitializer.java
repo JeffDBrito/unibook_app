@@ -2,6 +2,8 @@ package com.unibook.app.config;
 
 import com.unibook.app.dto.request.author.CreateAuthorRequest;
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.category.CreateCategoryRequest;
+import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.model.Book;
@@ -202,9 +204,9 @@ public class DataInitializer {
     @Order(6)    
     CommandLineRunner initCategories(CategoryService categoryService) {
         return args -> {
-            categoryService.createCategory("Fiction", "Literary works invented by the imagination, such as novels or short stories.");
-            categoryService.createCategory("Non-Fiction", "Literary works based on facts, real events, and real people, such as biography or history.");
-            categoryService.createCategory("Science Fiction", "A genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life.");
+            categoryService.createCategory(new CreateCategoryRequest("Fiction", "Literary works invented by the imagination, such as novels or short stories."));
+            categoryService.createCategory(new CreateCategoryRequest("Non-Fiction", "Literary works based on facts, real events, and real people, such as biography or history."));
+            categoryService.createCategory(new CreateCategoryRequest("Science Fiction", "A genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life."));
         };
     }
 
@@ -212,9 +214,9 @@ public class DataInitializer {
     @Order(7)    
     CommandLineRunner initPublishers(PublisherService publisherService) {
         return args -> {
-            publisherService.createPublisher("Scribner", "An American publishing company based in New York City, known for publishing many classic and contemporary works of fiction.");
-            publisherService.createPublisher("J.B. Lippincott & Co.", "An American publishing house founded in Philadelphia in 1836, known for publishing many classic works of literature, including Harper Lee's To Kill a Mockingbird.");
-            publisherService.createPublisher("Secker & Warburg", "A British publishing company founded in 1935, known for publishing many influential works of literature, including George Orwell's 1984 and Animal Farm.");
+            publisherService.createPublisher(new CreatePublisherRequest("Scribner", "An American publishing company based in New York City, known for publishing many classic and contemporary works of fiction."));
+            publisherService.createPublisher(new CreatePublisherRequest("J.B. Lippincott & Co.", "An American publishing house founded in Philadelphia in 1836, known for publishing many classic works of literature, including Harper Lee's To Kill a Mockingbird."));
+            publisherService.createPublisher(new CreatePublisherRequest("Secker & Warburg", "A British publishing company founded in 1935, known for publishing many influential works of literature, including George Orwell's 1984 and Animal Farm."));
         };
     }
 

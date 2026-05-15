@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.unibook.app.dto.request.person.CreatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.model.Person;
@@ -29,12 +30,12 @@ public class PersonService {
      * @param name
      * @param email
      * @return PersonResponse
-    **/ //TODO: User CreateRequest dto
-    public PersonResponse createPerson(String name, String email, LocalDate birthDate) {
+    **/ //TODO: Use CreateRequest dto
+    public PersonResponse createPerson(CreatePersonRequest request) {
         var person = new Person();
-        person.setName(name);
-        person.setEmail(email);
-        person.setBirthDate(birthDate);
+        person.setName(request.getName());
+        person.setEmail(request.getEmail());
+        person.setBirthDate(request.getBirthDate());
         return toResponse(personRepository.save(person));
     }
 

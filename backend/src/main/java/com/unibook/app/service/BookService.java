@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.book.CreateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Category;
@@ -38,7 +39,7 @@ public class BookService {
      * Create Book
      * @param request
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse createBook(CreateBookRequest request) {
         Book book = new Book();
@@ -48,18 +49,18 @@ public class BookService {
         book.setPublicationYear(request.getPublicationYear());
 
         Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + request.getPublisherId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + request.getPublisherId()));
         book.setPublisher(publisher);
 
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
         if (authors.size() != request.getAuthorIds().size()) {
-            throw new RuntimeException("One or more authors not found");
+            throw new ResourceNotFoundException("One or more authors not found");
         }
         book.setAuthors(authors);
         
         Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
         if (categories.size() != request.getCategoryIds().size()) {
-            throw new RuntimeException("One or more categories not found");
+            throw new ResourceNotFoundException("One or more categories not found");
         }
         book.setCategories(categories);
 
@@ -73,12 +74,12 @@ public class BookService {
      * @param request
      * @param partial
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
 
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Book not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         if (!partial || request.getTitle() != null) {
             book.setTitle(request.getTitle());
@@ -99,7 +100,7 @@ public class BookService {
         if (!partial || request.getPublisherId() != null) {
 
             Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                    .orElseThrow(() -> new RuntimeException("Publisher not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
 
             book.setPublisher(publisher);
         }
@@ -127,7 +128,7 @@ public class BookService {
      */
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
 
         book.softDelete();
         bookRepository.save(book);
@@ -140,7 +141,7 @@ public class BookService {
      */
     public BookResponse restoreById(Long id){
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
 
         book.restore();
 
@@ -166,11 +167,11 @@ public class BookService {
      * Find Book by id
      * @param id
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
         return toResponse(book);
     }
 
@@ -178,11 +179,11 @@ public class BookService {
      * Find Book by isbn
      * @param isbn
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new RuntimeException("Book not found with ISBN: " + isbn));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + isbn));
         return toResponse(book);
     }
 
@@ -190,11 +191,11 @@ public class BookService {
      * Find Book by title
      * @param title
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findByTitle(String title) {
         Book book = bookRepository.findByTitle(title)
-                .orElseThrow(() -> new RuntimeException("Book not found with title: " + title));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with title: " + title));
         return toResponse(book);
     }
 

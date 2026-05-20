@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unibook.app.dto.request.person.CreatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.service.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,7 @@ public class PersonController {
     @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonByName(@PathVariable String name) {
         return personService.findByName(name)
-            .orElseThrow(() -> new RuntimeException("Person not found with name: " + name));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not found with name: " + name));
     }
 
     // Partial update

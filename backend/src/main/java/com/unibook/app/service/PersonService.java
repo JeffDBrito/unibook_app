@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.person.CreatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.PersonRepository;
 
@@ -45,7 +46,7 @@ public class PersonService {
      */
     public void deleteById(Long id) {
         Person person = personRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id));
         person.softDelete();
         personRepository.save(person);
     }
@@ -57,7 +58,7 @@ public class PersonService {
      */
     public PersonResponse restoreById(Long id) {
         Person person = personRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Person not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id));
         person.restore();
         return toResponse(personRepository.save(person));
     }
@@ -71,7 +72,7 @@ public class PersonService {
      */
     public PersonResponse update(Long id, UpdatePersonRequest request, boolean partial){
         Person person = personRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Person not Found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not Found"));
         
         if(!partial || request.getName() != null){
             person.setName(request.getName());
@@ -109,7 +110,7 @@ public class PersonService {
      */
     public PersonResponse findById(Long id) {
         return toResponse(personRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Person not found with id: " + id)));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id)));
     }
 
     /**

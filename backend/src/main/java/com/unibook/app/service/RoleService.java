@@ -3,6 +3,7 @@ package com.unibook.app.service;
 import com.unibook.app.dto.request.role.CreateRoleRequest;
 import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
 import com.unibook.app.repository.PermissionRepository;
@@ -54,7 +55,7 @@ public class RoleService {
      */
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
         role.softDelete();
         roleRepository.save(role);        
     }
@@ -66,7 +67,7 @@ public class RoleService {
      */
     public RoleResponse restoreById(Long id){
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
         role.restore();
         return toResponse(roleRepository.save(role));
     }
@@ -81,7 +82,7 @@ public class RoleService {
     public RoleResponse update(Long id, UpdateRoleRequest request, boolean partial){
 
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         if(!partial || request.getTitle() != null){
             role.setTitle(request.getTitle());
@@ -117,7 +118,7 @@ public class RoleService {
     public RoleResponse findById(Long id) {
         return roleRepository.findById(id)
             .map(this::toResponse)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
     }
 
     /**
@@ -128,7 +129,7 @@ public class RoleService {
     public RoleResponse findByTitle(String title) {
         return roleRepository.findByTitle(title)
             .map(this::toResponse)
-            .orElseThrow(() -> new RuntimeException("Role not found with title: " + title));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with title: " + title));
     }
 
     // -------------- //
@@ -175,7 +176,7 @@ public class RoleService {
     @Transactional
     public void assignPermissionsByRoleName(String roleName, List<Permission> permissions) {
         Role role = roleRepository.findByTitle(roleName)
-            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + roleName));
         assignPermissions(role, permissions);
     }
 }

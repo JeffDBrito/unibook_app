@@ -8,6 +8,7 @@ import com.unibook.app.dto.request.copy.CreateCopyRequest;
 import com.unibook.app.dto.request.copy.UpdateCopyRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.dto.response.CopyResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -42,7 +43,7 @@ public class CopyService {
         copy.setStatus(request.getStatus());
 
         Book book = bookRepository.findById(request.getBookId())
-            .orElseThrow(() -> new RuntimeException("Book not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         copy.setBook(book);
 
@@ -55,7 +56,7 @@ public class CopyService {
      */
     public void deleteById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         copy.softDelete();
         copyRepository.save(copy);
@@ -67,7 +68,7 @@ public class CopyService {
      */
     public CopyResponse restoreById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         copy.restore();
         return toResponse(copyRepository.save(copy));
@@ -84,7 +85,7 @@ public class CopyService {
     public CopyResponse update(Long id, UpdateCopyRequest request, boolean partial){
 
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         if(!partial || request.getCode() != null){
             copy.setCode(request.getCode());
@@ -96,7 +97,7 @@ public class CopyService {
         
         if(!partial || request.getInventoryId() != null){
             Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
             copy.setInventory(inventory);
         }
@@ -116,7 +117,7 @@ public class CopyService {
      */
     public CopyResponse findById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
         
         return toResponse(copy);
     }

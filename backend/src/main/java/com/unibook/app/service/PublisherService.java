@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Publisher;
 import com.unibook.app.repository.PublisherRepository;
 
@@ -42,7 +43,7 @@ public class PublisherService {
      */
     public void deleteById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
         publisher.softDelete();
         publisherRepository.save(publisher);
     }
@@ -54,7 +55,7 @@ public class PublisherService {
      */
     public PublisherResponse restoreById(Long id){
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
         publisher.restore();
         return toResponse(publisherRepository.save(publisher));
     }
@@ -69,7 +70,7 @@ public class PublisherService {
     public PublisherResponse update(Long id, UpdatePublisherRequest request, boolean partial){
 
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Publisher not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
 
         if(!partial || request.getTitle() != null){
             publisher.setTitle(request.getTitle());
@@ -102,7 +103,7 @@ public class PublisherService {
      */
     public PublisherResponse findById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
         return toResponse(publisher);
     }
 
@@ -113,7 +114,7 @@ public class PublisherService {
      */
     public PublisherResponse findByTitle(String title) {
         Publisher publisher = publisherRepository.findByTitle(title)
-            .orElseThrow(() -> new RuntimeException("Publisher not found with title: " + title));
+            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with title: " + title));
         return toResponse(publisher);
     }
 

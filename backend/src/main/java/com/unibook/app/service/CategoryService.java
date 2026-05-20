@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.category.CreateCategoryRequest;
 import com.unibook.app.dto.request.category.UpdateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Category;
 import com.unibook.app.repository.CategoryRepository;
 
@@ -42,7 +43,7 @@ public class CategoryService {
      */
     public void deleteById(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));   
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));   
         category.softDelete();     
         categoryRepository.save(category);
     }
@@ -54,7 +55,7 @@ public class CategoryService {
      */
     public CategoryResponse restoreById(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));   
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));   
         category.restore();     
         return toResponse(categoryRepository.save(category));
     }
@@ -68,7 +69,7 @@ public class CategoryService {
      */
     public CategoryResponse update(Long id, UpdateCategoryRequest request, boolean partial){
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         if(!partial || request.getTitle() != null){
             category.setTitle(request.getTitle());
@@ -101,7 +102,7 @@ public class CategoryService {
      */
     public CategoryResponse findById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         return toResponse(category);
     }
 
@@ -112,7 +113,7 @@ public class CategoryService {
      */
     public CategoryResponse findByTitle(String title) {
         Category category = categoryRepository.findByTitle(title)
-            .orElseThrow(() -> new RuntimeException("Category not found with title: " + title));
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found with title: " + title));
         return toResponse(category);
     }
 

@@ -78,7 +78,7 @@ public class UserService {
         if(request.getRoleIds().size() > 0){
             for (Long roleId : request.getRoleIds()) {
                 Role r = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + roleId));
                 user.getRoles().add(r);
             }
         }else{
@@ -189,7 +189,7 @@ public class UserService {
      */
     public UserResponse restoreById(Long id){
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found with id: "+id));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+id));
 
         user.restore();
         userRepository.save(user);

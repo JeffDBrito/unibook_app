@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.fine.CreateFineRequest;
 import com.unibook.app.dto.response.FineResponse;
 import com.unibook.app.enums.FineStatus;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Fine;
 import com.unibook.app.model.Loan;
 import com.unibook.app.repository.FineRepository;
@@ -34,7 +35,7 @@ public class FineService {
      */
     public FineResponse createFine(CreateFineRequest request) {
         Loan loan = loanRepository.findById(request.getLoanId())
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         Fine fine = new Fine();
         fine.setAmount(request.getAmount());
@@ -53,7 +54,7 @@ public class FineService {
      */
     public FineResponse payFine(Long id) {
         Fine fine = fineRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Fine not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Fine not found"));
 
         fine.setStatus(FineStatus.PAID);
         fine.setPaidDate(LocalDate.now());
@@ -81,7 +82,7 @@ public class FineService {
      */
     public FineResponse findById(Long id){
         Fine fine = fineRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Fine not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Fine not found"));
 
         return toResponse(fine);
     }

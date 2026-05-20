@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
 import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
 import com.unibook.app.repository.InventoryRepository;
@@ -45,7 +46,7 @@ public class InventoryService {
      */
     public void deleteById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventory.softDelete();
         inventoryRepository.save(inventory);
@@ -58,7 +59,7 @@ public class InventoryService {
      */
     public InventoryResponse restoreById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventory.restore();
         return toResponse(inventoryRepository.save(inventory));
@@ -74,7 +75,7 @@ public class InventoryService {
     public InventoryResponse update(Long id, UpdateInventoryRequest request, boolean partial){
 
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         if(!partial || request.getSector() != null){
             inventory.setSector(request.getSector());
@@ -117,7 +118,7 @@ public class InventoryService {
      */
     public InventoryResponse findById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + id));
         return toResponse(inventory);
     }
 
@@ -132,7 +133,7 @@ public class InventoryService {
     public InventoryResponse findByLocation(String sector, String shelf, int row, int slot) {
         Inventory inventory = inventoryRepository.findBySectorAndShelfAndRowAndSlot(sector,shelf,row,slot)
             .orElseThrow(() ->
-                new RuntimeException("Inventory not found")
+                new ResourceNotFoundException("Inventory not found")
             );
 
         return toResponse(inventory);

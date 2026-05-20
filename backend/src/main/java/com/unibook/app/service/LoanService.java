@@ -10,6 +10,7 @@ import com.unibook.app.dto.request.loan.UpdateLoanRequest;
 import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.enums.LoanStatus;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Loan;
 import com.unibook.app.model.User;
@@ -42,13 +43,13 @@ public class LoanService {
     public LoanResponse createLoan(CreateLoanRequest request) {
 
         User user = userRepository.findById(request.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Copy copy = copyRepository.findById(request.getCopyId())
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         if (copy.getStatus() != CopyStatus.AVAILABLE) {
-            throw new RuntimeException("Copy is not available");
+            throw new ResourceNotFoundException("Copy is not available");
         }
 
         Loan loan = new Loan();
@@ -76,7 +77,7 @@ public class LoanService {
      */
     public LoanResponse returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.setReturnDate(LocalDate.now());
         loan.setStatus(LoanStatus.RETURNED);
@@ -96,7 +97,7 @@ public class LoanService {
      */
     public void deleteById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.softDelete();
         loanRepository.save(loan);
@@ -108,7 +109,7 @@ public class LoanService {
      */
     public LoanResponse restoreById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.restore();
         return toResponse(loanRepository.save(loan));
@@ -124,7 +125,7 @@ public class LoanService {
     public LoanResponse update(Long id, UpdateLoanRequest request, boolean partial){
 
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         if(!partial || request.getReturnDate() != null){
             loan.setReturnDate(request.getReturnDate());
@@ -149,7 +150,7 @@ public class LoanService {
      */
     public LoanResponse findById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
         
         return toResponse(loan);
     }

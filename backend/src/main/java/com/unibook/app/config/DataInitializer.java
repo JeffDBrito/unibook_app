@@ -6,6 +6,7 @@ import com.unibook.app.dto.request.category.CreateCategoryRequest;
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -175,10 +176,10 @@ public class DataInitializer {
                 "admin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
-                        .orElseThrow(() -> new RuntimeException("Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Admin role not found"))
                         .getId(),                    
                     roleRepository.findByTitle("SUPER_ADMIN")
-                        .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Super Admin role not found"))
                         .getId()
                 ))
             );

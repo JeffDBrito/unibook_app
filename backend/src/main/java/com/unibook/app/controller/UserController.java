@@ -69,7 +69,7 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Update User", description = "Updates an existing user with the provided details and returns the updated user.", tags = {"User Endpoints"})
     public UserResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request){
-        return userService.update(id, request, false);
+        return userService.update(id, request);
     }
 
 }

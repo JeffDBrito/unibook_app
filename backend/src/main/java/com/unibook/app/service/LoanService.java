@@ -11,6 +11,7 @@ import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.enums.LoanStatus;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.UserMapper;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Loan;
 import com.unibook.app.model.User;
@@ -27,7 +28,6 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final UserRepository userRepository;
     private final CopyRepository copyRepository;
-    private final UserService userService;
     private final CopyService copyService;
 
 
@@ -183,7 +183,7 @@ public class LoanService {
         response.setReturnDate(loan.getReturnDate());
         
         response.setCopy(copyService.toResponse(loan.getCopy()));
-        response.setUser(userService.toResponse(loan.getUser()));
+        response.setUser(UserMapper.toResponse(loan.getUser()));
 
         response.setStatus(loan.getStatus().name());
 

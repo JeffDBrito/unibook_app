@@ -4,9 +4,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.user.CreateUserRequest;
+import com.unibook.app.dto.request.user.PartialUpdateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
+import com.unibook.app.exceptions.BadRequestException;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Person;
 import com.unibook.app.model.Role;
@@ -17,7 +19,9 @@ import com.unibook.app.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +51,14 @@ public class UserService {
         String email = request.getEmail();
         String password = request.getPassword();
 
+        if(personRepository.existsByEmail(email)){
+            throw new BadRequestException("Email already exists");
+        }
+
+        if(userRepository.existsByLogin(login)){
+            throw new BadRequestException("Login already exists");
+        }
+
         // create Person
         Person person = new Person();
         person.setName(request.getName());
@@ -63,11 +75,17 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setPerson(person);
         
-        for (Long rId : request.getRoleIds()) {
-            Role r = roleRepository.findById(rId)
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + rId));
-            user.getRoles().add(r);
+        if(request.getRoleIds().size() > 0){
+            for (Long roleId : request.getRoleIds()) {
+                Role r = roleRepository.findById(roleId)
+                    .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+                user.getRoles().add(r);
+            }
+        }else{
+            Role guest = roleRepository.findByTitle("GUEST").get();
+            user.getRoles().add(guest);
         }
+
         
         System.out.println("Creating user with login: " + login + ", roles: " + user.getRoles().stream().map(Role::getTitle).toList());
 
@@ -83,32 +101,74 @@ public class UserService {
      * @param partial
      * @return UserResponse
      */
-    public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
-        
+    public UserResponse update(Long id, PartialUpdateUserRequest request, boolean partial){
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+            .orElseThrow(() ->
+                new ResourceNotFoundException("User not found")
+            );
 
-        if (!partial || request.getName() != null) {
-            user.getPerson().setName(request.getName());
+        Person person = user.getPerson();
+
+        if(!partial || request.getName() != null){
+            person.setName(request.getName());
         }
-        if (!partial || request.getEmail() != null) {
-            user.getPerson().setEmail(request.getEmail());
+
+        if(!partial || request.getEmail() != null){
+            if(request.getEmail() != null && userRepository.existsByPersonEmail(request.getEmail()) && !person.getEmail().equals(request.getEmail())){
+                throw new BadRequestException("Email already exists");
+            }
+
+            person.setEmail(request.getEmail());
         }
-        if (!partial || request.getLogin() != null) {
+
+        if(!partial || request.getBirthDate() != null){
+            person.setBirthDate(request.getBirthDate());
+        }
+
+        if(!partial || request.getLogin() != null){
+            if(request.getLogin() != null && userRepository.existsByLogin(request.getLogin()) && !user.getLogin().equals(request.getLogin())){
+                throw new BadRequestException("Login already exists");
+            }
             user.setLogin(request.getLogin());
         }
-        if (!partial || request.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
-        if (!partial || request.getRoleIds() != null) {
-            List<Role> roles = roleRepository.findAllById(request.getRoleIds());
-            if (roles.size() != request.getRoleIds().size()) {
-                throw new RuntimeException("One or more roles not found");
+
+        if(!partial || request.getPassword() != null){
+            if(request.getPassword() == null || request.getPassword().isBlank()){
+                throw new BadRequestException("Password cannot be empty");
             }
-            user.setRoles(roles.stream().collect(java.util.stream.Collectors.toSet()));
+
+            user.setPassword(
+                passwordEncoder.encode(request.getPassword())
+            );
+        }
+
+        if(!partial || request.getRoleIds() != null){
+            Set<Role> roles = new HashSet<>(roleRepository.findAllById(request.getRoleIds()));
+            if(roles.size() != request.getRoleIds().size()){
+                throw new BadRequestException("One or more roles were not found");
+            }
+            user.setRoles(roles);
         }
 
         return toResponse(userRepository.save(user));
+    }
+
+    /**
+     * Convert UpdateUserRequest to PartialUpdateUserRequest
+     * @param id
+     * @param request
+     * @param partial
+     * @return UserResponse
+     */
+    public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
+        PartialUpdateUserRequest partialRequest = new PartialUpdateUserRequest();
+        partialRequest.setName(request.getName());
+        partialRequest.setEmail(request.getEmail());
+        partialRequest.setLogin(request.getLogin());
+        partialRequest.setBirthDate(request.getBirthDate());
+        partialRequest.setPassword(request.getPassword());
+        partialRequest.setRoleIds(request.getRoleIds());
+        return update(id, partialRequest, partial);
     }
 
     /**

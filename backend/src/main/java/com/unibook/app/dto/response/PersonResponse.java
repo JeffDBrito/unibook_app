@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PersonResponse {
+
+    @Schema(example = "1")
+    private Long id;
     
     @Schema(example = "John Doe")
     private String name;

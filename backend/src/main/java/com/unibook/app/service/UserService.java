@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.dto.request.user.PartialUpdateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
-import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.exceptions.BadRequestException;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.UserMapper;
 import com.unibook.app.model.Person;
 import com.unibook.app.model.Role;
 import com.unibook.app.model.User;
@@ -91,7 +91,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         
-        return toResponse(savedUser);
+        return UserMapper.toResponse(savedUser);
     }
 
     /**
@@ -150,25 +150,20 @@ public class UserService {
             user.setRoles(roles);
         }
 
-        return toResponse(userRepository.save(user));
+        return UserMapper.toResponse(userRepository.save(user));
     }
 
     /**
+     * Full Update
      * Convert UpdateUserRequest to PartialUpdateUserRequest
      * @param id
      * @param request
      * @param partial
      * @return UserResponse
      */
-    public UserResponse update(Long id, UpdateUserRequest request, boolean partial){
-        PartialUpdateUserRequest partialRequest = new PartialUpdateUserRequest();
-        partialRequest.setName(request.getName());
-        partialRequest.setEmail(request.getEmail());
-        partialRequest.setLogin(request.getLogin());
-        partialRequest.setBirthDate(request.getBirthDate());
-        partialRequest.setPassword(request.getPassword());
-        partialRequest.setRoleIds(request.getRoleIds());
-        return update(id, partialRequest, partial);
+    public UserResponse update(Long id, UpdateUserRequest request){
+        PartialUpdateUserRequest partialRequest = UserMapper.toPartialUpdate(request);
+        return update(id, partialRequest, false);
     }
 
     /**
@@ -193,7 +188,7 @@ public class UserService {
 
         user.restore();
         userRepository.save(user);
-        return toResponse(user);
+        return UserMapper.toResponse(user);
             
     }
 
@@ -208,7 +203,7 @@ public class UserService {
     public List<UserResponse> findAll() {
         return userRepository.findAll()
             .stream()
-            .map(this::toResponse)
+            .map(UserMapper::toResponse)
             .toList();
     }
     
@@ -219,39 +214,8 @@ public class UserService {
      */
     public UserResponse findById(Long id) {
         return userRepository.findById(id)
-            .map(this::toResponse)
+            .map(UserMapper::toResponse)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert User instance to UserResponse
-     * @param user
-     * @return UserResponse
-     */ // TODO: Create a Mapper
-    public UserResponse toResponse(User user) {
-        PersonResponse person = new PersonResponse();
-        person.setName(user.getPerson().getName());
-        person.setEmail(user.getPerson().getEmail());
-        person.setBirthDate(user.getPerson().getBirthDate());
-
-        UserResponse response = new UserResponse();
-
-        response.setId(user.getId());
-        response.setLogin(user.getLogin());
-        response.setPerson(person);
-
-        String roleTitles = user.getRoles().stream()
-            .map(Role::getTitle)
-            .reduce((a, b) -> a + ", " + b)
-            .orElse("No Roles");
-        System.out.println("Mapping user to response: " + user.getLogin() + ", roles: " + roleTitles);
-        response.setRoles(roleTitles);
-
-        return response;
     }
 
 }

@@ -30,7 +30,7 @@ public class PersonService {
      * @param name
      * @param email
      * @return PersonResponse
-    **/ //TODO: Use CreateRequest dto
+    **/
     public PersonResponse createPerson(CreatePersonRequest request) {
         var person = new Person();
         person.setName(request.getName());

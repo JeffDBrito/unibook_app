@@ -30,6 +30,16 @@
 >       - npm install
 >       - npm run dev
 
+# Running on IFPB computer (Windows)
+> - Copy .env.example to .env 
+> - Change Postgres password to ```ifpb```
+> - Copy .env to ```./backend``` and ```./frontend``` manually 
+> - Go to ```./backend``` terminal
+> - Run ```set -a && . .env```
+> - Open a new terminal
+> - Go to ```./frontend```
+> - Run ```npm install```
+> - Run ```npm run dev```
 
 # Running on Docker
 ```

@@ -1,17 +1,18 @@
 package com.unibook.app.mapper;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.unibook.app.dto.request.user.PartialUpdateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
-import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Role;
 import com.unibook.app.model.User;
-import com.unibook.app.repository.UserRepository;
 
 public class UserMapper {
 
-    private static UserRepository userRepository;
+    private UserMapper() {}
     
     /**
      * Receive User and returns an UserResponse
@@ -30,27 +31,11 @@ public class UserMapper {
         response.setLogin(user.getLogin());
         response.setPerson(person);
 
-        String roleTitles = user.getRoles().stream()
-            .map(Role::getTitle)
-            .reduce((a, b) -> a + ", " + b)
-            .orElse("No Roles");
-        System.out.println("Mapping user to response: " + user.getLogin() + ", roles: " + roleTitles);
+        Set<String> roleTitles = user.getRoles().stream().map(Role::getTitle).collect(Collectors.toSet());
+
         response.setRoles(roleTitles);
 
         return response;
-    }
-
-    /**
-     * Receive UserResponse and returns an User By Id
-     * @param response
-     * @return User
-     * @throws ResourceNotFoundException
-     */
-    public static User toInstance(UserResponse response){        
-        User user = userRepository.findById(response.getId())
-            .orElseThrow(() -> new ResourceNotFoundException("User Not found"));
-
-        return user;
     }
 
     /**

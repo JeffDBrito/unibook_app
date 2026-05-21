@@ -21,3 +21,8 @@
 - histórico de empréstimos
 - gerar multa automaticamente (if today > dueDate) e calcular dias de atraso * valor diário
 - impedir empréstimos se usuário tiver multa pendente
+
+### Nota
+```
+- A senha do postgres do pc do if é "ifpb"
+```

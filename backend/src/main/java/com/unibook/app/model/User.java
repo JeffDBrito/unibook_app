@@ -19,10 +19,11 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(unique = true)
     private String login;
     private String password;
-
+    
     @OneToOne
     @JoinColumn(name = "person_id")
     private Person person;

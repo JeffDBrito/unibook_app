@@ -33,7 +33,8 @@ public class Book extends BaseEntity {
     @JoinTable(
         name = "book_authors",
         joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "author_id")
+        inverseJoinColumns = @JoinColumn(name = "author_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "author_id"})
     )
     private Set<Author> authors = new HashSet<>();
 
@@ -45,7 +46,8 @@ public class Book extends BaseEntity {
     @JoinTable(
         name = "book_categories",
         joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
+        inverseJoinColumns = @JoinColumn(name = "category_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "category_id"})
     )
     private Set<Category> categories = new HashSet<>();
 

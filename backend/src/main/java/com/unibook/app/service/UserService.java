@@ -155,15 +155,14 @@ public class UserService {
 
     /**
      * Full Update
-     * Convert UpdateUserRequest to PartialUpdateUserRequest
+     * Convert FullUpdateRequest to PartialUpdateRequest
      * @param id
      * @param request
      * @param partial
      * @return UserResponse
      */
     public UserResponse update(Long id, UpdateUserRequest request){
-        PartialUpdateUserRequest partialRequest = UserMapper.toPartialUpdate(request);
-        return update(id, partialRequest, false);
+        return update(id, UserMapper.toPartialUpdate(request), false);
     }
 
     /**

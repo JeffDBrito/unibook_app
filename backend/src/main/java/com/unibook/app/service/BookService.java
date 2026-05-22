@@ -3,14 +3,15 @@ package com.unibook.app.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.BookMapper;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Category;
@@ -65,7 +66,7 @@ public class BookService {
         book.setCategories(categories);
 
         Book savedBook = bookRepository.save(book);
-        return toResponse(savedBook);
+        return BookMapper.toResponse(savedBook);
     }
 
     /**
@@ -76,7 +77,7 @@ public class BookService {
      * @return BookResponse
      * @throws ResourceNotFoundException
      */
-    public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
+    public BookResponse update(Long id, PartialUpdateBookRequest request, boolean partial) {
 
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
@@ -119,7 +120,18 @@ public class BookService {
             book.setCategories(categories);
         }
 
-        return toResponse(bookRepository.save(book));
+        return BookMapper.toResponse(bookRepository.save(book));
+    }
+
+    /**
+     * Full Update
+     * Convert FullUpdateRequest to PartialUpdateRequest
+     * @param id
+     * @param request
+     * @return
+     */
+    public BookResponse update(Long id, UpdateBookRequest request){
+        return this.update(id,BookMapper.toPartialUpdate(request), false);
     }
 
     /**
@@ -147,7 +159,7 @@ public class BookService {
 
         bookRepository.save(book);
 
-        return toResponse(book);
+        return BookMapper.toResponse(book);
     }
 
     // ----------------- //
@@ -160,7 +172,7 @@ public class BookService {
      */
     public List<BookResponse> findAll() {
         List<Book> books = bookRepository.findAll();
-        return books.stream().map(this::toResponse).toList();
+        return books.stream().map(BookMapper::toResponse).toList();
     }
 
     /**
@@ -172,7 +184,7 @@ public class BookService {
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
-        return toResponse(book);
+        return BookMapper.toResponse(book);
     }
 
     /**
@@ -184,7 +196,7 @@ public class BookService {
     public BookResponse findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + isbn));
-        return toResponse(book);
+        return BookMapper.toResponse(book);
     }
 
     /**
@@ -196,42 +208,7 @@ public class BookService {
     public BookResponse findByTitle(String title) {
         Book book = bookRepository.findByTitle(title)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with title: " + title));
-        return toResponse(book);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Book instance to BookResponse dto
-     * @param book
-     * @return BookResponse
-     */ // TODO: Create a Mapper
-    private BookResponse toResponse(Book book) {
-        BookResponse response = new BookResponse();
-        response.setId(book.getId());
-        response.setTitle(book.getTitle());
-        response.setDescription(book.getDescription());
-        response.setIsbn(book.getIsbn());
-        response.setPublicationYear(book.getPublicationYear());
-        response.setPublisher(
-            book.getPublisher() != null ? book.getPublisher().getTitle() : null
-        );
-
-        String authors = book.getAuthors().stream()
-            .map(author -> author.getPerson().getName())
-            .collect(Collectors.joining(", "));
-
-        response.setAuthors(authors);        
-
-        String categories = book.getCategories().stream()
-            .map(Category::getTitle)
-            .collect(Collectors.joining(", "));
-
-        response.setCategories(categories);
-
-        return response;
+        return BookMapper.toResponse(book);
     }
 
 }

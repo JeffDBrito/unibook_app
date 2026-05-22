@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "inventory")
+@Table(name = "inventory", uniqueConstraints = {
+    @UniqueConstraint(name = "UniqueInventorySlot", columnNames = {"sector", "shelf", "row", "slot"})
+})
 public class Inventory extends BaseEntity{
     
     @Id

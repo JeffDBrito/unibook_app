@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.service.BookService;
@@ -48,7 +49,7 @@ public class BookController {
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update book", description = "Partially updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
-    public BookResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request ) {
+    public BookResponse partialUpdate( @PathVariable Long id, @RequestBody PartialUpdateBookRequest request ) {
         return bookService.update(id, request, true);
     }
 
@@ -56,7 +57,7 @@ public class BookController {
     @PutMapping("/{id}")
     @Operation(summary = "Update book", description = "Updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
     public BookResponse fullUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request) {
-        return bookService.update(id, request, false);
+        return bookService.update(id, request);
     }
 
     // Get book by id

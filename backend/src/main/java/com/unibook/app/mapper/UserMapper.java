@@ -21,6 +21,7 @@ public class UserMapper {
      */
     public static UserResponse toResponse(User user){
         PersonResponse person = new PersonResponse();
+        person.setId(user.getPerson().getId());
         person.setName(user.getPerson().getName());
         person.setEmail(user.getPerson().getEmail());
         person.setBirthDate(user.getPerson().getBirthDate());

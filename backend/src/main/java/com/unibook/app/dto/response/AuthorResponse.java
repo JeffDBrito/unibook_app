@@ -10,9 +10,6 @@ public class AuthorResponse {
     
     @Schema(example = "1")
     private Long id;
-
-    @Schema(example = "John Doe")
-    private String name;
     
     @Schema(example = "John Doe is a renowned author known for his compelling storytelling.")
     private String biography;

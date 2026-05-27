@@ -314,12 +314,15 @@ public class DataInitializer {
             if(env.getProperty("vars.print", Boolean.class) == true){
                 System.out.println("APP NAME: "+env.getProperty("spring.application.name"));
                 System.out.println("JWT EXPIRATION TIME: "+env.getProperty("jwt.expiration"));
-                System.out.println("FRONTEND URL: "+env.getProperty("frontend.url"));
-                System.out.println("FRONTEND URL: "+env.getProperty("frontend.port"));
+                System.out.println("APP URL: "+env.getProperty("app.url"));
+                System.out.println("FRONTEND PORT: "+env.getProperty("frontend.port"));
                 System.out.println("SERVER PORT: "+env.getProperty("server.port"));
                 System.out.println("POSTGRES url: "+env.getProperty("spring.datasource.url"));
                 System.out.println("POSTGRES username: "+env.getProperty("spring.datasource.username"));
                 System.out.println("POSTGRES password: "+env.getProperty("spring.datasource.password"));
+                System.out.println("\n-------------------------------------\n");
+                System.out.println("APP FRONTEND: "+env.getProperty("app.url")+":"+env.getProperty("frontend.port"));
+                System.out.println("SWAGGER URL: "+env.getProperty("app.url")+":"+env.getProperty("server.port")+"/swagger-ui/index.html#/");
             }
             System.out.println("\n===============================\n");
         };

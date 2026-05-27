@@ -69,14 +69,14 @@ public class AuthorController {
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Author", description = "Partially updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
-    public AuthorResponse partialUpdate(@PathVariable Long id, @Valid PartialUpdateAuthorRequest request){
+    public AuthorResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdateAuthorRequest request){
         return authorService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update Author", description = "Updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
-    public AuthorResponse fullUpdate(@PathVariable Long id, @Valid UpdateAuthorRequest request){
+    public AuthorResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateAuthorRequest request){
         return authorService.update(id, request);
     }
 

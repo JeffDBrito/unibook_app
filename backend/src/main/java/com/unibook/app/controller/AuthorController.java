@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.author.CreateAuthorRequest;
+import com.unibook.app.dto.request.author.PartialUpdateAuthorRequest;
 import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
 import com.unibook.app.service.AuthorService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/authors")
@@ -67,15 +69,15 @@ public class AuthorController {
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Author", description = "Partially updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
-    public AuthorResponse partialUpdate(@PathVariable Long id, UpdateAuthorRequest request){
+    public AuthorResponse partialUpdate(@PathVariable Long id, @Valid PartialUpdateAuthorRequest request){
         return authorService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update Author", description = "Updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
-    public AuthorResponse fullUpdate(@PathVariable Long id, UpdateAuthorRequest request){
-        return authorService.update(id, request, true);
+    public AuthorResponse fullUpdate(@PathVariable Long id, @Valid UpdateAuthorRequest request){
+        return authorService.update(id, request);
     }
 
     @PostMapping("/{id}/restore")

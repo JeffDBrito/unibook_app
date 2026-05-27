@@ -41,7 +41,7 @@ public class AuthorController {
     // Create author
     @PostMapping
     @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.", tags = {"Author Endpoints"})
-    public AuthorResponse createAuthor(@RequestBody CreateAuthorRequest request) {
+    public AuthorResponse createAuthor(@Valid @RequestBody CreateAuthorRequest request) {
         return authorService.createAuthor(request);
     }   
 

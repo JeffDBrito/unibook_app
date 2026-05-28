@@ -8,6 +8,7 @@ import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.PublisherMapper;
 import com.unibook.app.model.Publisher;
 import com.unibook.app.repository.PublisherRepository;
 
@@ -34,7 +35,7 @@ public class PublisherService {
         publisher.setTitle(request.getTitle());
         publisher.setDescription(request.getDescription());
         Publisher savedPublisher = publisherRepository.save(publisher);
-        return toResponse(savedPublisher);
+        return PublisherMapper.toResponse(savedPublisher);
     }
 
     /**
@@ -57,7 +58,7 @@ public class PublisherService {
         Publisher publisher = publisherRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
         publisher.restore();
-        return toResponse(publisherRepository.save(publisher));
+        return PublisherMapper.toResponse(publisherRepository.save(publisher));
     }
 
     /**
@@ -80,7 +81,7 @@ public class PublisherService {
             publisher.setDescription(request.getDescription());
         }
 
-        return toResponse(publisherRepository.save(publisher));
+        return PublisherMapper.toResponse(publisherRepository.save(publisher));
     }
 
     // ----------------- //
@@ -93,7 +94,7 @@ public class PublisherService {
      */
     public List<PublisherResponse> findAll() {
         List<Publisher> publishers = publisherRepository.findAll();
-        return publishers.stream().map(this::toResponse).toList();
+        return publishers.stream().map(PublisherMapper::toResponse).toList();
     }
 
     /**
@@ -104,7 +105,7 @@ public class PublisherService {
     public PublisherResponse findById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
-        return toResponse(publisher);
+        return PublisherMapper.toResponse(publisher);
     }
 
     /**
@@ -115,24 +116,7 @@ public class PublisherService {
     public PublisherResponse findByTitle(String title) {
         Publisher publisher = publisherRepository.findByTitle(title)
             .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with title: " + title));
-        return toResponse(publisher);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Publisher instance to PublisherResponse
-     * @param publisher
-     * @return PublisherResponse
-     */ // TODO: Create a Mapper
-    private PublisherResponse toResponse(Publisher publisher) {
-        PublisherResponse response = new PublisherResponse();
-        response.setId(publisher.getId());
-        response.setTitle(publisher.getTitle());
-        response.setDescription(publisher.getDescription());
-        return response;
+        return PublisherMapper.toResponse(publisher);
     }
 
 }

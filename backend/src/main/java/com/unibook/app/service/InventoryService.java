@@ -8,8 +8,7 @@ import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
 import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
-import com.unibook.app.mapper.CopyMapper;
-import com.unibook.app.model.Copy;
+import com.unibook.app.mapper.InventoryMapper;
 import com.unibook.app.model.Inventory;
 import com.unibook.app.repository.InventoryRepository;
 
@@ -37,7 +36,7 @@ public class InventoryService {
         inventory.setRow(request.getRow());
         inventory.setSlot(request.getSlot());
 
-        return toResponse(inventoryRepository.save(inventory));
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
     }
 
     /**
@@ -62,7 +61,7 @@ public class InventoryService {
             .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventory.restore();
-        return toResponse(inventoryRepository.save(inventory));
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
     }
 
     /**
@@ -93,7 +92,7 @@ public class InventoryService {
             inventory.setSlot(request.getSlot());
         }
 
-        return toResponse(inventoryRepository.save(inventory));
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
 
     }
 
@@ -107,7 +106,7 @@ public class InventoryService {
      */
     public List<InventoryResponse> findAll() {
         List<Inventory> inventories = inventoryRepository.findAll();
-        return inventories.stream().map(this::toResponse).toList();
+        return inventories.stream().map(InventoryMapper::toResponse).toList();
     }
 
     /**
@@ -119,7 +118,7 @@ public class InventoryService {
     public InventoryResponse findById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + id));
-        return toResponse(inventory);
+        return InventoryMapper.toResponse(inventory);
     }
 
     /**
@@ -136,32 +135,7 @@ public class InventoryService {
                 new ResourceNotFoundException("Inventory not found")
             );
 
-        return toResponse(inventory);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Inventory instance to InventoryResponse dto
-     * @param inventory
-     * @return InventoryResponse
-     */ // TODO: Create a Mapper
-    private InventoryResponse toResponse(Inventory inventory){
-        InventoryResponse response = new InventoryResponse();
-        response.setId(inventory.getId());
-        response.setSector(inventory.getSector());
-        response.setShelf(inventory.getShelf());
-        response.setRow(inventory.getRow());
-        response.setSlot(inventory.getSlot());
-
-        Copy copy = inventory.getCopy();
-        if(copy != null){
-            response.setCopy(CopyMapper.toResponse(copy));
-        }
-
-        return response;
-    }    
+        return InventoryMapper.toResponse(inventory);
+    } 
     
 }

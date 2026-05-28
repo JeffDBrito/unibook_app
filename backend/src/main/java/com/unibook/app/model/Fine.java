@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import com.unibook.app.enums.FineStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,6 +30,7 @@ public class Fine extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
     
     private String reason;

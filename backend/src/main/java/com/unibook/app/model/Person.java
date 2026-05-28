@@ -22,6 +22,7 @@ public class Person extends BaseEntity{
 
     @Column(unique = true)
     private String email;
+    
     private LocalDate birthDate;
 
     @OneToOne(mappedBy = "person")

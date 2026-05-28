@@ -21,10 +21,12 @@ public class Book extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String description;
 
+    @Column(unique = true, nullable = false)
     private String isbn;
 
     private Integer publicationYear;
@@ -40,7 +42,7 @@ public class Book extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "book")
-    private Set<Copy> copies = new HashSet<>();;
+    private Set<Copy> copies = new HashSet<>();
 
     @ManyToMany
     @JoinTable(

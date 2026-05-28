@@ -21,6 +21,7 @@ public class Role extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String title;
 
     @ManyToMany(fetch = FetchType.EAGER)

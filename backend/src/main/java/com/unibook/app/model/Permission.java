@@ -21,9 +21,10 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String title;
 
-    @Column(name = "group_name")
+    @Column(nullable = false)
     private String groupName;
 
     private String description;

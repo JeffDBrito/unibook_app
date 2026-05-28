@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.person.CreatePersonRequest;
+import com.unibook.app.dto.request.person.PartialUpdatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
@@ -70,7 +71,7 @@ public class PersonService {
      * @param partial
      * @return PersonResponse
      */
-    public PersonResponse update(Long id, UpdatePersonRequest request, boolean partial){
+    public PersonResponse update(Long id, PartialUpdatePersonRequest request, boolean partial){
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Person not Found"));
         
@@ -87,6 +88,10 @@ public class PersonService {
         }
 
         return PersonMapper.toResponse(personRepository.save(person));
+    }
+
+    public PersonResponse update(Long id, UpdatePersonRequest request){
+        return update(id, PersonMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //

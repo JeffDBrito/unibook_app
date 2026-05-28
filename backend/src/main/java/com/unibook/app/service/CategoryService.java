@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.category.CreateCategoryRequest;
+import com.unibook.app.dto.request.category.PartialUpdateCategoryRequest;
 import com.unibook.app.dto.request.category.UpdateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.CategoryMapper;
 import com.unibook.app.model.Category;
 import com.unibook.app.repository.CategoryRepository;
 
@@ -34,7 +36,7 @@ public class CategoryService {
         category.setTitle(request.getTitle());
         category.setDescription(request.getDescription());
         Category savedCategory = categoryRepository.save(category);
-        return toResponse(savedCategory);
+        return CategoryMapper.toResponse(savedCategory);
     }
 
     /**
@@ -57,7 +59,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));   
         category.restore();     
-        return toResponse(categoryRepository.save(category));
+        return CategoryMapper.toResponse(categoryRepository.save(category));
     }
 
     /**
@@ -67,7 +69,7 @@ public class CategoryService {
      * @param partial
      * @return CategoryResponse
      */
-    public CategoryResponse update(Long id, UpdateCategoryRequest request, boolean partial){
+    public CategoryResponse update(Long id, PartialUpdateCategoryRequest request, boolean partial){
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
@@ -79,7 +81,11 @@ public class CategoryService {
             category.setDescription(request.getDescription());
         }
 
-        return toResponse(categoryRepository.save(category));
+        return CategoryMapper.toResponse(categoryRepository.save(category));
+    }
+
+    public CategoryResponse update(Long id, UpdateCategoryRequest request){
+        return update(id, CategoryMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //
@@ -92,7 +98,7 @@ public class CategoryService {
      */
     public List<CategoryResponse> findAll() {
         List<Category> categories = categoryRepository.findAll();
-        return categories.stream().map(this::toResponse).toList();
+        return categories.stream().map(CategoryMapper::toResponse).toList();
     }
 
     /**
@@ -103,7 +109,7 @@ public class CategoryService {
     public CategoryResponse findById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
-        return toResponse(category);
+        return CategoryMapper.toResponse(category);
     }
 
     /**
@@ -114,24 +120,7 @@ public class CategoryService {
     public CategoryResponse findByTitle(String title) {
         Category category = categoryRepository.findByTitle(title)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with title: " + title));
-        return toResponse(category);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Category instance to CategoryResponse dto
-     * @param category
-     * @return CategoryResponse
-     */ // TODO: Create a Mapper
-    private CategoryResponse toResponse(Category category) {
-        CategoryResponse response = new CategoryResponse();
-        response.setId(category.getId());
-        response.setTitle(category.getTitle());
-        response.setDescription(category.getDescription());
-        return response;
+        return CategoryMapper.toResponse(category);
     }
 
 }

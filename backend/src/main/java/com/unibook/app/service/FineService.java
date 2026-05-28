@@ -9,6 +9,7 @@ import com.unibook.app.dto.request.fine.CreateFineRequest;
 import com.unibook.app.dto.response.FineResponse;
 import com.unibook.app.enums.FineStatus;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.FineMapper;
 import com.unibook.app.model.Fine;
 import com.unibook.app.model.Loan;
 import com.unibook.app.repository.FineRepository;
@@ -22,7 +23,6 @@ public class FineService {
 
     private final FineRepository fineRepository;
     private final LoanRepository loanRepository;
-    private final LoanService loanService;
 
     // --------------------- //
     // Management Operations //
@@ -44,7 +44,7 @@ public class FineService {
         fine.setStatus(FineStatus.PENDING);
         fine.setLoan(loan);
 
-        return toResponse(fineRepository.save(fine));
+        return FineMapper.toResponse(fineRepository.save(fine));
     }
 
     /**
@@ -59,7 +59,7 @@ public class FineService {
         fine.setStatus(FineStatus.PAID);
         fine.setPaidDate(LocalDate.now());
 
-        return toResponse(fineRepository.save(fine));
+        return FineMapper.toResponse(fineRepository.save(fine));
     }
 
     // ----------------- //
@@ -72,7 +72,7 @@ public class FineService {
      */
     public List<FineResponse> findAll() {
         List<Fine> fines = fineRepository.findAll();
-        return fines.stream().map(this::toResponse).toList();
+        return fines.stream().map(FineMapper::toResponse).toList();
     }
 
     /**
@@ -84,30 +84,7 @@ public class FineService {
         Fine fine = fineRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Fine not found"));
 
-        return toResponse(fine);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Fine instance to FineResponse
-     * @param fine
-     * @return FineResponse
-     */ // TODO: Create a Mapper
-    private FineResponse toResponse(Fine fine) {
-        FineResponse response = new FineResponse();
-        response.setId(fine.getId());
-        response.setAmount(fine.getAmount());
-        response.setReason(fine.getReason());
-        response.setIssuedDate(fine.getIssuedDate());
-        response.setPaidDate(fine.getPaidDate());
-        response.setStatus(fine.getStatus().name());
-        
-        response.setLoan(loanService.toResponse(fine.getLoan()));
-
-        return response;
+        return FineMapper.toResponse(fine);
     }
 
 }

@@ -17,11 +17,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateLoanRequest {
 
-    @NotBlank(message = "User is required")
+    @NotNull(message = "User is required")
     @Schema(example = "1")
     private Long userId;
 
-    @NotBlank(message = "Copy is required")
+    @NotNull(message = "Copy is required")
     @Schema(example = "1")
     private Long copyId;
 

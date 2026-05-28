@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class UpdateBookRequest {
     @Schema(example = "A classic American novel set in the Jazz Age.")
     private String description;
     
-    @NotBlank(message = "Publisher is required")
+    @NotNull(message = "Publisher is required")
     @Schema(example = "1")
     private Long publisherId;
 

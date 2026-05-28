@@ -28,7 +28,7 @@ public class CreateCopyRequest {
     @Schema(example = "AVAILABLE")
     private CopyStatus status;
 
-    @NotBlank(message = "Book is required")
+    @NotNull(message = "Book is required")
     @Schema(example = "1")
     private Long bookId;
 

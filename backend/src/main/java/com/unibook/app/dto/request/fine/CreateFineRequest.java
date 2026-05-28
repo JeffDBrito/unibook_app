@@ -27,7 +27,7 @@ public class CreateFineRequest {
     @Schema(example = "Late return")
     private String reason;
 
-    @NotBlank(message = "Loan is required")
+    @NotNull(message = "Loan is required")
     @Schema(example = "1")
     private Long loanId;
 }

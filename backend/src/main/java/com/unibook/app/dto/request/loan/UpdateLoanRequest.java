@@ -7,6 +7,7 @@ import com.unibook.app.enums.LoanStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +23,11 @@ public class UpdateLoanRequest {
     @Schema(example = "RETURNED")
     private LoanStatus status;
 
-    @NotBlank(message = "User is required")
+    @NotNull(message = "User is required")
     @Schema(example = "1")
     private Long userId;
 
-    @NotBlank(message = "Copy is required")
+    @NotNull(message = "Copy is required")
     @Schema(example = "1")
     private Long copyId;
 

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +37,7 @@ public class CreateBookRequest {
     @Schema(example = "A classic American novel set in the Jazz Age.")
     private String description;
     
-    @NotBlank(message = "Publisher is required")
+    @NotNull(message = "Publisher is required")
     @Schema(example = "1")
     private Long publisherId;
 

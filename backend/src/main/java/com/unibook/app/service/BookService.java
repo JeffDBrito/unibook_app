@@ -10,6 +10,7 @@ import com.unibook.app.dto.request.book.CreateBookRequest;
 import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
+import com.unibook.app.exceptions.BadRequestException;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.mapper.BookMapper;
 import com.unibook.app.model.Author;
@@ -43,24 +44,37 @@ public class BookService {
      * @throws ResourceNotFoundException
      */
     public BookResponse createBook(CreateBookRequest request) {
-        Book book = new Book();
-        book.setTitle(request.getTitle());
-        book.setIsbn(request.getIsbn());
-        book.setDescription(request.getDescription());
-        book.setPublicationYear(request.getPublicationYear());
 
-        Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + request.getPublisherId()));
+        String title = request.getTitle();
+        String isbn = request.getIsbn();
+        String description = request.getDescription();
+        Integer publicationYear = request.getPublicationYear();
+        Long publisherId = request.getPublisherId();
+        Set<Long> authorIds = request.getAuthorIds();
+        Set<Long> categoryIds = request.getCategoryIds();
+
+        if(bookRepository.existsByIsbn(isbn)){
+            throw new BadRequestException("Isbn already exists");
+        }
+
+        Book book = new Book();
+        book.setTitle(title);
+        book.setIsbn(isbn);
+        book.setDescription(description);
+        book.setPublicationYear(publicationYear);
+
+        Publisher publisher = publisherRepository.findById(publisherId)
+                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
         book.setPublisher(publisher);
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
-        if (authors.size() != request.getAuthorIds().size()) {
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(authorIds));
+        if (authors.size() != authorIds.size()) {
             throw new ResourceNotFoundException("One or more authors not found");
         }
         book.setAuthors(authors);
         
-        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
-        if (categories.size() != request.getCategoryIds().size()) {
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(categoryIds));
+        if (categories.size() != categoryIds.size()) {
             throw new ResourceNotFoundException("One or more categories not found");
         }
         book.setCategories(categories);
@@ -78,16 +92,20 @@ public class BookService {
      * @throws ResourceNotFoundException
      */
     public BookResponse update(Long id, PartialUpdateBookRequest request, boolean partial) {
-
+        
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        
         if (!partial || request.getTitle() != null) {
             book.setTitle(request.getTitle());
         }
-
-        if (!partial || request.getIsbn() != null) {
-            book.setIsbn(request.getIsbn());
+        
+        String isbn = request.getIsbn();
+        if (!partial || isbn != null) {            
+            if(bookRepository.existsByIsbn(isbn)){
+                throw new BadRequestException("Isbn already exists");
+            }
+            book.setIsbn(isbn);
         }
 
         if (!partial || request.getDescription() != null) {

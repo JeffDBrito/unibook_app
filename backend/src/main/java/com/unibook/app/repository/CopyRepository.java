@@ -6,4 +6,6 @@ import com.unibook.app.model.Copy;
 
 public interface CopyRepository extends JpaRepository<Copy, Long>{
     
+    Boolean existsByCode(String code);
+
 }

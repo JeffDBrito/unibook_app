@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
+import com.unibook.app.dto.request.inventory.PartialUpdateInventoryRequest;
 import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
@@ -71,7 +72,7 @@ public class InventoryService {
      * @param partial
      * @return InventoryResponse
      */
-    public InventoryResponse update(Long id, UpdateInventoryRequest request, boolean partial){
+    public InventoryResponse update(Long id, PartialUpdateInventoryRequest request, boolean partial){
 
         Inventory inventory = inventoryRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
@@ -94,6 +95,10 @@ public class InventoryService {
 
         return InventoryMapper.toResponse(inventoryRepository.save(inventory));
 
+    }
+
+    public InventoryResponse update(Long id, UpdateInventoryRequest request){
+        return update(id, InventoryMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //

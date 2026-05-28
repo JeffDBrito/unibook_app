@@ -1,5 +1,7 @@
 package com.unibook.app.mapper;
 
+import com.unibook.app.dto.request.inventory.PartialUpdateInventoryRequest;
+import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -26,5 +28,19 @@ public class InventoryMapper {
 
         return response;
     } 
+
+    /**
+     * Convert Full update dto to Partial update dto
+     * @param request
+     * @return
+     */
+    public static PartialUpdateInventoryRequest toPartialUpdate(UpdateInventoryRequest request){
+        PartialUpdateInventoryRequest partial = new PartialUpdateInventoryRequest();
+        partial.setSector(request.getSector());
+        partial.setShelf(request.getShelf());
+        partial.setRow(request.getRow());
+        partial.setSlot(request.getSlot());
+        return partial;
+    }
 
 }

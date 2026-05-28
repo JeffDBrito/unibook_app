@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
+import com.unibook.app.dto.request.publisher.PartialUpdatePublisherRequest;
 import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
@@ -68,7 +69,7 @@ public class PublisherService {
      * @param partial
      * @return PublisherResponse
      */
-    public PublisherResponse update(Long id, UpdatePublisherRequest request, boolean partial){
+    public PublisherResponse update(Long id, PartialUpdatePublisherRequest request, boolean partial){
 
         Publisher publisher = publisherRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
@@ -82,6 +83,10 @@ public class PublisherService {
         }
 
         return PublisherMapper.toResponse(publisherRepository.save(publisher));
+    }
+
+    public PublisherResponse update(Long id, UpdatePublisherRequest request){
+        return update(id, PublisherMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //

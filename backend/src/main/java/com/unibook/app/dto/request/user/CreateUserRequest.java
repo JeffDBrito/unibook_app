@@ -18,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateUserRequest {
 
+    // Person details
     @NotBlank(message = "Name is required")
     @Schema(example = "John Doe")
     private String name;
@@ -32,6 +33,7 @@ public class CreateUserRequest {
     @Schema(example = "2000-12-24")
     private LocalDate birthDate;
 
+    // User details
     @NotBlank(message = "Login is required")
     @Size(min = 3, max = 15, message = "Login must contain between 3 and 15 characters")
     @Schema(example = "john123")

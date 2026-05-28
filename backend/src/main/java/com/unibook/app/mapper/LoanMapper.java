@@ -1,5 +1,7 @@
 package com.unibook.app.mapper;
 
+import com.unibook.app.dto.request.loan.PartialUpdateLoanRequest;
+import com.unibook.app.dto.request.loan.UpdateLoanRequest;
 import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.model.Loan;
 
@@ -24,5 +26,16 @@ public class LoanMapper {
         response.setStatus(loan.getStatus().name());
 
         return response;
+    }
+
+    /**
+     * Convert full update dto to partial update dto
+     * @param request
+     * @return PartialUpdateLoanRequest
+     */
+    public static PartialUpdateLoanRequest toPartialUpdate(UpdateLoanRequest request){
+        PartialUpdateLoanRequest partial = new PartialUpdateLoanRequest();
+        partial.setStatus(request.getStatus());
+        return partial;
     }
 }

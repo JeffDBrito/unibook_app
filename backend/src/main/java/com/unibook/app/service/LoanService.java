@@ -11,8 +11,7 @@ import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.enums.LoanStatus;
 import com.unibook.app.exceptions.ResourceNotFoundException;
-import com.unibook.app.mapper.CopyMapper;
-import com.unibook.app.mapper.UserMapper;
+import com.unibook.app.mapper.LoanMapper;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Loan;
 import com.unibook.app.model.User;
@@ -67,7 +66,7 @@ public class LoanService {
 
         copyRepository.save(copy);
 
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -88,7 +87,7 @@ public class LoanService {
 
         copyRepository.save(copy);
 
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -112,7 +111,7 @@ public class LoanService {
             .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.restore();
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -135,7 +134,7 @@ public class LoanService {
             loan.setStatus(request.getStatus());
         }
         
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
 
     }
 
@@ -152,7 +151,7 @@ public class LoanService {
         Loan loan = loanRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
         
-        return toResponse(loan);
+        return LoanMapper.toResponse(loan);
     }
 
     /**
@@ -161,33 +160,7 @@ public class LoanService {
      */
     public List<LoanResponse> findAll(){
         List<Loan> loans = loanRepository.findAll();
-        return loans.stream().map(this::toResponse).toList();
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert a Loan instance to LoanResponse
-     * @param loan
-     * @return
-     */ // TODO: Create a Mapper
-    public LoanResponse toResponse(Loan loan) {
-
-        LoanResponse response = new LoanResponse();
-
-        response.setId(loan.getId());
-        response.setLoanDate(loan.getLoanDate());
-        response.setDueDate(loan.getDueDate());
-        response.setReturnDate(loan.getReturnDate());
-        
-        response.setCopy(CopyMapper.toResponse(loan.getCopy()));
-        response.setUser(UserMapper.toResponse(loan.getUser()));
-
-        response.setStatus(loan.getStatus().name());
-
-        return response;
+        return loans.stream().map(LoanMapper::toResponse).toList();
     }
 
 }

@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.copy.CreateCopyRequest;
+import com.unibook.app.dto.request.copy.PartialUpdateCopyRequest;
 import com.unibook.app.dto.request.copy.UpdateCopyRequest;
 import com.unibook.app.dto.response.CopyResponse;
 import com.unibook.app.service.CopyService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -41,7 +43,7 @@ public class CopyController {
     // Create copy
     @PostMapping
     @Operation(summary = "Create a new copy", description = "Creates a new copy with the provided details and returns the created copy.", tags = {"Copy Endpoints"})
-    public CopyResponse create(@RequestBody CreateCopyRequest request) {
+    public CopyResponse create(@Valid @RequestBody CreateCopyRequest request) {
         System.out.println(request);
         return copyService.createCopy(request);
     }
@@ -49,15 +51,15 @@ public class CopyController {
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update copy", description = "Partially updates an existing copy with the provided details and returns the updated copy.", tags = {"Copy Endpoints"})
-    public CopyResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateCopyRequest request ) {
+    public CopyResponse partialUpdate( @PathVariable Long id, @Valid @RequestBody PartialUpdateCopyRequest request ) {
         return copyService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update copy", description = "Updates an existing copy with the provided details and returns the updated copy.", tags = {"Copy Endpoints"})
-    public CopyResponse fullUpdate( @PathVariable Long id, @RequestBody UpdateCopyRequest request) {
-        return copyService.update(id, request, false);
+    public CopyResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateCopyRequest request) {
+        return copyService.update(id, request);
     }
 
     // Get copy by id

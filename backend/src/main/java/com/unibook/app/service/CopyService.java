@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.copy.CreateCopyRequest;
+import com.unibook.app.dto.request.copy.PartialUpdateCopyRequest;
 import com.unibook.app.dto.request.copy.UpdateCopyRequest;
-import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.dto.response.CopyResponse;
+import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.exceptions.BadRequestException;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.CopyMapper;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -24,7 +27,6 @@ public class CopyService {
  
     private final CopyRepository copyRepository;
     private final BookRepository bookRepository;
-    private final BookService bookService;
     private final InventoryRepository inventoryRepository;
 
     // --------------------- //
@@ -38,16 +40,24 @@ public class CopyService {
      */
     public CopyResponse createCopy(CreateCopyRequest request){
 
-        Copy copy = new Copy();
-        copy.setCode(request.getCode());
-        copy.setStatus(request.getStatus());
+        String code = request.getCode();
+        CopyStatus status = request.getStatus();
+        Long bookId = request.getBookId();
 
-        Book book = bookRepository.findById(request.getBookId())
+        if(copyRepository.existsByCode(code)){
+            throw new BadRequestException("code already exists");
+        }
+
+        Copy copy = new Copy();
+        copy.setCode(code);
+        copy.setStatus(status);
+
+        Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         copy.setBook(book);
 
-        return toResponse(copyRepository.save(copy));
+        return CopyMapper.toResponse(copyRepository.save(copy));
     }
 
     /**
@@ -71,7 +81,7 @@ public class CopyService {
             .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         copy.restore();
-        return toResponse(copyRepository.save(copy));
+        return CopyMapper.toResponse(copyRepository.save(copy));
     }
 
 
@@ -82,17 +92,24 @@ public class CopyService {
      * @param partial
      * @return CopyResponse
      */
-    public CopyResponse update(Long id, UpdateCopyRequest request, boolean partial){
+    public CopyResponse update(Long id, PartialUpdateCopyRequest request, boolean partial){
+        
+        String code = request.getCode();
+        CopyStatus status = request.getStatus();
+
+        if(copyRepository.existsByCode(code)){
+            throw new BadRequestException("code already exists");
+        }
 
         Copy copy = copyRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
-        if(!partial || request.getCode() != null){
-            copy.setCode(request.getCode());
+        if(!partial || code != null){
+            copy.setCode(code);
         }
 
-        if(!partial || request.getStatus() != null){
-            copy.setStatus(request.getStatus());
+        if(!partial || status != null){
+            copy.setStatus(status);
         }
         
         if(!partial || request.getInventoryId() != null){
@@ -102,9 +119,14 @@ public class CopyService {
             copy.setInventory(inventory);
         }
         
-        return toResponse(copyRepository.save(copy));
+        return CopyMapper.toResponse(copyRepository.save(copy));
 
     }
+
+    public CopyResponse update(Long id, UpdateCopyRequest request){
+        return update(id, CopyMapper.toPartialRequest(request), false);
+    }
+
 
     // ----------------- //
     // Search Operations //
@@ -119,7 +141,7 @@ public class CopyService {
         Copy copy = copyRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
         
-        return toResponse(copy);
+        return CopyMapper.toResponse(copy);
     }
 
     /**
@@ -128,47 +150,7 @@ public class CopyService {
      */
     public List<CopyResponse> findAll(){
         List<Copy> copies = copyRepository.findAll();
-        return copies.stream().map(this::toResponse).toList();
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert a Copy instance to CopyResponse
-     * @param copy
-     * @return
-     */
-    // TODO: Create a Mapper
-    public CopyResponse toResponse(Copy copy) {
-
-        CopyResponse response = new CopyResponse();
-
-        response.setId(copy.getId());
-        response.setCode(copy.getCode());
-        response.setStatus(copy.getStatus().name());
-
-        if (copy.getInventory() != null) {
-
-            Inventory inventory = copy.getInventory();
-
-            response.setInventoryAddress(
-                "section_" + inventory.getSector() +
-                ", shelf_" + inventory.getShelf() +
-                ", row_" + inventory.getRow() +
-                ", slot_" + inventory.getSlot()
-            );
-        }
-
-        if (copy.getBook() != null) {
-            BookResponse bookResponse = bookService.findById(copy.getBook().getId());
-            
-            response.setBook(bookResponse);
-
-        }
-
-        return response;
+        return copies.stream().map(CopyMapper::toResponse).toList();
     }
 
 }

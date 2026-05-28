@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.loan.CreateLoanRequest;
+import com.unibook.app.dto.request.loan.PartialUpdateLoanRequest;
 import com.unibook.app.dto.request.loan.UpdateLoanRequest;
 import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
@@ -121,14 +122,10 @@ public class LoanService {
      * @param partial
      * @return LoanResponse
      */
-    public LoanResponse update(Long id, UpdateLoanRequest request, boolean partial){
+    public LoanResponse update(Long id, PartialUpdateLoanRequest request, boolean partial){
 
         Loan loan = loanRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
-
-        if(!partial || request.getReturnDate() != null){
-            loan.setReturnDate(request.getReturnDate());
-        }
 
         if(!partial || request.getStatus() != null){
             loan.setStatus(request.getStatus());
@@ -136,6 +133,10 @@ public class LoanService {
         
         return LoanMapper.toResponse(loanRepository.save(loan));
 
+    }
+
+    public LoanResponse update(Long id, UpdateLoanRequest request){
+        return update(id,LoanMapper.toPartialUpdate(request),false);
     }
 
     // ----------------- //

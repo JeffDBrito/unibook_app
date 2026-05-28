@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
+import com.unibook.app.dto.request.publisher.PartialUpdatePublisherRequest;
 import com.unibook.app.dto.request.publisher.UpdatePublisherRequest;
 import com.unibook.app.dto.response.PublisherResponse;
 import com.unibook.app.service.PublisherService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/publishers")
@@ -39,7 +41,7 @@ public class PublisherController {
     // Create publisher
     @PostMapping
     @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the provided details and returns the created publisher.", tags = {"Publisher Endpoints"})
-    public PublisherResponse createPublisher(@RequestBody CreatePublisherRequest request) {
+    public PublisherResponse createPublisher(@Valid @RequestBody CreatePublisherRequest request) {
         return publisherService.createPublisher(request);
     }
 
@@ -67,15 +69,15 @@ public class PublisherController {
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Publisher", description = "Partially updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
-    public PublisherResponse partialUpdate(@PathVariable Long id, @RequestBody UpdatePublisherRequest request){
+    public PublisherResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdatePublisherRequest request){
         return publisherService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update Publisher", description = "Updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
-    public PublisherResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePublisherRequest request){
-        return publisherService.update(id, request, false);
+    public PublisherResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdatePublisherRequest request){
+        return publisherService.update(id, request);
     }
 
     @PostMapping("/{id}/restore")

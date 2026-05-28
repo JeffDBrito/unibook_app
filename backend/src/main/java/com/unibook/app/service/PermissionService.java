@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.response.PermissionResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
-import com.unibook.app.model.Permission;
+import com.unibook.app.mapper.PermissionMapper;
 import com.unibook.app.repository.PermissionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PermissionService {
      */
     public List<PermissionResponse> findAll() {
         return permissionRepository.findAll().stream()
-            .map(this::toResponse)
+            .map(PermissionMapper::toResponse)
             .collect(java.util.stream.Collectors.toList());
     }
 
@@ -37,25 +37,8 @@ public class PermissionService {
      * @return PermissionResponse
      */
     public PermissionResponse findById(Long id) {
-        return toResponse(permissionRepository.findById(id)
+        return PermissionMapper.toResponse(permissionRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Permission not found with id: " + id)));
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Permission instance to PermissionResponse
-     * @param permission
-     * @return PermissionResponse
-     */ // TODO: Create a Mapper
-    public PermissionResponse toResponse(Permission permission) {
-        PermissionResponse response = new PermissionResponse();
-        response.setId(permission.getId());
-        response.setTitle(permission.getTitle());
-        response.setDescription(permission.getDescription());
-        return response;
     }
 
 }

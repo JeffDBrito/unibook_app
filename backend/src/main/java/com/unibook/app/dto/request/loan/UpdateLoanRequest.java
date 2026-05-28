@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import com.unibook.app.enums.LoanStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +18,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateLoanRequest {
 
+    @NotBlank(message = "Status is required")
     @Schema(example = "RETURNED")
     private LoanStatus status;
 
+    @NotBlank(message = "User is required")
+    @Schema(example = "1")
+    private Long userId;
+
+    @NotBlank(message = "Copy is required")
+    @Schema(example = "1")
+    private Long copyId;
+
+    @Future(message = "Due date must be in the future")
+    @NotBlank(message = "Due date is required")
     @Schema(example = "2026-05-20")
-    private LocalDate returnDate;
+    private LocalDate dueDate;
 }

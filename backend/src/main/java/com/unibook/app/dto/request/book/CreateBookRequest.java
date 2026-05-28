@@ -1,6 +1,6 @@
 package com.unibook.app.dto.request.book;
 
-import java.util.List;
+import java.util.Set;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -42,10 +42,10 @@ public class CreateBookRequest {
 
     @NotBlank(message = "At least one actor is required")
     @Schema(example = "[1, 2]")
-    private List<Long> authorIds;
+    private Set<Long> authorIds;
 
     @NotBlank(message = "At least one category is required")
     @Schema(example = "[1, 3]")
-    private List<Long> categoryIds;
+    private Set<Long> categoryIds;
 
 }

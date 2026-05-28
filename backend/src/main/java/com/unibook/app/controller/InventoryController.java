@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
+import com.unibook.app.dto.request.inventory.PartialUpdateInventoryRequest;
 import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.service.InventoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/inventory")
@@ -42,22 +44,22 @@ public class InventoryController {
     // Create inventory
     @PostMapping
     @Operation(summary = "Create a new inventory", description = "Creates a new inventory with the provided details and returns the created inventory.", tags = {"Inventory Endpoints"})
-    public InventoryResponse create(@RequestBody CreateInventoryRequest request) {
+    public InventoryResponse create(@Valid @RequestBody CreateInventoryRequest request) {
         return inventoryService.createInventory(request);
     }
 
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update inventory", description = "Partially updates an existing inventory with the provided details and returns the updated inventory.", tags = {"Inventory Endpoints"})
-    public InventoryResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateInventoryRequest request ) {
+    public InventoryResponse partialUpdate( @PathVariable Long id, @Valid @RequestBody PartialUpdateInventoryRequest request ) {
         return inventoryService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update inventory", description = "Updates an existing inventory with the provided details and returns the updated inventory.", tags = {"Inventory Endpoints"})
-    public InventoryResponse fullUpdate( @PathVariable Long id, @RequestBody UpdateInventoryRequest request) {
-        return inventoryService.update(id, request, false);
+    public InventoryResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateInventoryRequest request) {
+        return inventoryService.update(id, request);
     }
 
     // Get inventory by id

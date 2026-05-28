@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -226,8 +227,8 @@ public class DataInitializer {
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
             Long publisherId = publisherService.findByTitle("Scribner").getId(); 
-            List<Long> authorIds = List.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
-            List<Long> categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            Set<Long> authorIds = Set.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
+            Set<Long> categoryIds = Set.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
             
             bookService.createBook(buildBook(
                 "The Great Gatsby",
@@ -239,8 +240,8 @@ public class DataInitializer {
                 categoryIds));
 
             publisherId = publisherService.findByTitle("J.B. Lippincott & Co.").getId();
-            authorIds = List.of(authorService.findByName("Harper Lee").getId());
-            categoryIds = List.of(categoryService.findByTitle("Fiction").getId());
+            authorIds = Set.of(authorService.findByName("Harper Lee").getId());
+            categoryIds = Set.of(categoryService.findByTitle("Fiction").getId());
 
             bookService.createBook(buildBook(
                 "To Kill a Mockingbird",
@@ -252,8 +253,8 @@ public class DataInitializer {
                 categoryIds));
 
             publisherId = publisherService.findByTitle("Secker & Warburg").getId();
-            authorIds = List.of(authorService.findByName("George Orwell").getId());
-            categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            authorIds = Set.of(authorService.findByName("George Orwell").getId());
+            categoryIds = Set.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
 
             bookService.createBook(buildBook(
                 "1984",
@@ -334,8 +335,8 @@ public class DataInitializer {
         String description,
         Integer year,
         Long publisherId,
-        List<Long> authorIds,
-        List<Long> categoryIds
+        Set<Long> authorIds,
+        Set<Long> categoryIds
     ){
         CreateBookRequest request = CreateBookRequest.builder()
         .title(title)

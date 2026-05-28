@@ -10,6 +10,7 @@ import com.unibook.app.dto.request.person.CreatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.PersonMapper;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.PersonRepository;
 
@@ -36,7 +37,7 @@ public class PersonService {
         person.setName(request.getName());
         person.setEmail(request.getEmail());
         person.setBirthDate(request.getBirthDate());
-        return toResponse(personRepository.save(person));
+        return PersonMapper.toResponse(personRepository.save(person));
     }
 
     /**
@@ -59,7 +60,7 @@ public class PersonService {
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id));
         person.restore();
-        return toResponse(personRepository.save(person));
+        return PersonMapper.toResponse(personRepository.save(person));
     }
 
     /**
@@ -85,7 +86,7 @@ public class PersonService {
             person.setBirthDate(request.getBirthDate());
         }
 
-        return toResponse(personRepository.save(person));
+        return PersonMapper.toResponse(personRepository.save(person));
     }
 
     // ----------------- //
@@ -98,7 +99,7 @@ public class PersonService {
      */
     public List<PersonResponse> findAll() {
         return personRepository.findAll().stream()
-            .map(this::toResponse)
+            .map(PersonMapper::toResponse)
             .collect(java.util.stream.Collectors.toList());
     }
 
@@ -108,7 +109,7 @@ public class PersonService {
      * @return PersonResponse
      */
     public PersonResponse findById(Long id) {
-        return toResponse(personRepository.findById(id)
+        return PersonMapper.toResponse(personRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id)));
     }
 
@@ -118,24 +119,8 @@ public class PersonService {
      * @return Optional<PersonResponse>
      */
     public Optional<PersonResponse> findByName(String name) {
-        return personRepository.findByName(name).map(this::toResponse);
+        return personRepository.findByName(name).map(PersonMapper::toResponse);
     }
 
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Person instance to PersonResponse
-     * @param person
-     * @return PersonResponse
-     */ // TODO: Create a Mapper
-    private PersonResponse toResponse(Person person) {
-        PersonResponse response = new PersonResponse();
-        response.setBirthDate(person.getBirthDate());
-        response.setName(person.getName());
-        response.setEmail(person.getEmail());
-        return response;
-    }
     
 }

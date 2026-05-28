@@ -32,4 +32,7 @@ public class CreateCopyRequest {
     @Schema(example = "1")
     private Long bookId;
 
+    @Schema(example = "1")
+    private Long inventoryId;
+
 }

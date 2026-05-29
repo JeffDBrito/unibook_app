@@ -29,4 +29,8 @@ public class UpdateInventoryRequest {
     @Schema(example = "12")
     private Integer slot;
 
+    @NotNull(message = "Copy is required")
+    @Schema(example = "3")
+    private Long copyId;
+
 }

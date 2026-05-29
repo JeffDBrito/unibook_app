@@ -20,4 +20,7 @@ public class PartialUpdateInventoryRequest {
     @Schema(example = "12")
     private Integer slot;
 
+    @Schema(example = "3")
+    private Long copyId;
+
 }

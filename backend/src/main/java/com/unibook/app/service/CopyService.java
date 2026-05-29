@@ -43,6 +43,7 @@ public class CopyService {
         String code = request.getCode();
         CopyStatus status = request.getStatus();
         Long bookId = request.getBookId();
+        Long inventoryId = request.getInventoryId();
 
         if(copyRepository.existsByCode(code)){
             throw new BadRequestException("code already exists");
@@ -56,8 +57,29 @@ public class CopyService {
             .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         copy.setBook(book);
+        
+        Inventory inventory = null;
+        if(request.getInventoryId() != null){
+            inventory = inventoryRepository.findById(inventoryId)
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+            
+            if(inventory.getCopy() != null){
+                throw new BadRequestException("Inventory occupied");
+            }
+        }
+        
+        Copy savedCopy = copyRepository.save(copy);
+        
+        // After validate inventory, assign existing inventory to copy and save copy, then assign copy to inventory
+        if(request.getInventoryId() != null && inventory != null){
+            copy.setInventory(inventory);    
+            savedCopy = copyRepository.save(copy);
 
-        return CopyMapper.toResponse(copyRepository.save(copy));
+            inventory.setCopy(savedCopy);
+            inventoryRepository.save(inventory);            
+        }
+        
+        return CopyMapper.toResponse(savedCopy);
     }
 
     /**
@@ -96,6 +118,7 @@ public class CopyService {
         
         String code = request.getCode();
         CopyStatus status = request.getStatus();
+        Long inventoryId = request.getInventoryId();
 
         if(copyRepository.existsByCode(code)){
             throw new BadRequestException("code already exists");
@@ -117,6 +140,31 @@ public class CopyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
             copy.setInventory(inventory);
+        }
+
+        Inventory inventory = null;
+        
+        if(!partial || request.getInventoryId() != null){
+            if(request.getInventoryId() != null){
+                inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+                
+                if(inventory.getCopy() != null){
+                    throw new BadRequestException("Inventory occupied");
+                }
+            }
+            
+        }
+
+        Copy savedCopy = copyRepository.save(copy);
+        
+        // After validate inventory, assign existing inventory to copy and save copy, then assign copy to inventory
+        if(request.getInventoryId() != null && inventory != null){
+            copy.setInventory(inventory);    
+            savedCopy = copyRepository.save(copy);
+
+            inventory.setCopy(savedCopy);
+            inventoryRepository.save(inventory);            
         }
         
         return CopyMapper.toResponse(copyRepository.save(copy));

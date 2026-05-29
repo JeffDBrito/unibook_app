@@ -2,6 +2,7 @@ package com.unibook.app.dto.request.inventory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,11 +21,11 @@ public class UpdateInventoryRequest {
     @Schema(example = "2")
     private String shelf;
     
-    @NotBlank(message = "Row is required")
+    @NotNull(message = "Row is required")
     @Schema(example = "4")
     private Integer row;
     
-    @NotBlank(message = "Slot is required")
+    @NotNull(message = "Slot is required")
     @Schema(example = "12")
     private Integer slot;
 

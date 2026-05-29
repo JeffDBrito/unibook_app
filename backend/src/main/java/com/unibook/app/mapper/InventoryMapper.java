@@ -20,6 +20,12 @@ public class InventoryMapper {
         response.setShelf(inventory.getShelf());
         response.setRow(inventory.getRow());
         response.setSlot(inventory.getSlot());
+        response.setAddressString(
+            "section_" + inventory.getSector() +
+            ", shelf_" + inventory.getShelf() +
+            ", row_" + inventory.getRow() +
+            ", slot_" + inventory.getSlot()
+        );        
 
         Copy copy = inventory.getCopy();
         if(copy != null){

@@ -10,7 +10,9 @@ import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.mapper.InventoryMapper;
+import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
+import com.unibook.app.repository.CopyRepository;
 import com.unibook.app.repository.InventoryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final CopyRepository copyRepository;
 
     // --------------------- //
     // Management Operations //
@@ -91,6 +94,13 @@ public class InventoryService {
 
         if(!partial || request.getSlot() != null){
             inventory.setSlot(request.getSlot());
+        }
+
+        if(!partial || request.getCopyId() != null){
+            Copy copy = copyRepository.findById(request.getCopyId())
+                .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+
+            inventory.setCopy(copy);
         }
 
         return InventoryMapper.toResponse(inventoryRepository.save(inventory));

@@ -14,12 +14,14 @@ export async function api(path, options = {}) {
     }
   });
 
-  if (response.status === 401) {
+  const isLoginRequest = path === "/auth/login";
+
+  if (response.status === 401 && !isLoginRequest) {
     console.warn("Invalid or expired token, logging out...");
 
     localStorage.removeItem("token");
 
-    window.location.href = "/";
+    window.location.href = "/login";
 
     return;
   }

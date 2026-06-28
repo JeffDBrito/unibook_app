@@ -3,9 +3,6 @@ import { useAuth } from "../hooks/useAuth";
 import { loginRequest } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
-import Input from "../components/Input";
-import Button from "../components/Button";
-
 export default function Login() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -19,15 +16,16 @@ export default function Login() {
     e.preventDefault();
 
     setLoading(true);
+    setError("");
 
     try {
       localStorage.removeItem("token");
+
       const data = await loginRequest(login, password);
 
-      const token = data.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", data.token);
 
-      doLogin(token);
+      doLogin(data.token);
 
       navigate("/dashboard");
     } catch (err) {
@@ -38,30 +36,78 @@ export default function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 300, margin: "100px auto" }}>
-      <h2>Login</h2>
+    <div className="loginPage container vh-100 d-flex align-items-center justify-content-center">
+      <div
+        className="card shadow-sm p-4"
+        style={{ width: "100%", maxWidth: "420px" }}
+      >
+        <div className="text-center mb-4">
+          <h2 className="fw-bold logo">UniBook</h2>
+          <p className="text-muted mb-0">
+            Login to access the system
+          </p>
+        </div>
 
-      <form onSubmit={handleLogin}>
-        <Input
-          type="text"
-          placeholder="Login"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-        />
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
 
-        <Input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label className="form-label">
+              Login
+            </label>
 
-        <Button type="submit">
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-      </form>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your login"
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
+              required
+            />
+          </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          <div className="mb-4">
+            <label className="form-label">
+              Password
+            </label>
+
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="my-3">
+            <a href="#">Sign up</a>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

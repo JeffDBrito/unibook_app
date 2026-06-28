@@ -1,42 +1,68 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  --color-primary: #5c65c0;
+  --color-primary-light: #6f95ff;
+
+  --color-secondary: #413b6b;
+
+  --color-background: #1c0b2b;
+  --color-surface: #301c41;
+
+  --color-text: #ffffff;
+  --color-text-muted: #c7c7c7;
+
+  --icon-sm: 25px;
+  --icon-md: 50px;
+  --icon-lg: 70px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+#root{
+  max-width: 100%;
+  margin: 0;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sidebar{
+  width: 220px;
+  background: var(--color-background);
+  color: var(--color-text);
+  padding: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.sidebar-link{
+  color: #fff;
+	text-decoration: none;
+	padding: 8px;
+	border-radius: 4px;
+	transition: 0.2s
 }
 
-.card {
-  padding: 2em;
+.sidebar-link:hover{
+  background-color: var(--color-secondary);
+  color: var(--color-text);
 }
 
-.read-the-docs {
-  color: #888;
+.sidebar-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.sidebar-icon.icon-sm {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.sidebar-icon.icon-md {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.sidebar-icon.icon-lg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+.loginPage{
+  background-color: var(--color-background);
+  max-width: 100%;
+}
+

@@ -22,7 +22,7 @@ export default function Users({ title }) {
 
         setUsers(data);
       } catch (err) {
-        setError("Erro ao carregar usuários");
+        setError("Error when loading users");
       } finally {
         setLoading(false);
       }
@@ -36,7 +36,7 @@ export default function Users({ title }) {
     { key: "login", label: "Login", accessor: "login" },
     {
       key: "name",
-      label: "Nome",
+      label: "Name",
       render: (user) => user.name
     },
     {
@@ -51,21 +51,21 @@ export default function Users({ title }) {
     },
     {
       key: "actions",
-      label: "Ações",
+      label: "Actions",
       render: (user) => (
         <div style={{ display: "flex", gap: "8px" }}>
           <button
             onClick={() => handleEdit(user)}
             style={actionButton("#3b82f6")}
           >
-            Editar
+            Edit
           </button>
 
           <button
             onClick={() => handleDelete(user)}
             style={actionButton("#ef4444")}
           >
-            Deletar
+            Delete
           </button>
         </div>
       )
@@ -89,7 +89,7 @@ export default function Users({ title }) {
 
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
     } catch (err) {
-      alert("Erro ao deletar usuário");
+      alert("Error when deleting user");
     }
   }
 
@@ -107,9 +107,9 @@ export default function Users({ title }) {
 
   return (
     <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Lista de Usuários</h2>
+      <h2 style={{ marginBottom: "20px" }}>User List</h2>
 
-      {loading && <p>Carregando...</p>}
+      {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button
         style={{
@@ -121,7 +121,7 @@ export default function Users({ title }) {
           borderRadius: "4px"
         }}
       >
-        Novo Usuário
+        Create User
       </button>
       {!loading && !error && (
         <Table columns={columns} data={users} />

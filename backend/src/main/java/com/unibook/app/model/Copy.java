@@ -22,6 +22,7 @@ public class Copy extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String code;
 
     @Enumerated(EnumType.STRING)

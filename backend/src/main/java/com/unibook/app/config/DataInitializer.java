@@ -6,6 +6,7 @@ import com.unibook.app.dto.request.category.CreateCategoryRequest;
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -175,10 +177,10 @@ public class DataInitializer {
                 "admin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
-                        .orElseThrow(() -> new RuntimeException("Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Admin role not found"))
                         .getId(),                    
                     roleRepository.findByTitle("SUPER_ADMIN")
-                        .orElseThrow(() -> new RuntimeException("Super Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Super Admin role not found"))
                         .getId()
                 ))
             );
@@ -225,8 +227,8 @@ public class DataInitializer {
     CommandLineRunner initBooks(BookService bookService, AuthorService authorService, CategoryService categoryService, PublisherService publisherService) {
         return args -> {
             Long publisherId = publisherService.findByTitle("Scribner").getId(); 
-            List<Long> authorIds = List.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
-            List<Long> categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            Set<Long> authorIds = Set.of(authorService.findByName("F. Scott Fitzgerald").getId()); 
+            Set<Long> categoryIds = Set.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
             
             bookService.createBook(buildBook(
                 "The Great Gatsby",
@@ -238,8 +240,8 @@ public class DataInitializer {
                 categoryIds));
 
             publisherId = publisherService.findByTitle("J.B. Lippincott & Co.").getId();
-            authorIds = List.of(authorService.findByName("Harper Lee").getId());
-            categoryIds = List.of(categoryService.findByTitle("Fiction").getId());
+            authorIds = Set.of(authorService.findByName("Harper Lee").getId());
+            categoryIds = Set.of(categoryService.findByTitle("Fiction").getId());
 
             bookService.createBook(buildBook(
                 "To Kill a Mockingbird",
@@ -251,8 +253,8 @@ public class DataInitializer {
                 categoryIds));
 
             publisherId = publisherService.findByTitle("Secker & Warburg").getId();
-            authorIds = List.of(authorService.findByName("George Orwell").getId());
-            categoryIds = List.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
+            authorIds = Set.of(authorService.findByName("George Orwell").getId());
+            categoryIds = Set.of(categoryService.findByTitle("Fiction").getId(), categoryService.findByTitle("Science Fiction").getId());
 
             bookService.createBook(buildBook(
                 "1984",
@@ -313,12 +315,15 @@ public class DataInitializer {
             if(env.getProperty("vars.print", Boolean.class) == true){
                 System.out.println("APP NAME: "+env.getProperty("spring.application.name"));
                 System.out.println("JWT EXPIRATION TIME: "+env.getProperty("jwt.expiration"));
-                System.out.println("FRONTEND URL: "+env.getProperty("frontend.url"));
-                System.out.println("FRONTEND URL: "+env.getProperty("frontend.port"));
+                System.out.println("APP URL: "+env.getProperty("app.url"));
+                System.out.println("FRONTEND PORT: "+env.getProperty("frontend.port"));
                 System.out.println("SERVER PORT: "+env.getProperty("server.port"));
                 System.out.println("POSTGRES url: "+env.getProperty("spring.datasource.url"));
                 System.out.println("POSTGRES username: "+env.getProperty("spring.datasource.username"));
                 System.out.println("POSTGRES password: "+env.getProperty("spring.datasource.password"));
+                System.out.println("\n-------------------------------------\n");
+                System.out.println("APP FRONTEND: "+env.getProperty("app.url")+":"+env.getProperty("frontend.port"));
+                System.out.println("SWAGGER URL: "+env.getProperty("app.url")+":"+env.getProperty("server.port")+"/swagger-ui/index.html#/");
             }
             System.out.println("\n===============================\n");
         };
@@ -330,8 +335,8 @@ public class DataInitializer {
         String description,
         Integer year,
         Long publisherId,
-        List<Long> authorIds,
-        List<Long> categoryIds
+        Set<Long> authorIds,
+        Set<Long> categoryIds
     ){
         CreateBookRequest request = CreateBookRequest.builder()
         .title(title)

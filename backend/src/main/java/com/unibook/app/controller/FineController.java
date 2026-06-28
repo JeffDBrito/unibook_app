@@ -14,6 +14,7 @@ import com.unibook.app.dto.response.FineResponse;
 import com.unibook.app.service.FineService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,7 +27,7 @@ public class FineController {
     // Create Fine
     @PostMapping
     @Operation(summary = "Create a fine",description = "Creates a new fine.", tags = {"Fine Endpoints"})
-    public FineResponse create(@RequestBody CreateFineRequest request) {
+    public FineResponse create(@Valid @RequestBody CreateFineRequest request) {
         return fineService.createFine(request);
     }
 

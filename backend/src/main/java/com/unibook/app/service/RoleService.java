@@ -3,6 +3,8 @@ package com.unibook.app.service;
 import com.unibook.app.dto.request.role.CreateRoleRequest;
 import com.unibook.app.dto.request.role.UpdateRoleRequest;
 import com.unibook.app.dto.response.RoleResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.RoleMapper;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
 import com.unibook.app.repository.PermissionRepository;
@@ -45,7 +47,7 @@ public class RoleService {
                 .collect(java.util.stream.Collectors.toList()));
 
         role.setPermissions(permissions);
-        return toResponse(roleRepository.save(role));
+        return RoleMapper.toResponse(roleRepository.save(role));
     }
 
     /**
@@ -54,7 +56,7 @@ public class RoleService {
      */
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
         role.softDelete();
         roleRepository.save(role);        
     }
@@ -66,9 +68,9 @@ public class RoleService {
      */
     public RoleResponse restoreById(Long id){
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
         role.restore();
-        return toResponse(roleRepository.save(role));
+        return RoleMapper.toResponse(roleRepository.save(role));
     }
 
     /**
@@ -81,7 +83,7 @@ public class RoleService {
     public RoleResponse update(Long id, UpdateRoleRequest request, boolean partial){
 
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Role not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         if(!partial || request.getTitle() != null){
             role.setTitle(request.getTitle());
@@ -92,7 +94,7 @@ public class RoleService {
             role.setPermissions(permissions);
         }
 
-        return toResponse(roleRepository.save(role));
+        return RoleMapper.toResponse(roleRepository.save(role));
     }
 
     // ----------------- //
@@ -105,7 +107,7 @@ public class RoleService {
      */
     public List<RoleResponse> findAll() {
         return roleRepository.findAll().stream()
-            .map(this::toResponse)
+            .map(RoleMapper::toResponse)
             .collect(java.util.stream.Collectors.toList());
     }
 
@@ -116,8 +118,8 @@ public class RoleService {
      */
     public RoleResponse findById(Long id) {
         return roleRepository.findById(id)
-            .map(this::toResponse)
-            .orElseThrow(() -> new RuntimeException("Role not found with id: " + id));
+            .map(RoleMapper::toResponse)
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
     }
 
     /**
@@ -127,30 +129,13 @@ public class RoleService {
      */
     public RoleResponse findByTitle(String title) {
         return roleRepository.findByTitle(title)
-            .map(this::toResponse)
-            .orElseThrow(() -> new RuntimeException("Role not found with title: " + title));
+            .map(RoleMapper::toResponse)
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found with title: " + title));
     }
 
     // -------------- //
     // Helper Methods //
     // -------------- //
-
-    /**
-     * Convert Role instance to RoleResponse
-     * @param role
-     * @return RoleResponse
-     */ // TODO: Create a Mapper
-    private RoleResponse toResponse(Role role) {
-        List<String> permissionNames = role.getPermissions().stream()
-                .map(Permission::getTitle)
-                .collect(java.util.stream.Collectors.toList());
-
-        RoleResponse response = new RoleResponse();
-        response.setId(role.getId());
-        response.setName(role.getTitle());
-        response.setPermissions(permissionNames);
-        return response;
-    }
 
     /**
      * Assign permissions to Role
@@ -175,7 +160,7 @@ public class RoleService {
     @Transactional
     public void assignPermissionsByRoleName(String roleName, List<Permission> permissions) {
         Role role = roleRepository.findByTitle(roleName)
-            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+            .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + roleName));
         assignPermissions(role, permissions);
     }
 }

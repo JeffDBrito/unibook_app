@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.service.BookService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/books")
@@ -41,22 +43,22 @@ public class BookController {
     // Create book
     @PostMapping
     @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.", tags = {"Book Endpoints"})
-    public BookResponse create(@RequestBody CreateBookRequest request) {
+    public BookResponse create(@Valid @RequestBody CreateBookRequest request) {
         return bookService.createBook(request);
     }
 
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update book", description = "Partially updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
-    public BookResponse partialUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request ) {
+    public BookResponse partialUpdate( @PathVariable Long id, @Valid @RequestBody PartialUpdateBookRequest request ) {
         return bookService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update book", description = "Updates an existing book with the provided details and returns the updated book.", tags = {"Book Endpoints"})
-    public BookResponse fullUpdate( @PathVariable Long id, @RequestBody UpdateBookRequest request) {
-        return bookService.update(id, request, false);
+    public BookResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateBookRequest request) {
+        return bookService.update(id, request);
     }
 
     // Get book by id

@@ -5,10 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.inventory.CreateInventoryRequest;
+import com.unibook.app.dto.request.inventory.PartialUpdateInventoryRequest;
 import com.unibook.app.dto.request.inventory.UpdateInventoryRequest;
 import com.unibook.app.dto.response.InventoryResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.InventoryMapper;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
+import com.unibook.app.repository.CopyRepository;
 import com.unibook.app.repository.InventoryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
-    private final CopyService copyService;
+    private final CopyRepository copyRepository;
 
     // --------------------- //
     // Management Operations //
@@ -36,7 +40,7 @@ public class InventoryService {
         inventory.setRow(request.getRow());
         inventory.setSlot(request.getSlot());
 
-        return toResponse(inventoryRepository.save(inventory));
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
     }
 
     /**
@@ -45,7 +49,7 @@ public class InventoryService {
      */
     public void deleteById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventory.softDelete();
         inventoryRepository.save(inventory);
@@ -58,10 +62,10 @@ public class InventoryService {
      */
     public InventoryResponse restoreById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         inventory.restore();
-        return toResponse(inventoryRepository.save(inventory));
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
     }
 
     /**
@@ -71,10 +75,10 @@ public class InventoryService {
      * @param partial
      * @return InventoryResponse
      */
-    public InventoryResponse update(Long id, UpdateInventoryRequest request, boolean partial){
+    public InventoryResponse update(Long id, PartialUpdateInventoryRequest request, boolean partial){
 
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
 
         if(!partial || request.getSector() != null){
             inventory.setSector(request.getSector());
@@ -92,8 +96,19 @@ public class InventoryService {
             inventory.setSlot(request.getSlot());
         }
 
-        return toResponse(inventoryRepository.save(inventory));
+        if(!partial || request.getCopyId() != null){
+            Copy copy = copyRepository.findById(request.getCopyId())
+                .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
+            inventory.setCopy(copy);
+        }
+
+        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
+
+    }
+
+    public InventoryResponse update(Long id, UpdateInventoryRequest request){
+        return update(id, InventoryMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //
@@ -106,7 +121,7 @@ public class InventoryService {
      */
     public List<InventoryResponse> findAll() {
         List<Inventory> inventories = inventoryRepository.findAll();
-        return inventories.stream().map(this::toResponse).toList();
+        return inventories.stream().map(InventoryMapper::toResponse).toList();
     }
 
     /**
@@ -117,8 +132,8 @@ public class InventoryService {
      */
     public InventoryResponse findById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found with id: " + id));
-        return toResponse(inventory);
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + id));
+        return InventoryMapper.toResponse(inventory);
     }
 
     /**
@@ -132,35 +147,10 @@ public class InventoryService {
     public InventoryResponse findByLocation(String sector, String shelf, int row, int slot) {
         Inventory inventory = inventoryRepository.findBySectorAndShelfAndRowAndSlot(sector,shelf,row,slot)
             .orElseThrow(() ->
-                new RuntimeException("Inventory not found")
+                new ResourceNotFoundException("Inventory not found")
             );
 
-        return toResponse(inventory);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Inventory instance to InventoryResponse dto
-     * @param inventory
-     * @return InventoryResponse
-     */ // TODO: Create a Mapper
-    private InventoryResponse toResponse(Inventory inventory){
-        InventoryResponse response = new InventoryResponse();
-        response.setId(inventory.getId());
-        response.setSector(inventory.getSector());
-        response.setShelf(inventory.getShelf());
-        response.setRow(inventory.getRow());
-        response.setSlot(inventory.getSlot());
-
-        Copy copy = inventory.getCopy();
-        if(copy != null){
-            response.setCopy(copyService.toResponse(copy));
-        }
-
-        return response;
-    }    
+        return InventoryMapper.toResponse(inventory);
+    } 
     
 }

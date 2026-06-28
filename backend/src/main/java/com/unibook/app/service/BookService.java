@@ -3,13 +3,16 @@ package com.unibook.app.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.book.CreateBookRequest;
+import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
+import com.unibook.app.exceptions.BadRequestException;
+import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.BookMapper;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Category;
@@ -38,33 +41,46 @@ public class BookService {
      * Create Book
      * @param request
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse createBook(CreateBookRequest request) {
-        Book book = new Book();
-        book.setTitle(request.getTitle());
-        book.setIsbn(request.getIsbn());
-        book.setDescription(request.getDescription());
-        book.setPublicationYear(request.getPublicationYear());
 
-        Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                .orElseThrow(() -> new RuntimeException("Publisher not found with id: " + request.getPublisherId()));
+        String title = request.getTitle();
+        String isbn = request.getIsbn();
+        String description = request.getDescription();
+        Integer publicationYear = request.getPublicationYear();
+        Long publisherId = request.getPublisherId();
+        Set<Long> authorIds = request.getAuthorIds();
+        Set<Long> categoryIds = request.getCategoryIds();
+
+        if(bookRepository.existsByIsbn(isbn)){
+            throw new BadRequestException("Isbn already exists");
+        }
+
+        Book book = new Book();
+        book.setTitle(title);
+        book.setIsbn(isbn);
+        book.setDescription(description);
+        book.setPublicationYear(publicationYear);
+
+        Publisher publisher = publisherRepository.findById(publisherId)
+                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
         book.setPublisher(publisher);
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
-        if (authors.size() != request.getAuthorIds().size()) {
-            throw new RuntimeException("One or more authors not found");
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(authorIds));
+        if (authors.size() != authorIds.size()) {
+            throw new ResourceNotFoundException("One or more authors not found");
         }
         book.setAuthors(authors);
         
-        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.getCategoryIds()));
-        if (categories.size() != request.getCategoryIds().size()) {
-            throw new RuntimeException("One or more categories not found");
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(categoryIds));
+        if (categories.size() != categoryIds.size()) {
+            throw new ResourceNotFoundException("One or more categories not found");
         }
         book.setCategories(categories);
 
         Book savedBook = bookRepository.save(book);
-        return toResponse(savedBook);
+        return BookMapper.toResponse(savedBook);
     }
 
     /**
@@ -73,19 +89,23 @@ public class BookService {
      * @param request
      * @param partial
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
-    public BookResponse update(Long id, UpdateBookRequest request, boolean partial) {
-
+    public BookResponse update(Long id, PartialUpdateBookRequest request, boolean partial) {
+        
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Book not found"));
-
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        
         if (!partial || request.getTitle() != null) {
             book.setTitle(request.getTitle());
         }
-
-        if (!partial || request.getIsbn() != null) {
-            book.setIsbn(request.getIsbn());
+        
+        String isbn = request.getIsbn();
+        if (!partial || isbn != null) {            
+            if(bookRepository.existsByIsbn(isbn)){
+                throw new BadRequestException("Isbn already exists");
+            }
+            book.setIsbn(isbn);
         }
 
         if (!partial || request.getDescription() != null) {
@@ -99,7 +119,7 @@ public class BookService {
         if (!partial || request.getPublisherId() != null) {
 
             Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                    .orElseThrow(() -> new RuntimeException("Publisher not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
 
             book.setPublisher(publisher);
         }
@@ -118,7 +138,18 @@ public class BookService {
             book.setCategories(categories);
         }
 
-        return toResponse(bookRepository.save(book));
+        return BookMapper.toResponse(bookRepository.save(book));
+    }
+
+    /**
+     * Full Update
+     * Convert FullUpdateRequest to PartialUpdateRequest
+     * @param id
+     * @param request
+     * @return
+     */
+    public BookResponse update(Long id, UpdateBookRequest request){
+        return this.update(id,BookMapper.toPartialUpdate(request), false);
     }
 
     /**
@@ -127,7 +158,7 @@ public class BookService {
      */
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
 
         book.softDelete();
         bookRepository.save(book);
@@ -140,13 +171,13 @@ public class BookService {
      */
     public BookResponse restoreById(Long id){
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
 
         book.restore();
 
         bookRepository.save(book);
 
-        return toResponse(book);
+        return BookMapper.toResponse(book);
     }
 
     // ----------------- //
@@ -159,78 +190,43 @@ public class BookService {
      */
     public List<BookResponse> findAll() {
         List<Book> books = bookRepository.findAll();
-        return books.stream().map(this::toResponse).toList();
+        return books.stream().map(BookMapper::toResponse).toList();
     }
 
     /**
      * Find Book by id
      * @param id
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-        return toResponse(book);
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+        return BookMapper.toResponse(book);
     }
 
     /**
      * Find Book by isbn
      * @param isbn
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new RuntimeException("Book not found with ISBN: " + isbn));
-        return toResponse(book);
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + isbn));
+        return BookMapper.toResponse(book);
     }
 
     /**
      * Find Book by title
      * @param title
      * @return BookResponse
-     * @throws RuntimeException
+     * @throws ResourceNotFoundException
      */
     public BookResponse findByTitle(String title) {
         Book book = bookRepository.findByTitle(title)
-                .orElseThrow(() -> new RuntimeException("Book not found with title: " + title));
-        return toResponse(book);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Book instance to BookResponse dto
-     * @param book
-     * @return BookResponse
-     */ // TODO: Create a Mapper
-    private BookResponse toResponse(Book book) {
-        BookResponse response = new BookResponse();
-        response.setId(book.getId());
-        response.setTitle(book.getTitle());
-        response.setDescription(book.getDescription());
-        response.setIsbn(book.getIsbn());
-        response.setPublicationYear(book.getPublicationYear());
-        response.setPublisher(
-            book.getPublisher() != null ? book.getPublisher().getTitle() : null
-        );
-
-        String authors = book.getAuthors().stream()
-            .map(author -> author.getPerson().getName())
-            .collect(Collectors.joining(", "));
-
-        response.setAuthors(authors);        
-
-        String categories = book.getCategories().stream()
-            .map(Category::getTitle)
-            .collect(Collectors.joining(", "));
-
-        response.setCategories(categories);
-
-        return response;
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with title: " + title));
+        return BookMapper.toResponse(book);
     }
 
 }

@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.person.CreatePersonRequest;
+import com.unibook.app.dto.request.person.PartialUpdatePersonRequest;
 import com.unibook.app.dto.request.person.UpdatePersonRequest;
 import com.unibook.app.dto.response.PersonResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.service.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/persons")
@@ -39,7 +42,7 @@ public class PersonController {
     // Create person
     @PostMapping
     @Operation(summary = "Create a new person", description = "Creates a new person with the provided details and returns the created person.", tags = {"Person Endpoints"})
-    public PersonResponse createPerson(@RequestBody CreatePersonRequest request) {
+    public PersonResponse createPerson(@Valid @RequestBody CreatePersonRequest request) {
         return personService.createPerson(request);
     }
 
@@ -62,21 +65,21 @@ public class PersonController {
     @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonByName(@PathVariable String name) {
         return personService.findByName(name)
-            .orElseThrow(() -> new RuntimeException("Person not found with name: " + name));
+            .orElseThrow(() -> new ResourceNotFoundException("Person not found with name: " + name));
     }
 
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update Person", description = "Partially updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
-    public PersonResponse partialUpdate(@PathVariable Long id, @RequestBody UpdatePersonRequest request){
+    public PersonResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdatePersonRequest request){
         return personService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Partial update Person", description = "Updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
-    public PersonResponse fullUpdate(@PathVariable Long id, @RequestBody UpdatePersonRequest request){
-        return personService.update(id, request, false);
+    public PersonResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdatePersonRequest request){
+        return personService.update(id, request);
     }
 
     @PostMapping("/{id}/restore")

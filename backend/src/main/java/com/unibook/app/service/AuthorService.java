@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.author.CreateAuthorRequest;
+import com.unibook.app.dto.request.author.PartialUpdateAuthorRequest;
 import com.unibook.app.dto.request.author.UpdateAuthorRequest;
 import com.unibook.app.dto.response.AuthorResponse;
-import com.unibook.app.dto.response.PersonResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.AuthorMapper;
 import com.unibook.app.model.Author;
 import com.unibook.app.model.Person;
 import com.unibook.app.repository.AuthorRepository;
@@ -44,7 +46,7 @@ public class AuthorService {
         author.setPerson(person);
         
         Author savedAuthor = authorRepository.save(author);
-        return toResponse(savedAuthor);
+        return AuthorMapper.toResponse(savedAuthor);
     }
 
     /**
@@ -53,7 +55,7 @@ public class AuthorService {
      */
     public void deleteById(Long id) {
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));        
         author.softDelete();
         authorRepository.save(author);
     }
@@ -65,9 +67,9 @@ public class AuthorService {
      */
     public AuthorResponse restoreById(Long id) {
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));        
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));        
         author.restore();
-        return toResponse(authorRepository.save(author));
+        return AuthorMapper.toResponse(authorRepository.save(author));
     }
 
     /**
@@ -77,9 +79,9 @@ public class AuthorService {
      * @param partial
      * @return
      */
-    public AuthorResponse update(Long id, UpdateAuthorRequest request, boolean partial){
+    public AuthorResponse update(Long id, PartialUpdateAuthorRequest request, boolean partial){
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
 
         Person person = author.getPerson();
 
@@ -93,7 +95,11 @@ public class AuthorService {
         
         personRepository.save(person);
 
-        return toResponse(authorRepository.save(author));
+        return AuthorMapper.toResponse(authorRepository.save(author));
+    }
+
+    public AuthorResponse update(Long id, UpdateAuthorRequest request){
+        return this.update(id, AuthorMapper.toPartialUpdate(request), false);
     }
 
     // ----------------- //
@@ -106,7 +112,7 @@ public class AuthorService {
      */
     public List<AuthorResponse> findAll() {
         List<Author> authors = authorRepository.findAll();
-        return authors.stream().map(this::toResponse).toList();
+        return authors.stream().map(AuthorMapper::toResponse).toList();
     }
 
     /**
@@ -116,8 +122,8 @@ public class AuthorService {
      */
     public AuthorResponse findById(Long id) {
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        return toResponse(author);
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
+        return AuthorMapper.toResponse(author);
     }
 
     /**
@@ -127,31 +133,8 @@ public class AuthorService {
      */
     public AuthorResponse findByName(String name) {
         Author author = authorRepository.findByPersonName(name)
-            .orElseThrow(() -> new RuntimeException("Author not found with name: " + name));
-        return toResponse(author);
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert Author instance to AuthorResponse dto
-     * @param author
-     * @return AuthorResponse
-     */ // TODO: Create a Mapper
-    private AuthorResponse toResponse(Author author) {
-        
-        PersonResponse person = new PersonResponse();
-        person.setName(author.getPerson().getName());
-        person.setEmail(author.getPerson().getEmail());
-        
-        AuthorResponse response = new AuthorResponse();
-        response.setId(author.getId());
-        response.setBiography(author.getBiography());
-        response.setPerson(person);
-        
-        return response;   
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with name: " + name));
+        return AuthorMapper.toResponse(author);
     }
     
 }

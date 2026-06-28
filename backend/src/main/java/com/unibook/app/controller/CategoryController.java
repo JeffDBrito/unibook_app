@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 
 import com.unibook.app.dto.request.category.CreateCategoryRequest;
+import com.unibook.app.dto.request.category.PartialUpdateCategoryRequest;
 import com.unibook.app.dto.request.category.UpdateCategoryRequest;
 import com.unibook.app.dto.response.CategoryResponse;
 import com.unibook.app.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/categories")
@@ -39,7 +41,7 @@ public class CategoryController {
     // Create category
     @PostMapping
     @Operation(summary = "Create a new category", description = "Creates a new category with the provided details and returns the created category.", tags = {"Category Endpoints"})
-    public CategoryResponse createCategory(@RequestBody CreateCategoryRequest request) {
+    public CategoryResponse createCategory(@Valid @RequestBody CreateCategoryRequest request) {
         return categoryService.createCategory(request);
     }
 
@@ -64,16 +66,18 @@ public class CategoryController {
         return categoryService.findByTitle(title);
     }
 
+    // Partial Update
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Category", description = "Partially updates an existing Category with the provided details and returns the updated Category.", tags = {"Category Endpoints"})
-    public CategoryResponse partialUpdate(@PathVariable Long id, @RequestBody UpdateCategoryRequest request){
+    public CategoryResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdateCategoryRequest request){
         return categoryService.update(id, request, true);
     }
 
+    // Full Update
     @PutMapping("/{id}")
     @Operation(summary = "Update Category", description = "Updates an existing Category with the provided details and returns the updated Category.", tags = {"Category Endpoints"})
-    public CategoryResponse fullUpdate(@PathVariable Long id, @RequestBody UpdateCategoryRequest request){
-        return categoryService.update(id, request, false);
+    public CategoryResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateCategoryRequest request){
+        return categoryService.update(id, request);
     }
 
     @PostMapping("/{id}/restore")

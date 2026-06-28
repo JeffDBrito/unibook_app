@@ -1,5 +1,7 @@
 package com.unibook.app.dto.response;
 
+import java.util.Set;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +16,7 @@ public class UserResponse {
     private String login;
     
     @Schema(example = "[Admin, Teacher]")
-    private String roles;
+    private Set<String> roles;
 
     private PersonResponse person;
     

@@ -21,13 +21,15 @@ public class Role extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String title;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "role_permissions",
         joinColumns = @JoinColumn(name = "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "permission_id")
+        inverseJoinColumns = @JoinColumn(name = "permission_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "permission_id"})
     )
     private Set<Permission> permissions = new HashSet<>();
 

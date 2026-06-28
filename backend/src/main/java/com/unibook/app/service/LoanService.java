@@ -6,10 +6,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.loan.CreateLoanRequest;
+import com.unibook.app.dto.request.loan.PartialUpdateLoanRequest;
 import com.unibook.app.dto.request.loan.UpdateLoanRequest;
 import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
 import com.unibook.app.enums.LoanStatus;
+import com.unibook.app.exceptions.ResourceNotFoundException;
+import com.unibook.app.mapper.LoanMapper;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Loan;
 import com.unibook.app.model.User;
@@ -26,8 +29,6 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final UserRepository userRepository;
     private final CopyRepository copyRepository;
-    private final UserService userService;
-    private final CopyService copyService;
 
 
     // --------------------- //
@@ -42,13 +43,13 @@ public class LoanService {
     public LoanResponse createLoan(CreateLoanRequest request) {
 
         User user = userRepository.findById(request.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Copy copy = copyRepository.findById(request.getCopyId())
-            .orElseThrow(() -> new RuntimeException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
 
         if (copy.getStatus() != CopyStatus.AVAILABLE) {
-            throw new RuntimeException("Copy is not available");
+            throw new ResourceNotFoundException("Copy is not available");
         }
 
         Loan loan = new Loan();
@@ -66,7 +67,7 @@ public class LoanService {
 
         copyRepository.save(copy);
 
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -76,7 +77,7 @@ public class LoanService {
      */
     public LoanResponse returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.setReturnDate(LocalDate.now());
         loan.setStatus(LoanStatus.RETURNED);
@@ -87,7 +88,7 @@ public class LoanService {
 
         copyRepository.save(copy);
 
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -96,7 +97,7 @@ public class LoanService {
      */
     public void deleteById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.softDelete();
         loanRepository.save(loan);
@@ -108,10 +109,10 @@ public class LoanService {
      */
     public LoanResponse restoreById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         loan.restore();
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
     }
 
     /**
@@ -121,21 +122,21 @@ public class LoanService {
      * @param partial
      * @return LoanResponse
      */
-    public LoanResponse update(Long id, UpdateLoanRequest request, boolean partial){
+    public LoanResponse update(Long id, PartialUpdateLoanRequest request, boolean partial){
 
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
-
-        if(!partial || request.getReturnDate() != null){
-            loan.setReturnDate(request.getReturnDate());
-        }
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
 
         if(!partial || request.getStatus() != null){
             loan.setStatus(request.getStatus());
         }
         
-        return toResponse(loanRepository.save(loan));
+        return LoanMapper.toResponse(loanRepository.save(loan));
 
+    }
+
+    public LoanResponse update(Long id, UpdateLoanRequest request){
+        return update(id,LoanMapper.toPartialUpdate(request),false);
     }
 
     // ----------------- //
@@ -149,9 +150,9 @@ public class LoanService {
      */
     public LoanResponse findById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
         
-        return toResponse(loan);
+        return LoanMapper.toResponse(loan);
     }
 
     /**
@@ -160,33 +161,7 @@ public class LoanService {
      */
     public List<LoanResponse> findAll(){
         List<Loan> loans = loanRepository.findAll();
-        return loans.stream().map(this::toResponse).toList();
-    }
-
-    // -------------- //
-    // Helper Methods //
-    // -------------- //
-
-    /**
-     * Convert a Loan instance to LoanResponse
-     * @param loan
-     * @return
-     */ // TODO: Create a Mapper
-    public LoanResponse toResponse(Loan loan) {
-
-        LoanResponse response = new LoanResponse();
-
-        response.setId(loan.getId());
-        response.setLoanDate(loan.getLoanDate());
-        response.setDueDate(loan.getDueDate());
-        response.setReturnDate(loan.getReturnDate());
-        
-        response.setCopy(copyService.toResponse(loan.getCopy()));
-        response.setUser(userService.toResponse(loan.getUser()));
-
-        response.setStatus(loan.getStatus().name());
-
-        return response;
+        return loans.stream().map(LoanMapper::toResponse).toList();
     }
 
 }

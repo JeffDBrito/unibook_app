@@ -19,7 +19,10 @@ public class Person extends BaseEntity{
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
+    
     private LocalDate birthDate;
 
     @OneToOne(mappedBy = "person")

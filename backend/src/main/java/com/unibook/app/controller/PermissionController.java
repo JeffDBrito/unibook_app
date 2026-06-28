@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.response.PermissionResponse;
+import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.service.PermissionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +44,7 @@ public class PermissionController {
         return permissionService.findAll().stream()
                 .filter(permission -> permission.getTitle().equalsIgnoreCase(title))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Permission not found with title: " + title));
+                .orElseThrow(() -> new ResourceNotFoundException("Permission not found with title: " + title));
     }
 
 

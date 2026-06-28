@@ -3,11 +3,13 @@ package com.unibook.app.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.unibook.app.dto.request.user.CreateUserRequest;
+import com.unibook.app.dto.request.user.PartialUpdateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -52,22 +54,22 @@ public class UserController {
     // Create user
     @PostMapping
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details and returns the created user.", tags = {"User Endpoints"})
-    public UserResponse createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 
     // Partial update
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update User", description = "Partially updates an existing user with the provided details and returns the updated user.", tags = {"User Endpoints"})
-    public UserResponse partialUpdate(@PathVariable Long id, @RequestBody UpdateUserRequest request){
+    public UserResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdateUserRequest request){
         return userService.update(id, request, true);
     }
 
     // Full update
     @PutMapping("/{id}")
     @Operation(summary = "Update User", description = "Updates an existing user with the provided details and returns the updated user.", tags = {"User Endpoints"})
-    public UserResponse fullUpdate(@PathVariable Long id, @RequestBody UpdateUserRequest request){
-        return userService.update(id, request, false);
+    public UserResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request){
+        return userService.update(id, request);
     }
 
 }

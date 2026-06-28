@@ -23,6 +23,9 @@ public class InventoryResponse {
     @Schema(example = "12")
     private int slot;
 
+    @Schema(example = "section_A1, shelf_2, row_4, slot_12")
+    private String addressString;
+
     // Nested Object (Doesn't need a specific schema example)
     private CopyResponse copy;
 

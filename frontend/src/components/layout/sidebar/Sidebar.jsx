@@ -13,6 +13,7 @@ import CopiesIcon from "../../icons/CopiesIcon";
 import PublishersIcon from "../../icons/PublishersIcon";
 import LoansIcon from "../../icons/LoansIcon";
 import BillIcon from "../../icons/BillIcon";
+import ManagementIcon from "../../icons/ManagementIcon";
 
 export default function Sidebar() {
 // const [collapsed, setCollapsed] = useState(false);
@@ -114,9 +115,9 @@ return (
 			/>
 
 			<SidebarItem
-				to="/roles"
-				icon={<RolesIcon/>}
-				label="Roles"
+				to="/management"
+				icon={<ManagementIcon/>}
+				label="Management"
 				collapsed={collapsed}
 			/>
 

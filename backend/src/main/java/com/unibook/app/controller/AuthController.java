@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.LoginRequest;
+import com.unibook.app.dto.request.SignupRequest;
+import com.unibook.app.dto.response.UserResponse;
 import com.unibook.app.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,5 +30,10 @@ public class AuthController {
         String token = authService.login(request.getLogin(), request.getPassword());
 
         return Map.of("token", token);
+    }
+
+    @PostMapping("/signup")
+    public UserResponse signup(@Valid @RequestBody SignupRequest request) {
+        return authService.signup(request);
     }
 }

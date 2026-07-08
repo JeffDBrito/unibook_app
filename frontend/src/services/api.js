@@ -21,9 +21,9 @@ export async function api(path, options = {}) {
 
     localStorage.removeItem("token");
 
-    window.location.href = "/login";
+    // window.location.href = "/";
 
-    return;
+    // return;
   }
 
   return response;

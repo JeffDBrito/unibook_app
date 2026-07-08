@@ -3,8 +3,8 @@ import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
 import { api } from "../services/api";
 
-export default function Books({ title }) {
-  const [books, setBooks] = useState([]);
+export default function Authors({ title }) {
+  const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -15,59 +15,57 @@ export default function Books({ title }) {
       return
     }
 
-    async function fetchBooks() {
+    async function fetchAuthors() {
       try {
-        const res = await api("/books");
+        const res = await api("/authors");
         const data = await res.json();
 
-        setBooks(data);
+        setAuthors(data);
       } catch (err) {
-        setError("Error when loading books");
+        setError("Error when loading authors");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchBooks();
+    fetchAuthors();
   }, []);
 
   const columns = [
     { key: "id", label: "ID", accessor: "id" },
     {
-      key: "authors",
-      label: "Authors",
-      render: (book) => book.authors
+      key: "person",
+      label: "Name",
+      colSize: 2,
+      render: (author) => author.person.name
     },
     {
-      key: "title",
-      label: "Title",
-      render: (book) => book.title
-    },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
-    {
-      key: "categories",
-      label: "Categories",
-      render: (book) => book.categories
+      key: "bio",
+      label: "Biography",
+      colSize:6,
+      render: (author) => author.biography      
     },
     {
       key: "year",
       label: "Year",
-      render: (book) => book.publicationYear
+      colSize: 2,
+      render: (author) => author.publicationYear
     },
     {
       key: "actions",
       label: "Actions",
-      render: (book) => (
+      colSize: 2,
+      render: (author) => (
         <div style={{ display: "flex", gap: "8px" }}>
           <button
-            onClick={() => handleEdit(book)}
+            onClick={() => handleEdit(author)}
             style={actionButton("#3b82f6")}
           >
             Edit
           </button>
 
           <button
-            onClick={() => handleDelete(book)}
+            onClick={() => handleDelete(author)}
             style={actionButton("#ef4444")}
           >
             Delete
@@ -77,24 +75,24 @@ export default function Books({ title }) {
     }
   ]
 
-  function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+  function handleEdit(author) {
+    console.log("Editauthor:", author);
+    // depois: navigate(`/authors/${author.id}`)
   }
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+  async function handleDelete(author) {
+    const confirmDelete = confirm(`Deletar ${author.title}?`);
 
     if (!confirmDelete) return;
 
     try {
-      await api(`/books/${book.id}`, {
+      await api(`/authors/${author.id}`, {
         method: "DELETE"
       });
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
+      setAuthors((prev) => prev.filter((u) => u.id !== author.id));
     } catch (err) {
-      alert("Error when deleting book");
+      alert("Error when deleting author");
     }
   }
 
@@ -112,7 +110,7 @@ export default function Books({ title }) {
 
   return (
     <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Book List</h2>
+      <h2 style={{ marginBottom: "20px" }}>Author List</h2>
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -126,10 +124,10 @@ export default function Books({ title }) {
           borderRadius: "4px"
         }}
       >
-        Create Book
+        Create Author
       </button>
       {!loading && !error && (
-        <Table columns={columns} data={books} />
+        <Table columns={columns} data={authors} />
       )}
     </AppLayout>
   );

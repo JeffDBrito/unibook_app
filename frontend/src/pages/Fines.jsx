@@ -3,7 +3,7 @@ import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
 import { api } from "../services/api";
 
-export default function Books({ title }) {
+export default function Fines({ title }) {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -57,17 +57,17 @@ export default function Books({ title }) {
     {
       key: "actions",
       label: "Actions",
-      render: (book) => (
+      render: (fine) => (
         <div style={{ display: "flex", gap: "8px" }}>
           <button
-            onClick={() => handleEdit(book)}
+            onClick={() => handleEdit(fine)}
             style={actionButton("#3b82f6")}
           >
             Edit
           </button>
 
           <button
-            onClick={() => handleDelete(book)}
+            onClick={() => handleDelete(fine)}
             style={actionButton("#ef4444")}
           >
             Delete

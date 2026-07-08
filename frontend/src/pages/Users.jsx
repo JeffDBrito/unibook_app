@@ -37,17 +37,17 @@ export default function Users({ title }) {
     {
       key: "name",
       label: "Name",
-      render: (user) => user.name
+      render: (user) => user.person.name
     },
     {
       key: "email",
       label: "Email",
-      render: (user) => user.email
+      render: (user) => user.person.email
     },
     {
-      key: "role",
-      label: "Role",
-      render: (user) => user.role
+      key: "roles",
+      label: "Roles",
+      render: (user) => user.roles.join(', ')
     },
     {
       key: "actions",

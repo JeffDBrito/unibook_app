@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { loginRequest } from "../services/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export default function Login() {
   const [login, setLogin] = useState("");
@@ -11,6 +11,20 @@ export default function Login() {
 
   const { login: doLogin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [accountCreated, setAccountCreated] = useState(
+    location.state?.accountCreated || false
+  );
+  
+  useEffect(() => {
+    if (location.state?.success) {
+      navigate(location.pathname, {
+        replace: true,
+        state: {}
+      });
+    }
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -47,6 +61,13 @@ export default function Login() {
             Login to access the system
           </p>
         </div>
+
+        {accountCreated && (
+          <div className="alert alert-success text-center">
+            Account created successfully! <br />
+            You can now log in.
+          </div>
+        )}
 
         {error && (
           <div className="alert alert-danger">
@@ -86,7 +107,12 @@ export default function Login() {
           </div>
 
           <div className="my-3">
-            <a href="#">Sign up</a>
+            <p className="text-center mt-3">
+              Don't have an account?{" "}
+              <Link to="/signup">
+                  Create one
+              </Link>
+            </p>
           </div>
 
           <button

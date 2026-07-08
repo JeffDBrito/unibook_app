@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "app": "concurrently \"cd ../backend && ./mvnw spring-boot:run\" \"cd ../frontend && npm run dev\""
+    "app": "concurrently \"cd ../backend && mvnw spring-boot:run\" \"cd ../frontend && npm run dev\""
   },
   "dependencies": {
     "bootstrap": "^5.3.8",

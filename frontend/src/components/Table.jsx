@@ -18,6 +18,7 @@ export default function Table({ columns, data }) {
 							padding: "12px",
 							borderBottom: "1px solid #ddd"
 						}}
+						className={`col-${col.colSize}`}
 					>
 						{col.label}
 					</th>
@@ -46,6 +47,7 @@ export default function Table({ columns, data }) {
 									padding: "12px",
 									borderBottom: "1px solid #eee"
 								}}
+								className={`col-${col.colSize ? col.colSize : ''}`}
 							>
 								{col.render ? col.render(row) : row[col.accessor]}
 							</td>

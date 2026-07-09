@@ -22,7 +22,12 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 // Allow Frontend to access Backend
                 registry.addMapping("/**")
-                    .allowedOrigins("http://localhost:5173","http://192.168.0.104:5173")
+                    .allowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://192.168.*:*",
+                        "http://10.*:*",
+                        "http://172.*:*"
+                    )
                     .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true);               

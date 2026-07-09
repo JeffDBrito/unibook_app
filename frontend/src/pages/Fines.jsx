@@ -4,7 +4,7 @@ import Table from "../components/Table";
 import { api } from "../services/api";
 
 export default function Fines({ title }) {
-  const [books, setBooks] = useState([]);
+  const [fines, setFines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -17,12 +17,12 @@ export default function Fines({ title }) {
 
     async function fetchEntity() {
       try {
-        const res = await api("/books");
+        const res = await api("/fines");
         const data = await res.json();
 
-        setBooks(data);
+        setFines(data);
       } catch (err) {
-        setError("Error when loading books");
+        setError("Error when loading fines");
       } finally {
         setLoading(false);
       }
@@ -36,23 +36,23 @@ export default function Fines({ title }) {
     {
       key: "authors",
       label: "Authors",
-      render: (book) => book.authors
+      render: (fine) => fine.authors
     },
     {
       key: "title",
       label: "Title",
-      render: (book) => book.title
+      render: (fine) => fine.title
     },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
+    {key:"isbn", label: "ISBN", render: (fine) => fine.isbn},
     {
       key: "categories",
       label: "Categories",
-      render: (book) => book.categories
+      render: (fine) => fine.categories
     },
     {
       key: "year",
       label: "Year",
-      render: (book) => book.publicationYear
+      render: (fine) => fine.publicationYear
     },
     {
       key: "actions",
@@ -77,24 +77,24 @@ export default function Fines({ title }) {
     }
   ]
 
-  function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+  function handleEdit(fine) {
+    console.log("Editfine:", fine);
+    // depois: navigate(`/fines/${fine.id}`)
   }
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+  async function handleDelete(fine) {
+    const confirmDelete = confirm(`Deletar ${fine.title}?`);
 
     if (!confirmDelete) return;
 
     try {
-      await api(`/books/${book.id}`, {
+      await api(`/fines/${fine.id}`, {
         method: "DELETE"
       });
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
+      setFines((prev) => prev.filter((u) => u.id !== fine.id));
     } catch (err) {
-      alert("Error when deleting book");
+      alert("Error when deleting fine");
     }
   }
 
@@ -126,10 +126,10 @@ export default function Fines({ title }) {
           borderRadius: "4px"
         }}
       >
-        Create Book
+        Create Fine
       </button>
       {!loading && !error && (
-        <Table columns={columns} data={books} />
+        <Table columns={columns} data={fines} />
       )}
     </AppLayout>
   );

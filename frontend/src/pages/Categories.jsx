@@ -4,7 +4,7 @@ import Table from "../components/Table";
 import { api } from "../services/api";
 
 export default function Categories({ title }) {
-  const [books, setBooks] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -17,12 +17,12 @@ export default function Categories({ title }) {
 
     async function fetchEntity() {
       try {
-        const res = await api("/books");
+        const res = await api("/categories");
         const data = await res.json();
 
-        setBooks(data);
+        setCategories(data);
       } catch (err) {
-        setError("Error when loading books");
+        setError("Error when loading categories");
       } finally {
         setLoading(false);
       }
@@ -34,25 +34,14 @@ export default function Categories({ title }) {
   const columns = [
     { key: "id", label: "ID", accessor: "id" },
     {
-      key: "authors",
-      label: "Authors",
-      render: (book) => book.authors
-    },
-    {
       key: "title",
       label: "Title",
-      render: (book) => book.title
-    },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
-    {
-      key: "categories",
-      label: "Categories",
-      render: (book) => book.categories
+      render: (category) => category.title
     },
     {
-      key: "year",
-      label: "Year",
-      render: (book) => book.publicationYear
+      key: "description",
+      label: "Description",
+      render: (category) => category.description
     },
     {
       key: "actions",
@@ -77,24 +66,24 @@ export default function Categories({ title }) {
     }
   ]
 
-  function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+  function handleEdit(category) {
+    console.log("Editcategory:", category);
+    // depois: navigate(`/categories/${category.id}`)
   }
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+  async function handleDelete(category) {
+    const confirmDelete = confirm(`Deletar ${category.title}?`);
 
     if (!confirmDelete) return;
 
     try {
-      await api(`/books/${book.id}`, {
+      await api(`/categories/${category.id}`, {
         method: "DELETE"
       });
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
+      setCategories((prev) => prev.filter((u) => u.id !== category.id));
     } catch (err) {
-      alert("Error when deleting book");
+      alert("Error when deleting category");
     }
   }
 
@@ -126,10 +115,10 @@ export default function Categories({ title }) {
           borderRadius: "4px"
         }}
       >
-        Create Book
+        Create Category
       </button>
       {!loading && !error && (
-        <Table columns={columns} data={books} />
+        <Table columns={columns} data={categories} />
       )}
     </AppLayout>
   );

@@ -36,25 +36,16 @@ export default function Authors({ title }) {
     {
       key: "person",
       label: "Name",
-      colSize: 2,
       render: (author) => author.person.name
     },
     {
       key: "bio",
       label: "Biography",
-      colSize:6,
       render: (author) => author.biography      
-    },
-    {
-      key: "year",
-      label: "Year",
-      colSize: 2,
-      render: (author) => author.publicationYear
     },
     {
       key: "actions",
       label: "Actions",
-      colSize: 2,
       render: (author) => (
         <div style={{ display: "flex", gap: "8px" }}>
           <button

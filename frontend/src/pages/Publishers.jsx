@@ -4,7 +4,7 @@ import Table from "../components/Table";
 import { api } from "../services/api";
 
 export default function Publishers({ title }) {
-  const [books, setBooks] = useState([]);
+  const [publishers, setPublishers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -17,12 +17,12 @@ export default function Publishers({ title }) {
 
     async function fetchEntity() {
       try {
-        const res = await api("/books");
+        const res = await api("/publishers");
         const data = await res.json();
 
-        setBooks(data);
+        setPublishers(data);
       } catch (err) {
-        setError("Error when loading books");
+        setError("Error when loading publishers");
       } finally {
         setLoading(false);
       }
@@ -34,25 +34,14 @@ export default function Publishers({ title }) {
   const columns = [
     { key: "id", label: "ID", accessor: "id" },
     {
-      key: "authors",
-      label: "Authors",
-      render: (book) => book.authors
-    },
-    {
       key: "title",
       label: "Title",
-      render: (book) => book.title
-    },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
-    {
-      key: "categories",
-      label: "Categories",
-      render: (book) => book.categories
+      render: (publisher) => publisher.title
     },
     {
-      key: "year",
-      label: "Year",
-      render: (book) => book.publicationYear
+      key: "description",
+      label: "Description",
+      render: (publisher) => publisher.description
     },
     {
       key: "actions",
@@ -77,24 +66,24 @@ export default function Publishers({ title }) {
     }
   ]
 
-  function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+  function handleEdit(publisher) {
+    console.log("Editpublisher:", publisher);
+    // depois: navigate(`/publishers/${publisher.id}`)
   }
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+  async function handleDelete(publisher) {
+    const confirmDelete = confirm(`Deletar ${publisher.title}?`);
 
     if (!confirmDelete) return;
 
     try {
-      await api(`/books/${book.id}`, {
+      await api(`/publishers/${publisher.id}`, {
         method: "DELETE"
       });
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
+      setPublishers((prev) => prev.filter((u) => u.id !== publisher.id));
     } catch (err) {
-      alert("Error when deleting book");
+      alert("Error when deleting publisher");
     }
   }
 
@@ -126,10 +115,10 @@ export default function Publishers({ title }) {
           borderRadius: "4px"
         }}
       >
-        Create Book
+        Create Publisher
       </button>
       {!loading && !error && (
-        <Table columns={columns} data={books} />
+        <Table columns={columns} data={publishers} />
       )}
     </AppLayout>
   );

@@ -4,7 +4,7 @@ import Table from "../components/Table";
 import { api } from "../services/api";
 
 export default function Copies({ title }) {
-  const [books, setBooks] = useState([]);
+  const [copies, setCopies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -15,44 +15,44 @@ export default function Copies({ title }) {
       return
     }
 
-    async function fetchBooks() {
+    async function fetchEntity() {
       try {
-        const res = await api("/books");
+        const res = await api("/copy");
         const data = await res.json();
 
-        setBooks(data);
+        setCopies(data);
       } catch (err) {
-        setError("Error when loading books");
+        setError("Error when loading copies");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchBooks();
+    fetchEntity();
   }, []);
 
   const columns = [
     { key: "id", label: "ID", accessor: "id" },
     {
+      key: "code",
+      label: "Code",
+      render: (copy) => copy.code
+    },
+    {
       key: "authors",
       label: "Authors",
-      render: (book) => book.authors
+      render: (copy) => copy.book.authors
     },
     {
       key: "title",
       label: "Title",
-      render: (book) => book.title
+      render: (copy) => copy.book.title
     },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
+    {key:"isbn", label: "ISBN", render: (copy) => copy.book.isbn},
     {
       key: "categories",
       label: "Categories",
-      render: (book) => book.categories
-    },
-    {
-      key: "year",
-      label: "Year",
-      render: (book) => book.publicationYear
+      render: (copy) => copy.book.categories
     },
     {
       key: "actions",
@@ -77,24 +77,24 @@ export default function Copies({ title }) {
     }
   ]
 
-  function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+  function handleEdit(copy) {
+    console.log("Editcopy:", copy);
+    // depois: navigate(`/copies/${copy.id}`)
   }
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+  async function handleDelete(copy) {
+    const confirmDelete = confirm(`Deletar ${copy.title}?`);
 
     if (!confirmDelete) return;
 
     try {
-      await api(`/books/${book.id}`, {
+      await api(`/copies/${copy.id}`, {
         method: "DELETE"
       });
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
+      setCopies((prev) => prev.filter((u) => u.id !== copy.id));
     } catch (err) {
-      alert("Error when deleting book");
+      alert("Error when deleting copy");
     }
   }
 
@@ -126,10 +126,10 @@ export default function Copies({ title }) {
           borderRadius: "4px"
         }}
       >
-        Create Book
+        Create Copy
       </button>
       {!loading && !error && (
-        <Table columns={columns} data={books} />
+        <Table columns={columns} data={copies} />
       )}
     </AppLayout>
   );

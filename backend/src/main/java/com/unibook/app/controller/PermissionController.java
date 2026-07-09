@@ -44,7 +44,7 @@ public class PermissionController {
         return permissionService.findAll().stream()
                 .filter(permission -> permission.getTitle().equalsIgnoreCase(title))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Permission not found with title: " + title));
+                .orElseThrow(() -> new ResourceNotFoundException("title", "Permission not found with title: " + title));
     }
 
 

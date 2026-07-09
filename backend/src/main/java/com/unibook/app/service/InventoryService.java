@@ -49,7 +49,7 @@ public class InventoryService {
      */
     public void deleteById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
 
         inventory.softDelete();
         inventoryRepository.save(inventory);
@@ -62,7 +62,7 @@ public class InventoryService {
      */
     public InventoryResponse restoreById(Long id){
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
 
         inventory.restore();
         return InventoryMapper.toResponse(inventoryRepository.save(inventory));
@@ -78,7 +78,7 @@ public class InventoryService {
     public InventoryResponse update(Long id, PartialUpdateInventoryRequest request, boolean partial){
 
         Inventory inventory = inventoryRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
 
         if(!partial || request.getSector() != null){
             inventory.setSector(request.getSector());
@@ -98,7 +98,7 @@ public class InventoryService {
 
         if(!partial || request.getCopyId() != null){
             Copy copy = copyRepository.findById(request.getCopyId())
-                .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
 
             inventory.setCopy(copy);
         }
@@ -132,7 +132,7 @@ public class InventoryService {
      */
     public InventoryResponse findById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found with id: " + id));
         return InventoryMapper.toResponse(inventory);
     }
 
@@ -147,7 +147,7 @@ public class InventoryService {
     public InventoryResponse findByLocation(String sector, String shelf, int row, int slot) {
         Inventory inventory = inventoryRepository.findBySectorAndShelfAndRowAndSlot(sector,shelf,row,slot)
             .orElseThrow(() ->
-                new ResourceNotFoundException("Inventory not found")
+                new ResourceNotFoundException("id", "Inventory not found")
             );
 
         return InventoryMapper.toResponse(inventory);

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class CreateBookRequest {
     @Schema(example = "978-0-7432-7356-5")
     private String isbn;
     
-    @NotBlank(message = "Publication Year is required")
+    @NotNull(message = "Publication Year is required")
     @Schema(example = "1925")
     private Integer publicationYear;
     
@@ -41,11 +42,11 @@ public class CreateBookRequest {
     @Schema(example = "1")
     private Long publisherId;
 
-    @NotBlank(message = "At least one actor is required")
+    @NotEmpty(message = "At least one actor is required")
     @Schema(example = "[1, 2]")
     private Set<Long> authorIds;
 
-    @NotBlank(message = "At least one category is required")
+    @NotEmpty(message = "At least one category is required")
     @Schema(example = "[1, 3]")
     private Set<Long> categoryIds;
 

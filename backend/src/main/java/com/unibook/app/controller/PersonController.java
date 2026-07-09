@@ -65,7 +65,7 @@ public class PersonController {
     @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonByName(@PathVariable String name) {
         return personService.findByName(name)
-            .orElseThrow(() -> new ResourceNotFoundException("Person not found with name: " + name));
+            .orElseThrow(() -> new ResourceNotFoundException("name", "Person not found with name: " + name));
     }
 
     // Partial update

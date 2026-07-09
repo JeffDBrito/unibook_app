@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.unibook.app.dto.response.ErrorResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -18,9 +20,9 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity<String>
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex){
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ex.getMessage());
+            .body(Map.of(ex.getField(), ex.getMessage()));
     }
 
     /**
@@ -29,9 +31,10 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity<String>
      */
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequest(BadRequestException ex){
-        return ResponseEntity.badRequest()
-            .body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity.badRequest().body(
+            Map.of(ex.getField(), ex.getMessage())
+        );
     }
 
     /**

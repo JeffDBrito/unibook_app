@@ -38,7 +38,7 @@ public class PermissionService {
      */
     public PermissionResponse findById(Long id) {
         return PermissionMapper.toResponse(permissionRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Permission not found with id: " + id)));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Permission not found with id: " + id)));
     }
 
 }

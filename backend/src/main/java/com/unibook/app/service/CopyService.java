@@ -46,7 +46,7 @@ public class CopyService {
         Long inventoryId = request.getInventoryId();
 
         if(copyRepository.existsByCode(code)){
-            throw new BadRequestException("code already exists");
+            throw new BadRequestException("code", "Code already exists");
         }
 
         Copy copy = new Copy();
@@ -54,17 +54,17 @@ public class CopyService {
         copy.setStatus(status);
 
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found"));
 
         copy.setBook(book);
         
         Inventory inventory = null;
         if(request.getInventoryId() != null){
             inventory = inventoryRepository.findById(inventoryId)
-            .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
             
             if(inventory.getCopy() != null){
-                throw new BadRequestException("Inventory occupied");
+                throw new BadRequestException("id", "Inventory occupied");
             }
         }
         
@@ -88,7 +88,7 @@ public class CopyService {
      */
     public void deleteById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
 
         copy.softDelete();
         copyRepository.save(copy);
@@ -100,7 +100,7 @@ public class CopyService {
      */
     public CopyResponse restoreById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
 
         copy.restore();
         return CopyMapper.toResponse(copyRepository.save(copy));
@@ -121,11 +121,11 @@ public class CopyService {
         Long inventoryId = request.getInventoryId();
 
         if(copyRepository.existsByCode(code)){
-            throw new BadRequestException("code already exists");
+            throw new BadRequestException("code", "Code already exists");
         }
 
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
 
         if(!partial || code != null){
             copy.setCode(code);
@@ -137,7 +137,7 @@ public class CopyService {
         
         if(!partial || request.getInventoryId() != null){
             Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
 
             copy.setInventory(inventory);
         }
@@ -147,10 +147,10 @@ public class CopyService {
         if(!partial || request.getInventoryId() != null){
             if(request.getInventoryId() != null){
                 inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Inventory not found"));
                 
                 if(inventory.getCopy() != null){
-                    throw new BadRequestException("Inventory occupied");
+                    throw new BadRequestException("id", "Inventory occupied");
                 }
             }
             
@@ -187,7 +187,7 @@ public class CopyService {
      */
     public CopyResponse findById(Long id){
         Copy copy = copyRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
         
         return CopyMapper.toResponse(copy);
     }

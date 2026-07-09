@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../../components/layout/AppLayout";
 import Table from "../../components/Table";
 import { api } from "../../services/api";
 
 export default function Books({ title }) {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -78,8 +80,7 @@ export default function Books({ title }) {
   ]
 
   function handleEdit(book) {
-    console.log("Editbook:", book);
-    // depois: navigate(`/books/${book.id}`)
+    navigate(`/books/${book.id}/edit`)
   }
 
   async function handleDelete(book) {
@@ -117,6 +118,7 @@ export default function Books({ title }) {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button
+        onClick={() => navigate("/books/create")}
         style={{
           marginBottom: "10px",
           padding: "8px 12px",

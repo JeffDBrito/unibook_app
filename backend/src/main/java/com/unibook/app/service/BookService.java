@@ -1,5 +1,6 @@
 package com.unibook.app.service;
 
+import java.time.Year;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,16 @@ public class BookService {
         Set<Long> categoryIds = request.getCategoryIds();
 
         if(bookRepository.existsByIsbn(isbn)){
-            throw new BadRequestException("Isbn already exists");
+            throw new BadRequestException("isbn", "Isbn already exists");
+        }
+
+        if(publicationYear < 0){
+            throw new BadRequestException("publicationYear", "Publication year must be a positive number");
+        }
+
+        Year currentYear = Year.now();
+        if(publicationYear > currentYear.getValue()){
+            throw new BadRequestException("publicationYear", "Publication year cannot be in the future");
         }
 
         Book book = new Book();
@@ -64,18 +74,18 @@ public class BookService {
         book.setPublicationYear(publicationYear);
 
         Publisher publisher = publisherRepository.findById(publisherId)
-                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("publisherId", "Publisher not found"));
         book.setPublisher(publisher);
 
         Set<Author> authors = new HashSet<>(authorRepository.findAllById(authorIds));
         if (authors.size() != authorIds.size()) {
-            throw new ResourceNotFoundException("One or more authors not found");
+            throw new ResourceNotFoundException("authorIds", "One or more authors not found");
         }
         book.setAuthors(authors);
         
         Set<Category> categories = new HashSet<>(categoryRepository.findAllById(categoryIds));
         if (categories.size() != categoryIds.size()) {
-            throw new ResourceNotFoundException("One or more categories not found");
+            throw new ResourceNotFoundException("categoryIds", "One or more categories not found");
         }
         book.setCategories(categories);
 
@@ -94,16 +104,16 @@ public class BookService {
     public BookResponse update(Long id, PartialUpdateBookRequest request, boolean partial) {
         
         Book book = bookRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found"));
         
         if (!partial || request.getTitle() != null) {
             book.setTitle(request.getTitle());
         }
         
         String isbn = request.getIsbn();
-        if (!partial || isbn != null) {            
+        if (!partial || isbn != null && !isbn.equals(book.getIsbn())) {            
             if(bookRepository.existsByIsbn(isbn)){
-                throw new BadRequestException("Isbn already exists");
+                throw new BadRequestException("isbn", "Isbn already exists");
             }
             book.setIsbn(isbn);
         }
@@ -112,14 +122,25 @@ public class BookService {
             book.setDescription(request.getDescription());
         }
 
+        // TODO: Date must be before or equal to the current year
         if (!partial || request.getPublicationYear() != null) {
+
+            if(request.getPublicationYear() < 0){
+                throw new BadRequestException("publicationYear", "Publication year must be a positive number");
+            }
+
+            Year currentYear = Year.now();
+            if(request.getPublicationYear() > currentYear.getValue()){
+                throw new BadRequestException("publicationYear", "Publication year cannot be in the future");
+            }
+
             book.setPublicationYear(request.getPublicationYear());
         }
 
         if (!partial || request.getPublisherId() != null) {
 
             Publisher publisher = publisherRepository.findById(request.getPublisherId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("publisherId", "Publisher not found"));
 
             book.setPublisher(publisher);
         }
@@ -158,7 +179,7 @@ public class BookService {
      */
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found with id: " + id));
 
         book.softDelete();
         bookRepository.save(book);
@@ -171,7 +192,7 @@ public class BookService {
      */
     public BookResponse restoreById(Long id){
         Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found with id: " + id));
 
         book.restore();
 
@@ -201,7 +222,7 @@ public class BookService {
      */
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found with id: " + id));
         return BookMapper.toResponse(book);
     }
 
@@ -213,7 +234,7 @@ public class BookService {
      */
     public BookResponse findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + isbn));
+                .orElseThrow(() -> new ResourceNotFoundException("isbn", "Book not found with ISBN: " + isbn));
         return BookMapper.toResponse(book);
     }
 
@@ -225,7 +246,7 @@ public class BookService {
      */
     public BookResponse findByTitle(String title) {
         Book book = bookRepository.findByTitle(title)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with title: " + title));
+                .orElseThrow(() -> new ResourceNotFoundException("title", "Book not found with title: " + title));
         return BookMapper.toResponse(book);
     }
 

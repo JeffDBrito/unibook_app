@@ -43,13 +43,13 @@ public class LoanService {
     public LoanResponse createLoan(CreateLoanRequest request) {
 
         User user = userRepository.findById(request.getUserId())
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "User not found"));
 
         Copy copy = copyRepository.findById(request.getCopyId())
-            .orElseThrow(() -> new ResourceNotFoundException("Copy not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Copy not found"));
 
         if (copy.getStatus() != CopyStatus.AVAILABLE) {
-            throw new ResourceNotFoundException("Copy is not available");
+            throw new ResourceNotFoundException("id", "Copy is not available");
         }
 
         Loan loan = new Loan();
@@ -77,7 +77,7 @@ public class LoanService {
      */
     public LoanResponse returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
 
         loan.setReturnDate(LocalDate.now());
         loan.setStatus(LoanStatus.RETURNED);
@@ -97,7 +97,7 @@ public class LoanService {
      */
     public void deleteById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
 
         loan.softDelete();
         loanRepository.save(loan);
@@ -109,7 +109,7 @@ public class LoanService {
      */
     public LoanResponse restoreById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
 
         loan.restore();
         return LoanMapper.toResponse(loanRepository.save(loan));
@@ -125,7 +125,7 @@ public class LoanService {
     public LoanResponse update(Long id, PartialUpdateLoanRequest request, boolean partial){
 
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
 
         if(!partial || request.getStatus() != null){
             loan.setStatus(request.getStatus());
@@ -150,7 +150,7 @@ public class LoanService {
      */
     public LoanResponse findById(Long id){
         Loan loan = loanRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
         
         return LoanMapper.toResponse(loan);
     }

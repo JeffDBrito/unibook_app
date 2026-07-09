@@ -45,7 +45,7 @@ public class PublisherService {
      */
     public void deleteById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Publisher not found with id: " + id));
         publisher.softDelete();
         publisherRepository.save(publisher);
     }
@@ -57,7 +57,7 @@ public class PublisherService {
      */
     public PublisherResponse restoreById(Long id){
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Publisher not found with id: " + id));
         publisher.restore();
         return PublisherMapper.toResponse(publisherRepository.save(publisher));
     }
@@ -72,7 +72,7 @@ public class PublisherService {
     public PublisherResponse update(Long id, PartialUpdatePublisherRequest request, boolean partial){
 
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Publisher not found with id: " + id));
 
         if(!partial || request.getTitle() != null){
             publisher.setTitle(request.getTitle());
@@ -109,7 +109,7 @@ public class PublisherService {
      */
     public PublisherResponse findById(Long id) {
         Publisher publisher = publisherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Publisher not found with id: " + id));
         return PublisherMapper.toResponse(publisher);
     }
 
@@ -120,7 +120,7 @@ public class PublisherService {
      */
     public PublisherResponse findByTitle(String title) {
         Publisher publisher = publisherRepository.findByTitle(title)
-            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with title: " + title));
+            .orElseThrow(() -> new ResourceNotFoundException("title", "Publisher not found with title: " + title));
         return PublisherMapper.toResponse(publisher);
     }
 

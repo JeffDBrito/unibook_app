@@ -177,10 +177,10 @@ public class DataInitializer {
                 "adminadmin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
-                        .orElseThrow(() -> new ResourceNotFoundException("Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Admin role not found"))
                         .getId(),                    
                     roleRepository.findByTitle("SUPER_ADMIN")
-                        .orElseThrow(() -> new ResourceNotFoundException("Super Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Super Admin role not found"))
                         .getId()
                 ))
             );

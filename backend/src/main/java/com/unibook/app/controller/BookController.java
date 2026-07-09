@@ -44,6 +44,7 @@ public class BookController {
     @PostMapping
     @Operation(summary = "Create a new book", description = "Creates a new book with the provided details and returns the created book.", tags = {"Book Endpoints"})
     public BookResponse create(@Valid @RequestBody CreateBookRequest request) {
+        System.out.println("CreateBookRequest: " + request);
         return bookService.createBook(request);
     }
 

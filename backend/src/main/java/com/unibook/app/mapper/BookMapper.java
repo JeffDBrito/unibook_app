@@ -1,5 +1,6 @@
 package com.unibook.app.mapper;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
@@ -30,14 +31,18 @@ public class BookMapper {
         String authors = book.getAuthors().stream()
             .map(author -> author.getPerson().getName())
             .collect(Collectors.joining(", "));
+        Set<Long> authorsIds = book.getAuthors().stream().map(author -> author.getId()).collect(Collectors.toSet());
 
-        response.setAuthors(authors);        
+        response.setAuthors(authors);
+        response.setAuthorsIds(authorsIds);
 
         String categories = book.getCategories().stream()
             .map(category -> category.getTitle())
             .collect(Collectors.joining(", "));
+        Set<Long> categoryIds = book.getCategories().stream().map(category -> category.getId()).collect(Collectors.toSet());
 
         response.setCategories(categories);
+        response.setCategoryIds(categoryIds);
 
         return response;
     }

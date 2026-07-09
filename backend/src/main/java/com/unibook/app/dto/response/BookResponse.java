@@ -1,5 +1,7 @@
 package com.unibook.app.dto.response;
 
+import java.util.Set;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +30,15 @@ public class BookResponse {
 
     @Schema(example = "John, Doe")
     private String authors;
+    
+    @Schema(example = "[1,2,3]")
+    private Set<Long> authorsIds;
 
     @Schema(example = "Romance, Fiction")
     private String categories;
+
+    @Schema(example = "[1,2,3]")
+    private Set<Long> categoryIds;
+
 
 }

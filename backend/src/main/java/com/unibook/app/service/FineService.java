@@ -35,7 +35,7 @@ public class FineService {
      */
     public FineResponse createFine(CreateFineRequest request) {
         Loan loan = loanRepository.findById(request.getLoanId())
-            .orElseThrow(() -> new ResourceNotFoundException("Loan not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Loan not found"));
 
         Fine fine = new Fine();
         fine.setAmount(request.getAmount());
@@ -54,7 +54,7 @@ public class FineService {
      */
     public FineResponse payFine(Long id) {
         Fine fine = fineRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Fine not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Fine not found"));
 
         fine.setStatus(FineStatus.PAID);
         fine.setPaidDate(LocalDate.now());
@@ -82,7 +82,7 @@ public class FineService {
      */
     public FineResponse findById(Long id){
         Fine fine = fineRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Fine not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Fine not found"));
 
         return FineMapper.toResponse(fine);
     }

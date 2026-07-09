@@ -16,14 +16,13 @@ export async function api(path, options = {}) {
 
   const isLoginRequest = path === "/auth/login";
 
-  if (response.status === 401 && !isLoginRequest) {
-    console.warn("Invalid or expired token, logging out...");
+  if (response.status === 401 && path !== "/auth/login" && path !== "/auth/signup") {
+    const body = await response.clone().json();
 
+    console.warn("Unauthorized request");
     localStorage.removeItem("token");
+    window.location.href = "/";
 
-    // window.location.href = "/";
-
-    // return;
   }
 
   return response;

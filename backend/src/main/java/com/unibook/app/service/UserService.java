@@ -52,11 +52,11 @@ public class UserService {
         String password = request.getPassword();
 
         if(personRepository.existsByEmail(email)){
-            throw new BadRequestException("Email already exists");
+            throw new BadRequestException("email", "Email already exists");
         }
 
         if(userRepository.existsByLogin(login)){
-            throw new BadRequestException("Login already exists");
+            throw new BadRequestException("login", "Login already exists");
         }
 
         // create Person
@@ -78,7 +78,7 @@ public class UserService {
         if(request.getRoleIds().size() > 0){
             for (Long roleId : request.getRoleIds()) {
                 Role r = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + roleId));
+                    .orElseThrow(() -> new ResourceNotFoundException("id", "Role not found with id: " + roleId));
                 user.getRoles().add(r);
             }
         }else{
@@ -104,7 +104,7 @@ public class UserService {
     public UserResponse update(Long id, PartialUpdateUserRequest request, boolean partial){
         User user = userRepository.findById(id)
             .orElseThrow(() ->
-                new ResourceNotFoundException("User not found")
+                new ResourceNotFoundException("id", "User not found with id: " + id)
             );
 
         Person person = user.getPerson();
@@ -115,7 +115,7 @@ public class UserService {
 
         if(!partial || request.getEmail() != null){
             if(request.getEmail() != null && userRepository.existsByPersonEmail(request.getEmail()) && !person.getEmail().equals(request.getEmail())){
-                throw new BadRequestException("Email already exists");
+                throw new BadRequestException("email", "Email already exists");
             }
 
             person.setEmail(request.getEmail());
@@ -127,14 +127,14 @@ public class UserService {
 
         if(!partial || request.getLogin() != null){
             if(request.getLogin() != null && userRepository.existsByLogin(request.getLogin()) && !user.getLogin().equals(request.getLogin())){
-                throw new BadRequestException("Login already exists");
+                throw new BadRequestException("login", "Login already exists");
             }
             user.setLogin(request.getLogin());
         }
 
         if(!partial || request.getPassword() != null){
             if(request.getPassword() == null || request.getPassword().isBlank()){
-                throw new BadRequestException("Password cannot be empty");
+                throw new BadRequestException("password", "Password cannot be empty");
             }
 
             user.setPassword(
@@ -145,7 +145,7 @@ public class UserService {
         if(!partial || request.getRoleIds() != null){
             Set<Role> roles = new HashSet<>(roleRepository.findAllById(request.getRoleIds()));
             if(roles.size() != request.getRoleIds().size()){
-                throw new BadRequestException("One or more roles were not found");
+                throw new BadRequestException("roleIds", "One or more roles were not found");
             }
             user.setRoles(roles);
         }
@@ -171,7 +171,7 @@ public class UserService {
      */
     public void deleteById(Long id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "User not found with id: " + id));
         user.softDelete();
         userRepository.save(user);
     }
@@ -183,7 +183,7 @@ public class UserService {
      */
     public UserResponse restoreById(Long id){
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "User not found with id: " + id));
 
         user.restore();
         userRepository.save(user);
@@ -214,7 +214,7 @@ public class UserService {
     public UserResponse findById(Long id) {
         return userRepository.findById(id)
             .map(UserMapper::toResponse)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "User not found with id: " + id));
     }
 
 }

@@ -56,7 +56,7 @@ public class RoleService {
      */
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Role not found with id: " + id));
         role.softDelete();
         roleRepository.save(role);        
     }
@@ -68,7 +68,7 @@ public class RoleService {
      */
     public RoleResponse restoreById(Long id){
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Role not found with id: " + id));
         role.restore();
         return RoleMapper.toResponse(roleRepository.save(role));
     }
@@ -83,7 +83,7 @@ public class RoleService {
     public RoleResponse update(Long id, UpdateRoleRequest request, boolean partial){
 
         Role role = roleRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Role not found with id: " + id));
 
         if(!partial || request.getTitle() != null){
             role.setTitle(request.getTitle());
@@ -119,7 +119,7 @@ public class RoleService {
     public RoleResponse findById(Long id) {
         return roleRepository.findById(id)
             .map(RoleMapper::toResponse)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Role not found with id: " + id));
     }
 
     /**
@@ -130,7 +130,7 @@ public class RoleService {
     public RoleResponse findByTitle(String title) {
         return roleRepository.findByTitle(title)
             .map(RoleMapper::toResponse)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found with title: " + title));
+            .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found with title: " + title));
     }
 
     // -------------- //
@@ -160,7 +160,7 @@ public class RoleService {
     @Transactional
     public void assignPermissionsByRoleName(String roleName, List<Permission> permissions) {
         Role role = roleRepository.findByTitle(roleName)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found: " + roleName));
+            .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found with title: " + roleName));
         assignPermissions(role, permissions);
     }
 }

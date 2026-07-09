@@ -16,6 +16,8 @@ import Authors from "../pages/Authors";
 import Management from "../pages/Management"; 
 import EditUser from "../pages/users/EditUser";
 import CreateUser from "../pages/users/CreateUser";
+import CreateBook from "../pages/books/CreateBook";
+import EditBook from "../pages/books/EditBook";
 
 export default function AppRoutes() {
   return (
@@ -28,7 +30,6 @@ export default function AppRoutes() {
         
         // Pages
         <Route path="/dashboard" element={<PrivateRoute><Dashboard title="Dashboard"/></PrivateRoute>} />
-        <Route path="/books" element={<PrivateRoute><Books title="Books"/></PrivateRoute>} />
         <Route path="/copies" element={<PrivateRoute><Copies title="Copies"/></PrivateRoute>} />
         <Route path="/publishers" element={<PrivateRoute><Publishers title="Publishers"/></PrivateRoute>} />
         <Route path="/categories" element={<PrivateRoute><Categories title="Categories"/></PrivateRoute>} /> 
@@ -42,6 +43,10 @@ export default function AppRoutes() {
         <Route path="/users/create" element={<PrivateRoute><CreateUser title="Create User" /></PrivateRoute>} />
         <Route path="/users/:id/edit" element={<PrivateRoute><EditUser title="Users"/></PrivateRoute>} />
 
+        // Books Pages
+        <Route path="/books" element={<PrivateRoute><Books title="Books"/></PrivateRoute>} />
+        <Route path="/books/create" element={<PrivateRoute><CreateBook title="Create Book" /></PrivateRoute>} />
+        <Route path="/books/:id/edit" element={<PrivateRoute><EditBook title="Edit Book" /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );

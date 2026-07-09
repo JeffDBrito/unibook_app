@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import AppLayout from "../components/layout/AppLayout";
-import Table from "../components/Table";
-import { api } from "../services/api";
+import AppLayout from "../../components/layout/AppLayout";
+import Table from "../../components/Table";
+import { api } from "../../services/api";
 
 export default function Books({ title }) {
   const [books, setBooks] = useState([]);

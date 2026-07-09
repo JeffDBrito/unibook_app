@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.unibook.app.dto.response.RoleResponse;
-import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
 
 public class RoleMapper {
@@ -17,7 +16,7 @@ public class RoleMapper {
      */ 
     public static RoleResponse toResponse(Role role) {
         List<String> permissionNames = role.getPermissions().stream()
-                .map(Permission::getTitle)
+                .map(permission -> permission.getTitle())
                 .collect(Collectors.toList());
 
         RoleResponse response = new RoleResponse();

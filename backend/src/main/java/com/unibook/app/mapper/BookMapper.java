@@ -6,7 +6,6 @@ import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.model.Book;
-import com.unibook.app.model.Category;
 
 public class BookMapper {
     
@@ -35,7 +34,7 @@ public class BookMapper {
         response.setAuthors(authors);        
 
         String categories = book.getCategories().stream()
-            .map(Category::getTitle)
+            .map(category -> category.getTitle())
             .collect(Collectors.joining(", "));
 
         response.setCategories(categories);

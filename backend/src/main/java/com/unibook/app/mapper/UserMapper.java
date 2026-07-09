@@ -7,7 +7,6 @@ import com.unibook.app.dto.request.user.PartialUpdateUserRequest;
 import com.unibook.app.dto.request.user.UpdateUserRequest;
 import com.unibook.app.dto.response.PersonResponse;
 import com.unibook.app.dto.response.UserResponse;
-import com.unibook.app.model.Role;
 import com.unibook.app.model.User;
 
 public class UserMapper {
@@ -32,7 +31,7 @@ public class UserMapper {
         response.setLogin(user.getLogin());
         response.setPerson(person);
 
-        Set<String> roleTitles = user.getRoles().stream().map(Role::getTitle).collect(Collectors.toSet());
+        Set<String> roleTitles = user.getRoles().stream().map(role -> role.getTitle()).collect(Collectors.toSet());
 
         response.setRoles(roleTitles);
 

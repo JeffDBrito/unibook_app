@@ -87,7 +87,7 @@ public class UserService {
         }
 
         
-        System.out.println("Creating user with login: " + login + ", roles: " + user.getRoles().stream().map(Role::getTitle).toList());
+        System.out.println("Creating user with login: " + login + ", roles: " + user.getRoles().stream().map(role -> role.getTitle()).toList());
 
         User savedUser = userRepository.save(user);
         

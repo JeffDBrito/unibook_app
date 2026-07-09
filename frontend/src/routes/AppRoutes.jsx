@@ -11,9 +11,11 @@ import Publishers from "../pages/Publishers";
 import Categories from "../pages/Categories"; 
 import Loans from "../pages/Loans";
 import Fines from "../pages/Fines"; 
-import Users from "../pages/Users";
+import Users from "../pages/users/Users";
 import Authors from "../pages/Authors"; 
 import Management from "../pages/Management"; 
+import EditUser from "../pages/users/EditUser";
+import CreateUser from "../pages/users/CreateUser";
 
 export default function AppRoutes() {
   return (
@@ -32,9 +34,13 @@ export default function AppRoutes() {
         <Route path="/categories" element={<PrivateRoute><Categories title="Categories"/></PrivateRoute>} /> 
         <Route path="/loans" element={<PrivateRoute><Loans title="Loans"/></PrivateRoute>} />
         <Route path="/fines" element={<PrivateRoute><Fines title="Fines"/></PrivateRoute>} /> // fines
-        <Route path="/users" element={<PrivateRoute><Users title="Users"/></PrivateRoute>} />
         <Route path="/authors" element={<PrivateRoute><Authors title="Authors"/></PrivateRoute>} /> // authors
         <Route path="/management" element={<PrivateRoute><Management title="Management"/></PrivateRoute>} /> // management
+
+        // Users Pages
+        <Route path="/users" element={<PrivateRoute><Users title="Users"/></PrivateRoute>} />
+        <Route path="/users/create" element={<PrivateRoute><CreateUser title="Create User" /></PrivateRoute>} />
+        <Route path="/users/:id/edit" element={<PrivateRoute><EditUser title="Users"/></PrivateRoute>} />
 
       </Routes>
     </BrowserRouter>

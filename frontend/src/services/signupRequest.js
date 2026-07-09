@@ -7,8 +7,7 @@ export async function signupRequest(data) {
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => null);
-    throw new Error(error?.message || "Error creating account");
+    throw await response.json();
   }
 
   return response.json();

@@ -324,6 +324,7 @@ public class DataInitializer {
                 System.out.println("\n-------------------------------------\n");
                 System.out.println("APP FRONTEND: "+env.getProperty("app.url")+":"+env.getProperty("frontend.port"));
                 System.out.println("SWAGGER URL: "+env.getProperty("app.url")+":"+env.getProperty("server.port")+"/swagger-ui/index.html#/");
+                System.out.println("APP MOBILE ACESS: http://192.168.0.104:"+env.getProperty("frontend.port"));
             }
             System.out.println("\n===============================\n");
         };

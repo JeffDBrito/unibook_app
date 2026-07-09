@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
 import { api } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Authors({ title }) {
   const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { token, user } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -48,19 +50,27 @@ export default function Authors({ title }) {
       label: "Actions",
       render: (author) => (
         <div style={{ display: "flex", gap: "8px" }}>
-          <button
-            onClick={() => handleEdit(author)}
-            style={actionButton("#3b82f6")}
-          >
-            Edit
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
+              <button
+                onClick={() => handleEdit(author)}
+                style={actionButton("#3b82f6")}
+              >
+                Edit
+              </button>
+            : ""
+          }
 
-          <button
-            onClick={() => handleDelete(author)}
-            style={actionButton("#ef4444")}
-          >
-            Delete
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") ?
+              <button
+                onClick={() => handleDelete(author)}
+                style={actionButton("#ef4444")}
+              >
+                Delete
+              </button>
+            : ""
+          }
         </div>
       )
     }

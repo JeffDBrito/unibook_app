@@ -53,7 +53,9 @@ export default function Table({ columns, data }) {
 							</td>
 						))}
 					</tr>
-				)) : ""}
+				)) : <tr>
+					<td>No data</td>
+					</tr>}
 			</tbody>
 		</table>
 	);

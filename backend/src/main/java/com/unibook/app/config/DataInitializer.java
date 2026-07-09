@@ -170,6 +170,22 @@ public class DataInitializer {
         return args -> {
             LocalDate birthDate = LocalDate.of(2000, 12, 24);
             userService.createUser(new CreateUserRequest(
+                "Super Admin User",
+                "superadmin@superadmin.com",
+                birthDate,
+                "superadmin",
+                "superadminsuperadmin",
+                List.of(
+                    roleRepository.findByTitle("ADMIN")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Admin role not found"))
+                        .getId(),                    
+                    roleRepository.findByTitle("SUPER_ADMIN")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Super Admin role not found"))
+                        .getId()
+                ))
+            );
+
+            userService.createUser(new CreateUserRequest(
                 "Admin User",
                 "admin@admin.com",
                 birthDate,
@@ -177,10 +193,33 @@ public class DataInitializer {
                 "adminadmin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
-                        .orElseThrow(() -> new ResourceNotFoundException("title", "Admin role not found"))
-                        .getId(),                    
-                    roleRepository.findByTitle("SUPER_ADMIN")
-                        .orElseThrow(() -> new ResourceNotFoundException("title", "Super Admin role not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "role not found"))
+                        .getId()
+                ))
+            );
+
+            userService.createUser(new CreateUserRequest(
+                "Teacher User",
+                "teacher@teacher.com",
+                birthDate,
+                "teacher",
+                "teacherteacher",
+                List.of(
+                    roleRepository.findByTitle("TEACHER")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found"))
+                        .getId()
+                ))
+            );
+
+            userService.createUser(new CreateUserRequest(
+                "Guest User",
+                "guest@guest.com",
+                birthDate,
+                "guest",
+                "guestguest",
+                List.of(
+                    roleRepository.findByTitle("GUEST")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found"))
                         .getId()
                 ))
             );

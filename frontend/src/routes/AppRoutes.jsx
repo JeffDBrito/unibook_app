@@ -29,24 +29,24 @@ export default function AppRoutes() {
         <Route path="/signup" element={<Signup />} />
         
         // Pages
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard title="Dashboard"/></PrivateRoute>} />
-        <Route path="/copies" element={<PrivateRoute><Copies title="Copies"/></PrivateRoute>} />
-        <Route path="/publishers" element={<PrivateRoute><Publishers title="Publishers"/></PrivateRoute>} />
-        <Route path="/categories" element={<PrivateRoute><Categories title="Categories"/></PrivateRoute>} /> 
-        <Route path="/loans" element={<PrivateRoute><Loans title="Loans"/></PrivateRoute>} />
-        <Route path="/fines" element={<PrivateRoute><Fines title="Fines"/></PrivateRoute>} /> // fines
-        <Route path="/authors" element={<PrivateRoute><Authors title="Authors"/></PrivateRoute>} /> // authors
-        <Route path="/management" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Management title="Management"/></PrivateRoute>} /> // management
+        <Route path="/dashboard" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Dashboard title="Dashboard"/></PrivateRoute>} />
+        <Route path="/copies" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Copies title="Copies"/></PrivateRoute>} />
+        <Route path="/publishers" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Publishers title="Publishers"/></PrivateRoute>} />
+        <Route path="/categories" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Categories title="Categories"/></PrivateRoute>} /> 
+        <Route path="/loans" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Loans title="Loans"/></PrivateRoute>} />
+        <Route path="/fines" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Fines title="Fines"/></PrivateRoute>} /> // fines
+        <Route path="/authors" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Authors title="Authors"/></PrivateRoute>} /> // authors
+        <Route path="/management" element={<PrivateRoute roles={["SUPER_ADMIN"]}><Management title="Management"/></PrivateRoute>} /> // management
 
         // Users Pages
-        <Route path="/users" element={<PrivateRoute><Users title="Users"/></PrivateRoute>} />
-        <Route path="/users/create" element={<PrivateRoute><CreateUser title="Create User" /></PrivateRoute>} />
+        <Route path="/users" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Users title="Users"/></PrivateRoute>} />
+        <Route path="/users/create" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><CreateUser title="Create User" /></PrivateRoute>} />
         <Route path="/users/:id/edit" element={<PrivateRoute><EditUser title="Users"/></PrivateRoute>} />
 
         // Books Pages
         <Route path="/books" element={<PrivateRoute><Books title="Books"/></PrivateRoute>} />
-        <Route path="/books/create" element={<PrivateRoute><CreateBook title="Create Book" /></PrivateRoute>} />
-        <Route path="/books/:id/edit" element={<PrivateRoute><EditBook title="Edit Book" /></PrivateRoute>} />
+        <Route path="/books/create" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><CreateBook title="Create Book" /></PrivateRoute>} />
+        <Route path="/books/:id/edit" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><EditBook title="Edit Book" /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );

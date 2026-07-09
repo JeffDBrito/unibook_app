@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import AppLayout from "../../components/layout/AppLayout";
 import Table from "../../components/Table";
 import { api } from "../../services/api";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Books({ title }) {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { token, user } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -61,19 +63,27 @@ export default function Books({ title }) {
       label: "Actions",
       render: (book) => (
         <div style={{ display: "flex", gap: "8px" }}>
-          <button
-            onClick={() => handleEdit(book)}
-            style={actionButton("#3b82f6")}
-          >
-            Edit
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
+              <button
+                onClick={() => handleEdit(book)}
+                style={actionButton("#3b82f6")}
+              >
+                Edit
+              </button>
+            : ""
+          }
 
-          <button
-            onClick={() => handleDelete(book)}
-            style={actionButton("#ef4444")}
-          >
-            Delete
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") ?
+              <button
+                onClick={() => handleDelete(book)}
+                style={actionButton("#ef4444")}
+              >
+                Delete
+              </button>
+            : ""
+          }
         </div>
       )
     }

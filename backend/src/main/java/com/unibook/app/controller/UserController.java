@@ -1,5 +1,6 @@
 package com.unibook.app.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.unibook.app.dto.request.user.CreateUserRequest;
@@ -52,6 +53,7 @@ public class UserController {
     }
 
     // Create user
+    //@PreAuthorize("") notação para validação de cargo/permissao
     @PostMapping
     @Operation(summary = "Create a new user", description = "Creates a new user with the provided details and returns the created user.", tags = {"User Endpoints"})
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {

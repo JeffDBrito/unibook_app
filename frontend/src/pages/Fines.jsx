@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
 import { api } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
+
 
 export default function Fines({ title }) {
   const [fines, setFines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { token, user } = useAuth()
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -59,19 +62,27 @@ export default function Fines({ title }) {
       label: "Actions",
       render: (fine) => (
         <div style={{ display: "flex", gap: "8px" }}>
-          <button
-            onClick={() => handleEdit(fine)}
-            style={actionButton("#3b82f6")}
-          >
-            Edit
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
+              <button
+                onClick={() => handleEdit(fine)}
+                style={actionButton("#3b82f6")}
+              >
+                Edit
+              </button>
+            : ""
+          }
 
-          <button
-            onClick={() => handleDelete(fine)}
-            style={actionButton("#ef4444")}
-          >
-            Delete
-          </button>
+          {
+            user?.roles?.includes("SUPER_ADMIN") ?
+              <button
+                onClick={() => handleDelete(fine)}
+                style={actionButton("#ef4444")}
+              >
+                Delete
+              </button>
+            : ""
+          }
         </div>
       )
     }

@@ -10,6 +10,7 @@ function parseToken(token) {
   return {
     login: payload.sub,
     roles: payload.roles || [],
+    id: payload.id
   };
 }
 

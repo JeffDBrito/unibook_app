@@ -3,12 +3,14 @@ import AppLayout from "../../components/layout/AppLayout";
 import Table from "../../components/Table";
 import { api } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Users({ title }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { token, userAuth } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -56,21 +58,22 @@ export default function Users({ title }) {
       label: "Actions",
       render: (user) => (
         <div style={{ display: "flex", gap: "8px" }}>
+          
           <button
-            type="button" 
             onClick={() => handleEdit(user)}
             style={actionButton("#3b82f6")}
           >
             Edit
           </button>
+            
 
-          <button
-            type="button"
-            onClick={() => handleDelete(user)}
-            style={actionButton("#ef4444")}
-          >
-            Delete
-          </button>
+            <button
+              onClick={() => handleDelete(user)}
+              style={actionButton("#ef4444")}
+            >
+              Delete
+            </button>
+
         </div>
       )
     }

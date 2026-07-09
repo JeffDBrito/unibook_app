@@ -39,20 +39,20 @@ export default function Copies({ title }) {
       render: (copy) => copy.code
     },
     {
-      key: "authors",
-      label: "Authors",
-      render: (copy) => copy.book.authors
-    },
-    {
       key: "title",
       label: "Title",
       render: (copy) => copy.book.title
     },
+    {
+      key: "authors",
+      label: "Authors",
+      render: (copy) => copy.book.authors
+    },
     {key:"isbn", label: "ISBN", render: (copy) => copy.book.isbn},
     {
-      key: "categories",
-      label: "Categories",
-      render: (copy) => copy.book.categories
+      key: "inventory",
+      label: "Inventory",
+      render: (copy) => copy.inventoryAddress
     },
     {
       key: "actions",

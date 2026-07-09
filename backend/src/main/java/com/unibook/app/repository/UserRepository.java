@@ -1,5 +1,6 @@
 package com.unibook.app.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLoginWithRoles(String login);
     Boolean existsByPersonEmail(String email);
     Boolean existsByLogin(String email);
+
+    List<User> findByDeletedAtIsNull();
+    Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
 }

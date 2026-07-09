@@ -200,7 +200,7 @@ public class UserService {
      * @return List<UserResponse>
      */
     public List<UserResponse> findAll() {
-        return userRepository.findAll()
+        return userRepository.findByDeletedAtIsNull()
             .stream()
             .map(UserMapper::toResponse)
             .toList();

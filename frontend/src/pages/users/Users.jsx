@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import AppLayout from "../components/layout/AppLayout";
-import Table from "../components/Table";
-import { api } from "../services/api";
+import AppLayout from "../../components/layout/AppLayout";
+import Table from "../../components/Table";
+import { api } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Users({ title }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -55,6 +57,7 @@ export default function Users({ title }) {
       render: (user) => (
         <div style={{ display: "flex", gap: "8px" }}>
           <button
+            type="button" 
             onClick={() => handleEdit(user)}
             style={actionButton("#3b82f6")}
           >
@@ -62,6 +65,7 @@ export default function Users({ title }) {
           </button>
 
           <button
+            type="button"
             onClick={() => handleDelete(user)}
             style={actionButton("#ef4444")}
           >
@@ -73,8 +77,11 @@ export default function Users({ title }) {
   ];
 
   function handleEdit(user) {
-    console.log("Edituser:", user);
-    // depois: navigate(`/users/${user.id}`)
+    navigate(`/users/${user.id}/edit`)
+  }
+
+  function handleCreateUser(){
+    navigate(`/users/create`)
   }
 
   async function handleDelete(user) {
@@ -112,6 +119,7 @@ export default function Users({ title }) {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button
+        onClick={() => handleCreateUser()}
         style={{
           marginBottom: "10px",
           padding: "8px 12px",

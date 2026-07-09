@@ -112,7 +112,7 @@ export default function Copies({ title }) {
 
   return (
     <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Book List</h2>
+      <h2 style={{ marginBottom: "20px" }}>Copies List</h2>
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}

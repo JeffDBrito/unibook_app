@@ -28,11 +28,14 @@ public class BookResponse {
     @Schema(example = "Penguin Random House")
     private String publisher;
 
+    @Schema(example = "1")
+    private Long publisherId;
+
     @Schema(example = "John, Doe")
     private String authors;
     
     @Schema(example = "[1,2,3]")
-    private Set<Long> authorsIds;
+    private Set<Long> authorIds;
 
     @Schema(example = "Romance, Fiction")
     private String categories;

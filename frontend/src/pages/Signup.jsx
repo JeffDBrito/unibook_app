@@ -5,47 +5,60 @@ import { signupRequest } from "../services/signupRequest";
 export default function Signup() {
     // TODO: Remove Mock signup input
     const [form, setForm] = useState({
-        name: "Jeff Brito",
-        email: "jeff@email.com",
-        birthDate: "24/12/2000",
-        login: "jeff",
-        password: "12345678",
-        confirmPassword: "12345678",
+        name: "",
+        email: "",
+        birthDate: "",
+        login: "",
+        password: "",
+        confirmPassword: "",
     });
 
-    const [error, setError] = useState("");
+    // const [error, setError] = useState("")
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     function handleChange(e) {
         console.log(form)
+        console.log(errors)
+        console.log("birthDate: ",errors.birthDate)
         setForm({
             ...form,
             [e.target.name]: e.target.value,
         });
+
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: ""
+            }));
+        }
+    }
+
+    function resetErrors() {
+        setErrors({});
     }
 
     async function handleSignup(e) {
         e.preventDefault();
 
-
-        setError("");
-
         if (form.password.length < 8) {
-            setError("Passwords must have at least 8 characteres");
+            setErrors({password: "Passwords must have at least 8 characteres"});
             return;
         }
 
         if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match");
+            setErrors({confirmPassword: "Passwords do not match"});
             return;
         }
-
 
         setLoading(true);
 
         try {
+
+            resetErrors()
+
             await signupRequest({
                 name: form.name,
                 email: form.email,
@@ -60,7 +73,11 @@ export default function Signup() {
                 }
             });
         } catch (err) { // TODO: Assign error message to each field, backend is already set on this. EX: err.birthDate
-            setError(err.message || "Error creating account");
+            
+            if (typeof err === "object") {
+                setErrors(err);
+            } 
+            
         } finally {
             setLoading(false);
         }
@@ -74,37 +91,43 @@ export default function Signup() {
                     <p className="text-muted mb-0">Create your account</p>
                 </div>
 
-                {error && <div className="alert alert-danger">{error}</div>}
+                {/* {error && <div className="alert alert-danger">{error}</div>} */}
 
                 <form onSubmit={handleSignup}>
                     <div className="mb-3">
                         <label className="form-label">Name</label>
-                        <input name="name" className="form-control" value={form.name} onChange={handleChange} required />
+                        <input name="name" className={`form-control ${errors.name ? "is-invalid" : ""}`} value={form.name} onChange={handleChange} required />
+                        {errors.name && ( <span className="invalid-feedback">{errors.name}</span> )}
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label">Email</label>
-                        <input name="email" type="email" className="form-control" value={form.email} onChange={handleChange} required />
+                        <input name="email" type="email" className={`form-control ${errors.email ? "is-invalid" : ""}`} value={form.email} onChange={handleChange} required />
+                        {errors.email && ( <span className="invalid-feedback"> {errors.email} </span> )}
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label">Birth date</label>
-                        <input name="birthDate" type="date" className="form-control" value={form.birthDate} onChange={handleChange} required />
+                        <input name="birthDate" type="date" className={`form-control ${errors.birthDate ? "is-invalid" : ""}`} value={form.birthDate} onChange={handleChange} required/>
+                        {errors.birthDate && ( <span className="invalid-feedback"> {errors.birthDate} </span> )}
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label">Login</label>
-                        <input name="login" className="form-control" value={form.login} onChange={handleChange} required />
+                        <input name="login" className={`form-control ${errors.login ? "is-invalid" : ""}`} value={form.login} onChange={handleChange} required />
+                        {errors.birthDate && ( <span className="invalid-feedback"> {errors.birthDate} </span> )}
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input name="password" type="password" className="form-control" value={form.password} onChange={handleChange} required />
+                        <input name="password" type="password" className={`form-control ${errors.password ? "is-invalid" : ""}`} value={form.password} onChange={handleChange} required />
+                        {errors.password && ( <span className="invalid-feedback"> {errors.password} </span> )}
                     </div>
 
                     <div className="mb-4">
                         <label className="form-label">Confirm password</label>
-                        <input name="confirmPassword" type="password" className="form-control" value={form.confirmPassword} onChange={handleChange} required />
+                        <input name="confirmPassword" type="password" className={`form-control ${errors.confirmPassword ? "is-invalid" : ""}`} value={form.confirmPassword} onChange={handleChange} required />
+                        {errors.confirmPassword && ( <span className="invalid-feedback"> {errors.confirmPassword} </span> )}
                     </div>
 
                     <button className="btn btn-primary w-100" disabled={loading}>

@@ -37,7 +37,7 @@ public class AuthService {
      * @return String
      */
     public String login(String login, String password) {
-        User user = userRepository.findByLogin(login)
+        User user = userRepository.findByLoginAndDeletedAtIsNull(login)
                 .orElseThrow(() -> new BadCredentialsException("Invalid Credentials")); // User not found
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");

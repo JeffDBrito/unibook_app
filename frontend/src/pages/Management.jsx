@@ -15,7 +15,7 @@ export default function Management({ title }) {
       return
     }
 
-    async function fetchBooks() {
+    async function fetchEntity() {
       try {
         const res = await api("/books");
         const data = await res.json();
@@ -28,7 +28,7 @@ export default function Management({ title }) {
       }
     }
 
-    fetchBooks();
+    fetchEntity();
   }, []);
 
   const columns = [

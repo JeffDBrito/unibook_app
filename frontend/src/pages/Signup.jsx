@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { signupRequest } from "../services/signupRequest";
 
 export default function Signup() {
+    // TODO: Remove Mock signup input
     const [form, setForm] = useState({
         name: "Jeff Brito",
         email: "jeff@email.com",

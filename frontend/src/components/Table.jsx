@@ -27,7 +27,7 @@ export default function Table({ columns, data }) {
 		</thead>
 
 			<tbody>
-				{data.map((row, index) => (
+				{data.length > 0 ? data.map((row, index) => (
 					<tr
 						key={row.id}
 						style={{
@@ -53,7 +53,7 @@ export default function Table({ columns, data }) {
 							</td>
 						))}
 					</tr>
-				))}
+				)) : ""}
 			</tbody>
 		</table>
 	);

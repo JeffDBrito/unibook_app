@@ -32,8 +32,10 @@ public class UserMapper {
         response.setPerson(person);
 
         Set<String> roleTitles = user.getRoles().stream().map(role -> role.getTitle()).collect(Collectors.toSet());
+        Set<Long> roleIds = user.getRoles().stream().map(role -> role.getId()).collect(Collectors.toSet());
 
         response.setRoles(roleTitles);
+        response.setRoleIds(roleIds);
 
         return response;
     }

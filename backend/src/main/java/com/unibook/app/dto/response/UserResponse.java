@@ -18,6 +18,9 @@ public class UserResponse {
     @Schema(example = "[Admin, Teacher]")
     private Set<String> roles;
 
+    @Schema(example = "[1,2,3]")
+    private Set<Long> roleIds;
+
     private PersonResponse person;
     
 }

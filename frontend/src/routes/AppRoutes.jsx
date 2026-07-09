@@ -5,7 +5,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
-import Books from "../pages/Books";
+import Books from "../pages/books/Books";
 import Copies from "../pages/Copies";
 import Publishers from "../pages/Publishers"; 
 import Categories from "../pages/Categories"; 
@@ -35,7 +35,7 @@ export default function AppRoutes() {
         <Route path="/loans" element={<PrivateRoute><Loans title="Loans"/></PrivateRoute>} />
         <Route path="/fines" element={<PrivateRoute><Fines title="Fines"/></PrivateRoute>} /> // fines
         <Route path="/authors" element={<PrivateRoute><Authors title="Authors"/></PrivateRoute>} /> // authors
-        <Route path="/management" element={<PrivateRoute><Management title="Management"/></PrivateRoute>} /> // management
+        <Route path="/management" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Management title="Management"/></PrivateRoute>} /> // management
 
         // Users Pages
         <Route path="/users" element={<PrivateRoute><Users title="Users"/></PrivateRoute>} />

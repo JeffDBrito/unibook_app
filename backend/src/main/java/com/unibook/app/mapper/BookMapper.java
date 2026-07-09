@@ -27,14 +27,16 @@ public class BookMapper {
         response.setPublisher(
             book.getPublisher() != null ? book.getPublisher().getTitle() : null
         );
+        Long publisherId = book.getPublisher().getId();
+        response.setPublisherId(publisherId);
 
         String authors = book.getAuthors().stream()
             .map(author -> author.getPerson().getName())
             .collect(Collectors.joining(", "));
-        Set<Long> authorsIds = book.getAuthors().stream().map(author -> author.getId()).collect(Collectors.toSet());
+        Set<Long> authorIds = book.getAuthors().stream().map(author -> author.getId()).collect(Collectors.toSet());
 
         response.setAuthors(authors);
-        response.setAuthorsIds(authorsIds);
+        response.setAuthorIds(authorIds);
 
         String categories = book.getCategories().stream()
             .map(category -> category.getTitle())

@@ -174,7 +174,7 @@ public class DataInitializer {
                 "admin@admin.com",
                 birthDate,
                 "admin",
-                "admin",
+                "adminadmin",
                 List.of(
                     roleRepository.findByTitle("ADMIN")
                         .orElseThrow(() -> new ResourceNotFoundException("Admin role not found"))

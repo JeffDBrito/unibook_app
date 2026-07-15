@@ -10,19 +10,33 @@ export async function api(path, options = {}) {
     headers: {
       "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers
-    }
+      ...options.headers,
+    },
   });
 
-  const isLoginRequest = path === "/auth/login";
+  const isPublicRequest =
+    path === "/auth/login" ||
+    path === "/auth/signup";
 
-  if (response.status === 401 && path !== "/auth/login" && path !== "/auth/signup") {
-    const body = await response.clone().json();
+  if (response.status === 401 && !isPublicRequest) {
+    const body = await response
+      .clone()
+      .json()
+      .catch(() => null);
 
-    console.warn("Unauthorized request");
-    localStorage.removeItem("token");
-    window.location.href = "/";
+    const tokenIsInvalid =
+      body?.code === "TOKEN_EXPIRED" ||
+      body?.code === "INVALID_TOKEN" ||
+      body?.code === "TOKEN_MISSING";
 
+    if (tokenIsInvalid) {
+      console.warn("Invalid or expired token, logging out...");
+
+      localStorage.removeItem("token");
+      window.location.href = "/";
+
+      return response;
+    }
   }
 
   return response;

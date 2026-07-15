@@ -13,6 +13,7 @@ import com.unibook.app.exceptions.CustomAuthEntryPoint;
 import com.unibook.app.filter.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> {})
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(customAuthEntryPoint)
@@ -35,8 +36,9 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/auth/login",
                     "/auth/signup",
-                "/swagger-ui/**",
-                "/v3/api-docs/**"
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/error"
             ).permitAll()
                 .anyRequest().authenticated()
             )

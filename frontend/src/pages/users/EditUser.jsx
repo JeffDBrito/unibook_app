@@ -1,25 +1,50 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUser, updateUser } from "../../services/users";
+
 import AppLayout from "../../components/layout/AppLayout";
+import FormInput from "../../components/forms/FormInput";
+import CheckboxGroup from "../../components/forms/CheckboxGroup";
+import FormActions from "../../components/forms/FormActions";
+import FormSelect from "../../components/forms/FormSelect";
+
 import { getRoles } from "../../services/roles";
 
-export default function EditUser({title}) {
+const initialForm = {
+  name: "",
+  email: "",
+  birthDate: "",
+  login: "",
+  password: "",
+  roleIds: [],
+};
+
+export default function EditUser({ title }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    birthDate: "",
-    password: "",
-    roleIds: [],
-  });
-
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState(initialForm);
   const [roles, setRoles] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [loadingRoles, setLoadingRoles] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [generalError, setGeneralError] = useState("");
+
+  useEffect(() => {
+    async function loadRoles() {
+      try {
+        const data = await getRoles();
+        setRoles(data);
+      } catch {
+        setGeneralError("Unable to load roles.");
+      } finally {
+        setLoadingRoles(false);
+      }
+    }
+
+    loadRoles();
+  }, []);
 
   useEffect(() => {
     async function loadUser() {
@@ -35,18 +60,12 @@ export default function EditUser({title}) {
           roleIds: user.roleIds || [],
         });
       } finally {
-        setLoading(false);
+        setLoadingUser(false);
       }
     }
-    
+
     loadUser();
 
-    async function loadRoles() {
-      const data = await getRoles();
-      setRoles(data);
-    }
-    
-    loadRoles();
   }, [id]);
 
   function handleChange(e) {
@@ -103,106 +122,36 @@ export default function EditUser({title}) {
 
   return (
     <AppLayout title={title}>
-        <div className="container">
-            {
-                loading ? 
-                <span>Loading user details...</span> : 
-                <div>
-                    <h1>Edit User</h1>
+      <div className="container">
+        {
+          loadingUser ?
+            <span>Loading user details...</span> :
+            <div>
+              <h1>Edit User</h1>
 
-                    <form onSubmit={handleSubmit} className="card p-4">
-                        <div className="mb-3">
-                        <label className="form-label">Name</label>
-                        <input
-                            name="name"
-                            className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                            value={form.name}
-                            onChange={handleChange}
-                        />
-                        {errors.name && <div className="invalid-feedback">{errors.name}</div>}
-                        </div>
+              <form onSubmit={handleSubmit} className="card p-4">
+                <FormInput label="Name" name="name" value={form.name} onChange={handleChange} error={errors.name} />
+                <FormInput label="Email" name="email" type="email" value={form.email} onChange={handleChange} error={errors.email} />
+                <FormInput label="Birth date" name="birthDate" type="date" value={form.birthDate} onChange={handleChange} error={errors.birthDate} />
+                <FormInput label="Login" name="login" value={form.login} onChange={handleChange} error={errors.login} />
+                <FormInput label="Password" name="password" type="password" value={form.password} onChange={handleChange} error={errors.password} />
 
-                        <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input
-                            name="email"
-                            type="email"
-                            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                            value={form.email}
-                            onChange={handleChange}
-                        />
-                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                        </div>
+                {loadingRoles ? (
+                  <p className="text-muted">Loading roles...</p>
+                ) : (
+                  <FormSelect label="Roles" name="roleIds" value={form.roleIds} onChange={handleChange} options={roles} error={errors.roleIds} isMulti placeholder="Select roles..." getOptionLabel={role => role.name} getOptionValue={role => role.id} />
+                )}
 
-                        <div className="mb-3">
-                        <label className="form-label">Birth date</label>
-                        <input
-                            name="birthDate"
-                            type="date"
-                            className={`form-control ${errors.birthDate ? "is-invalid" : ""}`}
-                            value={form.birthDate}
-                            onChange={handleChange}
-                        />
-                        {errors.birthDate && <div className="invalid-feedback">{errors.birthDate}</div>}
-                        </div>
-
-                        <div className="mb-3">
-                        <label className="form-label">Login</label>
-                        <input
-                            disabled
-                            name="login"
-                            className={`form-control ${errors.login ? "is-invalid" : ""}`}
-                            value={form.login}
-                            onChange={handleChange}
-                        />
-                        {errors.login && <div className="invalid-feedback">{errors.login}</div>}
-                        </div>
-
-                        <div className="mb-3">
-                        <label className="form-label">Password</label>
-                        <input
-                            name="password"
-                            type="password"
-                            className={`form-control ${errors.password ? "is-invalid" : ""}`}
-                            value={form.password}
-                            onChange={handleChange}
-                            placeholder="Enter a new password"
-                        />
-                        {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-                        </div>
-
-                        <div className="mb-4">
-                          <label className="form-label">Roles</label>
-
-                          {roles.map(role => (
-                            <div className="form-check" key={role.id}>
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value={role.id}
-                                checked={form.roleIds.includes(role.id)}
-                                onChange={handleRoleChange}
-                              />
-                              <label className="form-check-label">
-                                {role.name}
-                              </label>
-                            </div>
-                          ))}
-
-                          {errors.roleIds && (
-                            <div className="text-danger mt-1">
-                              {errors.roleIds}
-                            </div>
-                          )}
-                        </div>
-
-                        <button className="btn btn-primary" disabled={saving}>
-                        {saving ? "Saving..." : "Save"}
-                        </button>
-                    </form>
-                </div>
-            }
-        </div>
+                <FormActions
+                  saving={saving}
+                  submitLabel="Update User"
+                  savingLabel="Updating..."
+                  onCancel={() => navigate("/users")}
+                />
+              </form>
+            </div>
+        }
+      </div>
     </AppLayout>
   );
 }

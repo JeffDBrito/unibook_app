@@ -3,6 +3,7 @@ package com.unibook.app.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,6 +36,7 @@ public class InventoryController {
     }
 
     // List inventories
+    @PreAuthorize("hasAuthority('INVENTORY_LIST')")
     @GetMapping
     @Operation(summary = "List inventories", description = "Retrieves a list of all inventories and returns their details.", tags = {"Inventory Endpoints"})
     public List<InventoryResponse> getAll() {
@@ -42,6 +44,7 @@ public class InventoryController {
     }
 
     // Create inventory
+    @PreAuthorize("hasAuthority('INVENTORY_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new inventory", description = "Creates a new inventory with the provided details and returns the created inventory.", tags = {"Inventory Endpoints"})
     public InventoryResponse create(@Valid @RequestBody CreateInventoryRequest request) {
@@ -49,6 +52,7 @@ public class InventoryController {
     }
 
     // Partial update
+    @PreAuthorize("hasAuthority('INVENTORY_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update inventory", description = "Partially updates an existing inventory with the provided details and returns the updated inventory.", tags = {"Inventory Endpoints"})
     public InventoryResponse partialUpdate( @PathVariable Long id, @Valid @RequestBody PartialUpdateInventoryRequest request ) {
@@ -56,6 +60,7 @@ public class InventoryController {
     }
 
     // Full update
+    @PreAuthorize("hasAuthority('INVENTORY_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update inventory", description = "Updates an existing inventory with the provided details and returns the updated inventory.", tags = {"Inventory Endpoints"})
     public InventoryResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateInventoryRequest request) {
@@ -63,6 +68,7 @@ public class InventoryController {
     }
 
     // Get inventory by id
+    @PreAuthorize("hasAuthority('INVENTORY_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get inventory by id", description = "Retrieves a inventory by their id and returns the inventory details.", tags = {"Inventory Endpoints"})
     public InventoryResponse getById(@PathVariable Long id) {
@@ -70,6 +76,7 @@ public class InventoryController {
     }
 
     // Get inventory by location
+    @PreAuthorize("hasAuthority('INVENTORY_READ')")
     @GetMapping("/location")
     @Operation(summary = "Find inventory by location", description = "Finds an inventory by sector, shelf, row and slot.", tags = {"Inventory Endpoints"})
     public InventoryResponse getByLocation(
@@ -82,6 +89,7 @@ public class InventoryController {
     }
 
     // Delete inventory by id
+    @PreAuthorize("hasAuthority('INVENTORY_DELETE')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete inventory by id", description = "Deletes a inventory by their id and returns no content.", tags = {"Inventory Endpoints"})
@@ -90,6 +98,7 @@ public class InventoryController {
     }
 
     // Restore inventory by id
+    @PreAuthorize("hasAuthority('INVENTORY_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore inventory by id", description = "Restores a previously deleted inventory by their id and returns the restored inventory details.", tags = {"Inventory Endpoints"})
     public InventoryResponse restoreById(@PathVariable Long id) {

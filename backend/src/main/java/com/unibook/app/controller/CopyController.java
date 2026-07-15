@@ -3,6 +3,7 @@ package com.unibook.app.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,6 +35,7 @@ public class CopyController {
     }
 
     // List copies
+    @PreAuthorize("hasAuthority('COPY_LIST')")
     @GetMapping
     @Operation(summary = "List copies", description = "Retrieves a list of all copies and returns their details.", tags = {"Copy Endpoints"})
     public List<CopyResponse> getAll() {
@@ -41,6 +43,7 @@ public class CopyController {
     }
 
     // Create copy
+    @PreAuthorize("hasAuthority('COPY_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new copy", description = "Creates a new copy with the provided details and returns the created copy.", tags = {"Copy Endpoints"})
     public CopyResponse create(@Valid @RequestBody CreateCopyRequest request) {
@@ -56,6 +59,7 @@ public class CopyController {
     }
 
     // Full update
+    @PreAuthorize("hasAuthority('COPY_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update copy", description = "Updates an existing copy with the provided details and returns the updated copy.", tags = {"Copy Endpoints"})
     public CopyResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateCopyRequest request) {
@@ -63,6 +67,7 @@ public class CopyController {
     }
 
     // Get copy by id
+    @PreAuthorize("hasAuthority('COPY_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get copy by id", description = "Retrieves a copy by their id and returns the copy details.", tags = {"Copy Endpoints"})
     public CopyResponse getById(@PathVariable Long id) {
@@ -70,6 +75,7 @@ public class CopyController {
     }
 
     // Delete copy by id
+    @PreAuthorize("hasAuthority('COPY_DELETE')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete copy by id", description = "Deletes a copy by their id and returns no content.", tags = {"Copy Endpoints"})
@@ -78,6 +84,7 @@ public class CopyController {
     }
 
     // Restore copy by id
+    @PreAuthorize("hasAuthority('COPY_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore copy by id", description = "Restores a previously deleted copy by their id and returns the restored copy details.", tags = {"Copy Endpoints"})
     public CopyResponse restoreById(@PathVariable Long id) {

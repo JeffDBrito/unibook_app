@@ -1,5 +1,7 @@
 package com.unibook.app.service;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,6 @@ import com.unibook.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -199,11 +200,19 @@ public class UserService {
      * Fetch all users
      * @return List<UserResponse>
      */
-    public List<UserResponse> findAll() {
-        return userRepository.findByDeletedAtIsNull()
-            .stream()
-            .map(UserMapper::toResponse)
-            .toList();
+    public Page<UserResponse> findAll(String search, Pageable pageable) {
+        Page<User> users;
+
+        if (search == null || search.isBlank()) {
+            users = userRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            users = userRepository.searchActiveUsers(
+                search.trim(),
+                pageable
+            );
+        }
+
+        return users.map(UserMapper::toResponse);
     }
     
     /**

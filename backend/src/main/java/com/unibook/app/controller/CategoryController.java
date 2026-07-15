@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class CategoryController {
     }
     
     // List categories
+    @PreAuthorize("hasAuthority('CATEGORY_LIST')")
     @GetMapping
     @Operation(summary = "List categories", description = "Retrieves a list of all categories and returns their details.", tags = {"Category Endpoints"})
     public List<CategoryResponse> getAllCategories() {
@@ -39,6 +41,7 @@ public class CategoryController {
     }
 
     // Create category
+    @PreAuthorize("hasAuthority('CATEGORY_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new category", description = "Creates a new category with the provided details and returns the created category.", tags = {"Category Endpoints"})
     public CategoryResponse createCategory(@Valid @RequestBody CreateCategoryRequest request) {
@@ -46,6 +49,7 @@ public class CategoryController {
     }
 
     // Delete category by id
+    @PreAuthorize("hasAuthority('CATEGORY_LIST')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete category by id", description = "Deletes a category by their id.", tags = {"Category Endpoints"})
     public void deleteCategoryById(@PathVariable Long id) {
@@ -53,6 +57,7 @@ public class CategoryController {
     }
 
     // Get category by id
+    @PreAuthorize("hasAuthority('CATEGORY_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get category by id", description = "Retrieves a category by their id and returns the category details.", tags = {"Category Endpoints"})
     public CategoryResponse getCategoryById(@PathVariable Long id) {
@@ -60,6 +65,7 @@ public class CategoryController {
     }
 
     // Get category by title
+    @PreAuthorize("hasAuthority('CATEGORY_READ')")
     @GetMapping("/title/{title}")
     @Operation(summary = "Get category by title", description = "Retrieves a category by their title and returns the category details.", tags = {"Category Endpoints"})
     public CategoryResponse getCategoryByTitle(@PathVariable String title) {
@@ -67,6 +73,7 @@ public class CategoryController {
     }
 
     // Partial Update
+    @PreAuthorize("hasAuthority('CATEGORY_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Category", description = "Partially updates an existing Category with the provided details and returns the updated Category.", tags = {"Category Endpoints"})
     public CategoryResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdateCategoryRequest request){
@@ -74,12 +81,15 @@ public class CategoryController {
     }
 
     // Full Update
+    @PreAuthorize("hasAuthority('CATEGORY_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update Category", description = "Updates an existing Category with the provided details and returns the updated Category.", tags = {"Category Endpoints"})
     public CategoryResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateCategoryRequest request){
         return categoryService.update(id, request);
     }
 
+    // Restore category
+    @PreAuthorize("hasAuthority('CATEGORY_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore Category by id", description = "Restores a previously deleted Category by their id and returns the restored Category details.", tags = {"Category Endpoints"})
     public CategoryResponse restore(@PathVariable Long id){

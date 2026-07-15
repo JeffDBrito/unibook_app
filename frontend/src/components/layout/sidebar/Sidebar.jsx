@@ -24,6 +24,73 @@ export default function Sidebar() {
 		return localStorage.getItem("sidebar-collapsed") === "true";
 	});
 
+	const menuItems = [{
+			to: "/dashboard",
+			label: "Dashboard",
+			icon: <DashboardIcon />,
+			roles: [
+				"SUPER_ADMIN",
+				"ADMIN",
+				"LIBRARIAN",
+				"TEACHER",
+				"STUDENT",
+				"GUEST"
+			],
+		},{
+			to: "/books",
+			label: "Books",
+			icon: <BooksIcon />,
+			roles: [
+			"SUPER_ADMIN",
+			"ADMIN",
+			"LIBRARIAN",
+			"TEACHER",
+			"STUDENT",
+			"GUEST",
+			],
+		},{
+			to: "/copies",
+			label: "Copies",
+			icon: <CopiesIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/publishers",
+			label: "Publishers",
+			icon: <PublishersIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/categories",
+			label: "Categories",
+			icon: <CategoriesIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/loans",
+			label: "Loans",
+			icon: <LoansIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/fines",
+			label: "Fines",
+			icon: <BillIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/users",
+			label: "Users",
+			icon: <UsersIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/authors",
+			label: "Authors",
+			icon: <UsersIcon />,
+			roles: ["ADMIN", "SUPER_ADMIN"],
+		},{
+			to: "/management",
+			label: "Management",
+			icon: <ManagementIcon />,
+			roles: ["SUPER_ADMIN"],
+		},
+	];
+
 	useEffect(() => {
 		localStorage.setItem("sidebar-collapsed", collapsed);
 	}, [collapsed]);

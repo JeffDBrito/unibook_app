@@ -8,6 +8,7 @@ function parseToken(token) {
   const payload = JSON.parse(atob(token.split(".")[1]));
 
   return {
+    name: payload.name,
     login: payload.sub,
     roles: payload.roles || [],
     id: payload.id

@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class PermissionController {
     }
 
     // List permissions
+    @PreAuthorize("hasAuthority('PERMISSION_LIST')")
     @GetMapping
     @Operation(summary = "List permissions", description = "Retrieves a list of all permissions and returns their details.", tags = {"Permission Endpoints"})
     public List<PermissionResponse> getAllPermissions() {
@@ -31,6 +33,7 @@ public class PermissionController {
     }
 
     // Get permission by id
+    @PreAuthorize("hasAuthority('PERMISSION_READ')") 
     @GetMapping("/{id}")
     @Operation(summary = "Get permission by ID", description = "Retrieves a permission by its unique ID and returns the permission details.", tags = {"Permission Endpoints"})
     public PermissionResponse getPermissionById(@PathVariable Long id) {
@@ -38,13 +41,14 @@ public class PermissionController {
     }
 
     // Get permission by title
+    @PreAuthorize("hasAuthority('PERMISSION_READ')") 
     @GetMapping("/title/{title}")
     @Operation(summary = "Get permission by title", description = "Retrieves a permission by its title and returns the permission details.", tags = {"Permission Endpoints"})
     public PermissionResponse getPermissionByTitle(@PathVariable String title) {
         return permissionService.findAll().stream()
-                .filter(permission -> permission.getTitle().equalsIgnoreCase(title))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("title", "Permission not found with title: " + title));
+            .filter(permission -> permission.getTitle().equalsIgnoreCase(title))
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("title", "Permission not found with title: " + title));
     }
 
 

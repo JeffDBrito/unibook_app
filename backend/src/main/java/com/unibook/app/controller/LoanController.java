@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class LoanController {
     }
 
     // List loans
+    @PreAuthorize("hasAuthority('LOAN_LIST')")
     @GetMapping
     @Operation(summary = "List loans", description = "Retrieves a list of all loans and returns their details.", tags = {"Loan Endpoints"})
     public List<LoanResponse> getAll() {
@@ -38,6 +40,7 @@ public class LoanController {
     }
 
     // Find Loan by id
+    @PreAuthorize("hasAuthority('LOAN_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Find loan", description = "Retrieves a list of all loans and returns their details.", tags = {"Loan Endpoints"})
     public LoanResponse findById(@PathVariable Long id) {
@@ -45,6 +48,7 @@ public class LoanController {
     }
 
     // Create Loan
+    @PreAuthorize("hasAuthority('LOAN_CREATE')")
     @PostMapping
     @Operation(summary = "Create a loan",description = "Creates a new loan.", tags = {"Loan Endpoints"})
     public LoanResponse create(@Valid @RequestBody CreateLoanRequest request) {
@@ -52,6 +56,7 @@ public class LoanController {
     }
 
     // Return Loan
+    @PreAuthorize("hasAuthority('LOAN_RETURN')")
     @PostMapping("/{id}/return")
     @Operation(summary = "Return a loan",description = "Marks a loan as returned.", tags = {"Loan Endpoints"})
     public LoanResponse returnLoan(@PathVariable Long id) {
@@ -59,12 +64,15 @@ public class LoanController {
     }
 
     // Partial update
+    @PreAuthorize("hasAuthority('LOAN_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update loan", description = "Partially updates an existing loan with the provided details and returns the updated loan.", tags = {"Loan Endpoints"})
     public LoanResponse partialUpdate( @PathVariable Long id, @Valid @RequestBody PartialUpdateLoanRequest request ) {
         return loanService.update(id, request, true);
     }
 
+    // Full update
+    @PreAuthorize("hasAuthority('LOAN_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update loan", description = "Partially updates an existing loan with the provided details and returns the updated loan.", tags = {"Loan Endpoints"})
     public LoanResponse fullUpdate( @PathVariable Long id, @Valid @RequestBody UpdateLoanRequest request ) {

@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,6 +33,7 @@ public class PublisherController {
     }
 
     // List publishers
+    @PreAuthorize("hasAuthority('PUBLISHER_LIST')")
     @GetMapping
     @Operation(summary = "List publishers", description = "Retrieves a list of all publishers and returns their details.", tags = {"Publisher Endpoints"})
     public List<PublisherResponse> getAllPublishers() {
@@ -39,6 +41,7 @@ public class PublisherController {
     }
 
     // Create publisher
+    @PreAuthorize("hasAuthority('PUBLISHER_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the provided details and returns the created publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse createPublisher(@Valid @RequestBody CreatePublisherRequest request) {
@@ -46,6 +49,7 @@ public class PublisherController {
     }
 
     // Get publisher by id
+    @PreAuthorize("hasAuthority('PUBLISHER_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get publisher by ID", description = "Retrieves a publisher by their unique ID and returns the publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse getPublisherById(@PathVariable Long id) {
@@ -53,6 +57,7 @@ public class PublisherController {
     }
 
     // Delete by id
+    @PreAuthorize("hasAuthority('PUBLISHER_DELETE')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete publisher by ID", description = "Deletes a publisher by their unique ID and returns a confirmation message.", tags = {"Publisher Endpoints"})
     public void deletePublisher(@PathVariable Long id) {
@@ -60,6 +65,7 @@ public class PublisherController {
     }
 
     // Get publisher by title
+    @PreAuthorize("hasAuthority('PUBLISHER_READ')")
     @GetMapping("/title/{title}")
     @Operation(summary = "Get publisher by title", description = "Retrieves a publisher by their title and returns the publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse getPublisherByTitle(@PathVariable String title) {
@@ -67,6 +73,7 @@ public class PublisherController {
     }
 
     // Partial update
+    @PreAuthorize("hasAuthority('PUBLISHER_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Publisher", description = "Partially updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdatePublisherRequest request){
@@ -74,12 +81,15 @@ public class PublisherController {
     }
 
     // Full update
+    @PreAuthorize("hasAuthority('PUBLISHER_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update Publisher", description = "Updates an existing Publisher with the provided details and returns the updated Publisher.", tags = {"Publisher Endpoints"})
     public PublisherResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdatePublisherRequest request){
         return publisherService.update(id, request);
     }
 
+    // Restore publisher
+    @PreAuthorize("hasAuthority('PUBLISHER_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore Publisher by id", description = "Restores a previously deleted Publisher by their id and returns the restored Publisher details.", tags = {"Publisher Endpoints"})
     public PublisherResponse restore(@PathVariable Long id){

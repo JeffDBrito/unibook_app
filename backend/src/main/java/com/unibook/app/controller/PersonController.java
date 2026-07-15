@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,6 +34,7 @@ public class PersonController {
     }
     
     // List categories
+    @PreAuthorize("hasAuthority('PERSON_LIST')")
     @GetMapping
     @Operation(summary = "List persons", description = "Retrieves a list of all persons and returns their details.", tags = {"Person Endpoints"})
     public List<PersonResponse> getAllCategories() {
@@ -40,6 +42,7 @@ public class PersonController {
     }
 
     // Create person
+    @PreAuthorize("hasAuthority('PERSON_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new person", description = "Creates a new person with the provided details and returns the created person.", tags = {"Person Endpoints"})
     public PersonResponse createPerson(@Valid @RequestBody CreatePersonRequest request) {
@@ -47,6 +50,7 @@ public class PersonController {
     }
 
     // Get person by id
+    @PreAuthorize("hasAuthority('PERSON_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get person by ID", description = "Retrieves a person by their unique ID and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonById(@PathVariable Long id) {
@@ -54,6 +58,7 @@ public class PersonController {
     }
 
     // Delete by id
+    @PreAuthorize("hasAuthority('PERSON_DELETE')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete person by ID", description = "Deletes a person by their unique ID and returns a confirmation message.", tags = {"Person Endpoints"})
     public void deletePerson(@PathVariable Long id) {
@@ -61,6 +66,7 @@ public class PersonController {
     }
 
     // Get person by name
+    @PreAuthorize("hasAuthority('PERSON_READ')")
     @GetMapping("/name/{name}")
     @Operation(summary = "Get person by name", description = "Retrieves a person by their name and returns the person details.", tags = {"Person Endpoints"})
     public PersonResponse getPersonByName(@PathVariable String name) {
@@ -69,6 +75,7 @@ public class PersonController {
     }
 
     // Partial update
+    @PreAuthorize("hasAuthority('PERSON_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partial update Person", description = "Partially updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
     public PersonResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdatePersonRequest request){
@@ -76,12 +83,15 @@ public class PersonController {
     }
 
     // Full update
+    @PreAuthorize("hasAuthority('PERSON_UPDATE')")
     @PutMapping("/{id}")
-    @Operation(summary = "Partial update Person", description = "Updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
+    @Operation(summary = "Full update Person", description = "Updates an existing Person with the provided details and returns the updated Person.", tags = {"Person Endpoints"})
     public PersonResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdatePersonRequest request){
         return personService.update(id, request);
     }
 
+    // Restore person
+    @PreAuthorize("hasAuthority('PERSON_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore Person by id", description = "Restores a previously deleted Person by their id and returns the restored Person details.", tags = {"Person Endpoints"})
     public PersonResponse restore(@PathVariable Long id){

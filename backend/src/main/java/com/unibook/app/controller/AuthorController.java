@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,6 +33,7 @@ public class AuthorController {
     }
 
     // List authors
+    @PreAuthorize("hasAuthority('AUTHOR_LIST')")
     @GetMapping
     @Operation(summary = "List authors", description = "Retrieves a list of all authors and returns their details.", tags = {"Author Endpoints"})
     public List<AuthorResponse> getAllAuthors() {
@@ -39,6 +41,7 @@ public class AuthorController {
     }
 
     // Create author
+    @PreAuthorize("hasAuthority('AUTHOR_CREATE')")
     @PostMapping
     @Operation(summary = "Create a new author", description = "Creates a new author with the provided details and returns the created author.", tags = {"Author Endpoints"})
     public AuthorResponse createAuthor(@Valid @RequestBody CreateAuthorRequest request) {
@@ -46,6 +49,7 @@ public class AuthorController {
     }   
 
     // Get author by id
+    @PreAuthorize("hasAuthority('AUTHOR_READ')")
     @GetMapping("/{id}")
     @Operation(summary = "Get author by id", description = "Retrieves an author by their id and returns the author details.", tags = {"Author Endpoints"})
     public AuthorResponse getAuthorById(@PathVariable Long id) {
@@ -53,6 +57,7 @@ public class AuthorController {
     }
 
     // Delete by id
+    @PreAuthorize("hasAuthority('AUTHOR_DELETE')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete author by ID", description = "Deletes an author by their unique ID and returns a confirmation message.", tags = {"Author Endpoints"})
     public void deleteAuthor(@PathVariable Long id) {
@@ -60,6 +65,7 @@ public class AuthorController {
     }
 
     // Get author by name
+    @PreAuthorize("hasAuthority('AUTHOR_READ')")
     @GetMapping("/name/{name}")
     @Operation(summary = "Get author by name", description = "Retrieves an author by their name and returns the author details.", tags = {"Author Endpoints"})
     public AuthorResponse getAuthorByName(@PathVariable String name) {
@@ -67,6 +73,7 @@ public class AuthorController {
     }
 
     // Partial update
+    @PreAuthorize("hasAuthority('AUTHOR_UPDATE')")
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update Author", description = "Partially updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
     public AuthorResponse partialUpdate(@PathVariable Long id, @Valid @RequestBody PartialUpdateAuthorRequest request){
@@ -74,12 +81,15 @@ public class AuthorController {
     }
 
     // Full update
+    @PreAuthorize("hasAuthority('AUTHOR_UPDATE')")
     @PutMapping("/{id}")
     @Operation(summary = "Update Author", description = "Updates an existing author with the provided details and returns the updated author.", tags = {"Author Endpoints"})
     public AuthorResponse fullUpdate(@PathVariable Long id, @Valid @RequestBody UpdateAuthorRequest request){
         return authorService.update(id, request);
     }
 
+    // Restore author
+    @PreAuthorize("hasAuthority('AUTHOR_RESTORE')")
     @PostMapping("/{id}/restore")
     @Operation(summary = "Restore Author by id", description = "Restores a previously deleted Author by their id and returns the restored Author details.", tags = {"Author Endpoints"})
     public AuthorResponse restore(@PathVariable Long id){

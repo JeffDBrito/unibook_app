@@ -80,62 +80,88 @@ public class DataInitializer {
             createPermissionIfNotExists(permissionRepository, "LOAN_CREATE", "Loan", "Create a new loan");
             createPermissionIfNotExists(permissionRepository, "LOAN_READ", "Loan", "View loan details");
             createPermissionIfNotExists(permissionRepository, "LOAN_RETURN", "Loan", "Return a loan");
-            createPermissionIfNotExists(permissionRepository, "LOAN_CANCEL", "Loan", "Cancel a loan");
-            createPermissionIfNotExists(permissionRepository, "LOAN_VIEW_ALL", "Loan", "View all loans");
+            createPermissionIfNotExists(permissionRepository, "LOAN_UPDATE", "Loan", "Update loan information");
+            createPermissionIfNotExists(permissionRepository, "LOAN_LIST", "Loan", "List all loans");
 
             // Book
             createPermissionIfNotExists(permissionRepository, "BOOK_CREATE", "Book", "Create a new book");
             createPermissionIfNotExists(permissionRepository, "BOOK_READ", "Book", "View book details");
             createPermissionIfNotExists(permissionRepository, "BOOK_UPDATE", "Book", "Update book information");
             createPermissionIfNotExists(permissionRepository, "BOOK_DELETE", "Book", "Delete a book");
+            createPermissionIfNotExists(permissionRepository, "BOOK_LIST", "Book", "List all books");
 
             // User
             createPermissionIfNotExists(permissionRepository, "USER_CREATE", "User", "Create a new user");
             createPermissionIfNotExists(permissionRepository, "USER_READ", "User", "View user details");
+            createPermissionIfNotExists(permissionRepository, "USER_LIST", "User", "List all users");
             createPermissionIfNotExists(permissionRepository, "USER_UPDATE", "User", "Update user information");
             createPermissionIfNotExists(permissionRepository, "USER_DELETE", "User", "Delete a user");
-            createPermissionIfNotExists(permissionRepository, "USER_VIEW_ALL", "User", "View all users");
+            createPermissionIfNotExists(permissionRepository, "USER_RESTORE", "User", "Restore a user");
 
             // Person
             createPermissionIfNotExists(permissionRepository, "PERSON_CREATE", "Person", "Create a new person");
             createPermissionIfNotExists(permissionRepository, "PERSON_READ", "Person", "View person details");
             createPermissionIfNotExists(permissionRepository, "PERSON_UPDATE", "Person", "Update person information");
             createPermissionIfNotExists(permissionRepository, "PERSON_DELETE", "Person", "Delete a person");
+            createPermissionIfNotExists(permissionRepository, "PERSON_RESTORE", "Person", "Restore a person");
 
             // Author
             createPermissionIfNotExists(permissionRepository, "AUTHOR_CREATE", "Author", "Create a new author");
             createPermissionIfNotExists(permissionRepository, "AUTHOR_READ", "Author", "View author details");
             createPermissionIfNotExists(permissionRepository, "AUTHOR_UPDATE", "Author", "Update author information");
             createPermissionIfNotExists(permissionRepository, "AUTHOR_DELETE", "Author", "Delete an author");
-            createPermissionIfNotExists(permissionRepository, "AUTHOR_VIEW_ALL", "Author", "View all authors");
+            createPermissionIfNotExists(permissionRepository, "AUTHOR_LIST", "Author", "List all authors");
 
             // Category
             createPermissionIfNotExists(permissionRepository, "CATEGORY_CREATE", "Category", "Create a new category");
             createPermissionIfNotExists(permissionRepository, "CATEGORY_READ", "Category", "View category details");
             createPermissionIfNotExists(permissionRepository, "CATEGORY_UPDATE", "Category", "Update category information");
             createPermissionIfNotExists(permissionRepository, "CATEGORY_DELETE", "Category", "Delete a category");
-            createPermissionIfNotExists(permissionRepository, "CATEGORY_VIEW_ALL", "Category", "View all categories");
+            createPermissionIfNotExists(permissionRepository, "CATEGORY_LIST", "Category", "List all categories");
+            createPermissionIfNotExists(permissionRepository, "CATEGORY_RESTORE", "Category", "Restore a deleted category");
 
             // Publisher
             createPermissionIfNotExists(permissionRepository, "PUBLISHER_CREATE", "Publisher", "Create a new publisher");
             createPermissionIfNotExists(permissionRepository, "PUBLISHER_READ", "Publisher", "View publisher details");
             createPermissionIfNotExists(permissionRepository, "PUBLISHER_UPDATE", "Publisher", "Update publisher information");
             createPermissionIfNotExists(permissionRepository, "PUBLISHER_DELETE", "Publisher", "Delete a publisher");
-            createPermissionIfNotExists(permissionRepository, "PUBLISHER_VIEW_ALL", "Publisher", "View all publishers");
+            createPermissionIfNotExists(permissionRepository, "PUBLISHER_LIST", "Publisher", "List all publishers");
+            createPermissionIfNotExists(permissionRepository, "PUBLISHER_RESTORE", "Publisher", "Restore a deleted publisher");
 
             // Copy
             createPermissionIfNotExists(permissionRepository, "COPY_CREATE", "Copy", "Create a new copy");
             createPermissionIfNotExists(permissionRepository, "COPY_READ", "Copy", "View copy details");
             createPermissionIfNotExists(permissionRepository, "COPY_UPDATE", "Copy", "Update copy information");
             createPermissionIfNotExists(permissionRepository, "COPY_DELETE", "Copy", "Delete a copy");
+            createPermissionIfNotExists(permissionRepository, "COPY_LIST", "Copy", "List all copies");
             createPermissionIfNotExists(permissionRepository, "COPY_MARK_LOST", "Copy", "Mark copy as lost");
             createPermissionIfNotExists(permissionRepository, "COPY_MARK_DAMAGED", "Copy", "Mark copy as damaged");
-            
+
+            // Inventory
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_CREATE", "Inventory", "Create a new inventory");
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_READ", "Inventory", "View inventory details");
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_UPDATE", "Inventory", "Update inventory information");
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_DELETE", "Inventory", "Delete a inventory");
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_LIST", "Inventory", "List all inventories");
+            createPermissionIfNotExists(permissionRepository, "INVENTORY_RESTORE", "Inventory", "Restore a deleted inventory");
+
             // Fine
             createPermissionIfNotExists(permissionRepository, "FINE_CREATE", "Fine", "Create a new fine");
             createPermissionIfNotExists(permissionRepository, "FINE_READ", "Fine", "View fine details");
             createPermissionIfNotExists(permissionRepository, "FINE_PAY", "Fine", "Pay a fine");
-            createPermissionIfNotExists(permissionRepository, "FINE_VIEW_ALL", "Fine", "View all fines");
+            createPermissionIfNotExists(permissionRepository, "FINE_LIST", "Fine", "List all fines");
+
+            // Role
+            createPermissionIfNotExists(permissionRepository, "ROLE_CREATE", "Role", "Create a new role");
+            createPermissionIfNotExists(permissionRepository, "ROLE_READ", "Role", "View role details");
+            createPermissionIfNotExists(permissionRepository, "ROLE_UPDATE", "Role", "Update role information");
+            createPermissionIfNotExists(permissionRepository, "ROLE_DELETE", "Role", "Delete a role");
+            createPermissionIfNotExists(permissionRepository, "ROLE_LIST", "Role", "List all roles");
+            createPermissionIfNotExists(permissionRepository, "ROLE_RESTORE", "Role", "Restore a role");
+
+            // Permissions
+            createPermissionIfNotExists(permissionRepository, "PERMISSION_LIST", "Permission", "List all permissions");
+            createPermissionIfNotExists(permissionRepository, "PERMISSION_READ", "Permission", "View permission details");
 
         };
     }
@@ -158,9 +184,12 @@ public class DataInitializer {
             RoleService roleService
     ) {
         return args -> {
-            List<Permission> allPermissions = permissionRepository.findAll();
-            roleService.assignPermissionsByRoleName("ADMIN", allPermissions);
-            roleService.assignPermissionsByRoleName("SUPER_ADMIN", allPermissions);
+            this.addSuperAdminPermissions(roleRepository, permissionRepository, roleService);
+            this.addAdminPermissions(roleRepository, permissionRepository, roleService);
+            this.addLibrarianPermissions(roleRepository, permissionRepository, roleService);
+            this.addTeacherPermissions(roleRepository, permissionRepository, roleService);
+            this.addStudentPermissions(roleRepository, permissionRepository, roleService);
+            this.addGuestPermissions(roleRepository, permissionRepository, roleService);
         };
     }
 
@@ -199,6 +228,19 @@ public class DataInitializer {
             );
 
             userService.createUser(new CreateUserRequest(
+                "Librarian User",
+                "librarian@librarian.com",
+                birthDate,
+                "librarian",
+                "librarianlibrarian",
+                List.of(
+                    roleRepository.findByTitle("LIBRARIAN")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found"))
+                        .getId()
+                ))
+            );
+
+            userService.createUser(new CreateUserRequest(
                 "Teacher User",
                 "teacher@teacher.com",
                 birthDate,
@@ -206,6 +248,19 @@ public class DataInitializer {
                 "teacherteacher",
                 List.of(
                     roleRepository.findByTitle("TEACHER")
+                        .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found"))
+                        .getId()
+                ))
+            );
+
+            userService.createUser(new CreateUserRequest(
+                "Student User",
+                "student@student.com",
+                birthDate,
+                "student",
+                "studentstudent",
+                List.of(
+                    roleRepository.findByTitle("STUDENT")
                         .orElseThrow(() -> new ResourceNotFoundException("title", "Role not found"))
                         .getId()
                 ))
@@ -422,6 +477,61 @@ public class DataInitializer {
         copy.setInventory(inventory);
 
         return copy;
+    }
+
+    private void addSuperAdminPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        List<Permission> allPermissions = permissionRepository.findAll();
+        roleService.assignPermissionsByRoleName("SUPER_ADMIN", allPermissions);
+    }
+
+    private void addAdminPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        List<Permission> allPermissions = permissionRepository.findAll();
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ADMIN"));
+        roleService.assignPermissionsByRoleName("ADMIN", allPermissions);
+    }
+
+    private void addLibrarianPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        List<Permission> allPermissions = permissionRepository.findAll();
+        allPermissions.removeIf(permission -> permission.getTitle().contains("DELETE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ADMIN"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ROLE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("PERMISSION"));
+
+        roleService.assignPermissionsByRoleName("LIBRARIAN", allPermissions);
+    }
+
+    private void addTeacherPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        List<Permission> allPermissions = permissionRepository.findAll();
+        allPermissions.removeIf(permission -> permission.getTitle().contains("DELETE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ADMIN"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ROLE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("PERMISSION"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("UPDATE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("MARK"));
+
+        roleService.assignPermissionsByRoleName("TEACHER", allPermissions);
+    }
+
+    private void addStudentPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        List<Permission> allPermissions = permissionRepository.findAll();
+        allPermissions.removeIf(permission -> permission.getTitle().contains("DELETE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ADMIN"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("ROLE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("PERMISSION"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("UPDATE"));
+        allPermissions.removeIf(permission -> permission.getTitle().contains("MARK"));
+
+        roleService.assignPermissionsByRoleName("STUDENT", allPermissions);
+    }
+
+    private void addGuestPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository, RoleService roleService){
+        
+        // add only BOOK_READ and BOOK_LIST
+
+        List<Permission> allPermissions = permissionRepository.findAll();
+        allPermissions.removeIf(permission -> !permission.getTitle().equals("BOOK_READ") && !permission.getTitle().equals("BOOK_LIST"));
+
+        roleService.assignPermissionsByRoleName("GUEST", allPermissions);
     }
 
 }

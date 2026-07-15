@@ -1,147 +1,222 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import AppLayout from "../../components/layout/AppLayout";
 import Table from "../../components/Table";
+
 import { api } from "../../services/api";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
+const PAGE_SIZE = 10;
+const SEARCH_DELAY = 400;
+
 export default function Users({ title }) {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const { token, user } = useAuth();
+	const navigate = useNavigate();
+	const { user } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 
-    if (!token){
-      return
-    }
+	const [page, setPage] = useState(0);
+	const [totalPages, setTotalPages] = useState(0);
 
-    async function fetchUsers() {
-      try {
-        const res = await api("/users");
-        const data = await res.json();
+	const [search, setSearch] = useState("");
+	const [debouncedSearch, setDebouncedSearch] = useState("");
 
-        setUsers(data);
-      } catch (err) {
-        setError("Error when loading users");
-      } finally {
-        setLoading(false);
-      }
-    }
+	const canEdit =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-    fetchUsers();
-  }, []);
+	const canDelete = user?.roles?.includes("SUPER_ADMIN");
 
-  const columns = [
-    { key: "id", label: "ID", accessor: "id" },
-    { key: "login", label: "Login", accessor: "login" },
-    {
-      key: "name",
-      label: "Name",
-      render: (data) => data.person.name
-    },
-    {
-      key: "email",
-      label: "Email",
-      render: (data) => data.person.email
-    },
-    {
-      key: "roles",
-      label: "Roles",
-      render: (data) => data.roles.join(', ')
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      render: (data) => (
-        <div style={{ display: "flex", gap: "8px" }}>
-          {
-            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
-              <button
-                onClick={() => handleEdit(data)}
-                style={actionButton("#3b82f6")}
-              >
-                Edit
-              </button>
-            : ""
-          }
+	const fetchUsers = useCallback(async () => {
+		setLoading(true);
+		setError("");
 
-          {
-            user?.roles?.includes("SUPER_ADMIN") ?
-              <button
-                onClick={() => handleDelete(data)}
-                style={actionButton("#ef4444")}
-              >
-                Delete
-              </button>
-            : ""
-          }
-        </div>
-      )
-    }
-  ];
+		try {
+			const params = new URLSearchParams({
+				page: String(page),
+				size: String(PAGE_SIZE),
+			});
 
-  function handleEdit(user) {
-    navigate(`/users/${user.id}/edit`)
-  }
+			if (debouncedSearch.trim()) {
+				params.set("search", debouncedSearch.trim());
+			}
 
-  function handleCreateUser(){
-    navigate(`/users/create`)
-  }
+			const response = await api(`/users?${params.toString()}`);
 
-  async function handleDelete(user) {
-    const confirmDelete = confirm(`Deletar ${user.login}?`);
+			if (!response.ok) {
+				const body = await response.json().catch(() => null);
 
-    if (!confirmDelete) return;
+				throw new Error(
+					body?.general ||
+					body?.message ||
+					"Error when loading users"
+				);
+			}
 
-    try {
-      await api(`/users/${user.id}`, {
-        method: "DELETE"
-      });
+			const data = await response.json();
 
-      setUsers((prev) => prev.filter((u) => u.id !== user.id));
-    } catch (err) {
-      alert("Error when deleting user");
-    }
-  }
+			setUsers(data.content ?? []);
+			setTotalPages(data.totalPages ?? 0);
+		} catch (err) {
+			setUsers([]);
+			setError(err.message || "Error when loading users");
+		} finally {
+			setLoading(false);
+		}
+	}, [page, debouncedSearch]);
 
-  function actionButton(color) {
-    return {
-      padding: "6px 10px",
-      border: "none",
-      borderRadius: "4px",
-      background: color,
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "12px"
-    };
-  }
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setDebouncedSearch(search);
+			setPage(0);
+		}, SEARCH_DELAY);
 
-  return (
-    <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>User List</h2>
+		return () => clearTimeout(timeout);
+	}, [search]);
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button
-        onClick={() => handleCreateUser()}
-        style={{
-          marginBottom: "10px",
-          padding: "8px 12px",
-          background: "#4f46e5",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px"
-        }}
-      >
-        Create User
-      </button>
-      {!loading && !error && (
-        <Table columns={columns} data={users} />
-      )}
-    </AppLayout>
-  );
+	useEffect(() => {
+		fetchUsers();
+	}, [fetchUsers]);
+
+	function handleEdit(selectedUser) {
+		navigate(`/users/${selectedUser.id}/edit`);
+	}
+
+	function handleCreateUser() {
+		navigate("/users/create");
+	}
+
+	async function handleDelete(selectedUser) {
+		// Depois substitua este confirm por um modal.
+		const confirmed = window.confirm(
+			`Delete user ${selectedUser.login}?`
+		);
+
+		if (!confirmed) {
+			return;
+		}
+
+		try {
+			const response = await api(`/users/${selectedUser.id}`, {
+				method: "DELETE",
+			});
+
+			if (!response.ok) {
+				const body = await response.json().catch(() => null);
+
+				throw new Error(
+					body?.general ||
+					body?.message ||
+					"Error when deleting user"
+				);
+			}
+
+			toast.success("User deleted successfully");
+
+			if (users.length === 1 && page > 0) {
+				setPage((currentPage) => currentPage - 1);
+			} else {
+				await fetchUsers();
+			}
+		} catch (err) {
+			toast.error(err.message || "Error when deleting user");
+		}
+	}
+
+	const columns = [
+		{
+			key: "id",
+			label: "ID",
+			accessor: "id",
+		},
+		{
+			key: "login",
+			label: "Login",
+			accessor: "login",
+		},
+		{
+			key: "name",
+			label: "Name",
+			render: (currentUser) => currentUser.person?.name ?? "-",
+		},
+		{
+			key: "email",
+			label: "Email",
+			render: (currentUser) => currentUser.person?.email ?? "-",
+		},
+		{
+			key: "roles",
+			label: "Roles",
+			render: (currentUser) =>
+				Array.isArray(currentUser.roles)
+					? currentUser.roles
+						.map((role) =>
+							typeof role === "string" ? role : role.name
+						)
+						.join(", ")
+					: currentUser.roles ?? "-",
+		},
+		{
+			key: "actions",
+			label: "Actions",
+			render: (currentUser) => (
+				<div className="d-flex gap-2">
+					{canEdit && (
+						<button
+							type="button"
+							className="btn btn-sm btn-primary"
+							onClick={() => handleEdit(currentUser)}
+						>
+							Edit
+						</button>
+					)}
+
+					{canDelete && (
+						<button
+							type="button"
+							className="btn btn-sm btn-danger"
+							onClick={() => handleDelete(currentUser)}
+						>
+							Delete
+						</button>
+					)}
+				</div>
+			),
+		},
+	];
+
+	return (
+		<AppLayout title={title}>
+			<div className="d-flex justify-content-between align-items-center mb-3">
+				<h2 className="mb-0">User List</h2>
+
+				{canEdit && (
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={handleCreateUser}
+					>
+						Create User
+					</button>
+				)}
+			</div>
+
+			<Table
+				columns={columns}
+				data={users}
+				loading={loading}
+				error={error}
+				search={search}
+				onSearchChange={setSearch}
+				searchPlaceholder="Search by name, email or login..."
+				page={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
+		</AppLayout>
+	);
 }

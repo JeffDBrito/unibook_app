@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import AppLayout from "../../components/layout/AppLayout";
 import FormInput from "../../components/forms/FormInput";
@@ -78,11 +79,15 @@ export default function CreateUser({ title }) {
           success: "User created successfully.",
         },
       });
+
+      toast.success("User created successfully.");
     } catch (error) {
       if (error && typeof error === "object") {
+        toast.error("Please fix the errors in the form.");
         setErrors(error);
       } else {
         setGeneralError("Unable to create user.");
+        toast.error("Unable to create user.");
       }
     } finally {
       setSaving(false);

@@ -69,7 +69,7 @@ public class UserService {
         // create User
         User user = new User();
         if(login == null || login.isEmpty()) {
-            login = email; // if login is empty, use email as login
+            throw new BadRequestException("login", "Login is required");
         }
         user.setLogin(login);
         user.setPassword(passwordEncoder.encode(password));

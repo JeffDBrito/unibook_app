@@ -10,7 +10,7 @@ export default function Users({ title }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { token, userAuth } = useAuth();
+  const { token, user } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,39 +41,44 @@ export default function Users({ title }) {
     {
       key: "name",
       label: "Name",
-      render: (user) => user.person.name
+      render: (data) => data.person.name
     },
     {
       key: "email",
       label: "Email",
-      render: (user) => user.person.email
+      render: (data) => data.person.email
     },
     {
       key: "roles",
       label: "Roles",
-      render: (user) => user.roles.join(', ')
+      render: (data) => data.roles.join(', ')
     },
     {
       key: "actions",
       label: "Actions",
-      render: (user) => (
+      render: (data) => (
         <div style={{ display: "flex", gap: "8px" }}>
-          
-          <button
-            onClick={() => handleEdit(user)}
-            style={actionButton("#3b82f6")}
-          >
-            Edit
-          </button>
-            
+          {
+            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
+              <button
+                onClick={() => handleEdit(data)}
+                style={actionButton("#3b82f6")}
+              >
+                Edit
+              </button>
+            : ""
+          }
 
-            <button
-              onClick={() => handleDelete(user)}
-              style={actionButton("#ef4444")}
-            >
-              Delete
-            </button>
-
+          {
+            user?.roles?.includes("SUPER_ADMIN") ?
+              <button
+                onClick={() => handleDelete(data)}
+                style={actionButton("#ef4444")}
+              >
+                Delete
+              </button>
+            : ""
+          }
         </div>
       )
     }

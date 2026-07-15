@@ -6,10 +6,12 @@ import { getAuthors } from "../../services/authors";
 import { getCategories } from "../../services/categories";
 import { getPublishers } from "../../services/publishers";
 
-export default function CreateBook({ title }) {
-  const navigate = useNavigate();
+import FormInput from "../../components/forms/FormInput";
+import CheckboxGroup from "../../components/forms/CheckboxGroup";
+import FormActions from "../../components/forms/FormActions";
+import FormSelect from "../../components/forms/FormSelect";
 
-  const [form, setForm] = useState({
+const initialForm = {
     title: "",
     isbn: "",
     publicationYear: "",
@@ -17,19 +19,53 @@ export default function CreateBook({ title }) {
     publisherId: "",
     authorIds: [],
     categoryIds: [],
-  });
+};
 
-  const [authors, setAuthors] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [publishers, setPublishers] = useState([]);
+export default function CreateBook({ title }) {
+  const navigate = useNavigate();
+
+  const [generalError, setGeneralError] = useState("");
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
+  const [form, setForm] = useState(initialForm);
+  const [authors, setAuthors] = useState([]);
+  const [loadingAuthors, setLoadingAuthors] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [publishers, setPublishers] = useState([]);
+  const [loadingPublishers, setLoadingPublishers] = useState(true);
+  
   useEffect(() => {
+
+    // Load Form options (authors, categories, publishers)
     async function loadOptions() {
-      setAuthors(await getAuthors());
-      setCategories(await getCategories());
-      setPublishers(await getPublishers());
+      try{
+        const data = await getAuthors();
+        setAuthors(data);
+      }catch {
+        setGeneralError("Unable to load authors.");
+      } finally{
+        setLoadingAuthors(false);
+      }
+
+      try{
+        const data = await getCategories();
+        setCategories(data);
+      }catch {
+        setGeneralError("Unable to load categories.");
+      } finally{
+        setLoadingCategories(false);
+      }
+
+      try{
+        const data = await getPublishers();
+        setPublishers(data);
+      }catch {
+        setGeneralError("Unable to load publishers.");
+      } finally{
+        setLoadingPublishers(false);
+      }
     }
 
     loadOptions();
@@ -43,24 +79,12 @@ export default function CreateBook({ title }) {
       [name]: value,
     }));
 
-    setErrors(prev => ({
-      ...prev,
-      [name]: "",
-    }));
+    clearFieldError(name);
   }
 
-  function handleCheckboxChange(e, field) {
-    const id = Number(e.target.value);
-
-    setForm(prev => ({
-      ...prev,
-      [field]: e.target.checked
-        ? [...prev[field], id]
-        : prev[field].filter(item => item !== id),
-    }));
-
-    setErrors(prev => ({
-      ...prev,
+  function clearFieldError(field) {
+    setErrors(previous => ({
+      ...previous,
       [field]: "",
     }));
   }
@@ -72,15 +96,19 @@ export default function CreateBook({ title }) {
     setErrors({});
 
     try {
-      await createBook({
-        ...form,
-        publicationYear: Number(form.publicationYear),
-        publisherId: Number(form.publisherId),
-      });
+      await createBook(form);
 
-      navigate("/books");
+      navigate("/books", {
+        state: {
+          success: "Book created successfully.",
+        },
+      });
     } catch (err) {
-      setErrors(err);
+      if (error && typeof error === "object") {
+        setErrors(error);
+      } else {
+        setGeneralError("Unable to create book.");
+      }
     } finally {
       setSaving(false);
     }
@@ -92,122 +120,13 @@ export default function CreateBook({ title }) {
         <h1>Create Book</h1>
 
         <form onSubmit={handleSubmit} className="card p-4">
-          <div className="mb-3">
-            <label className="form-label">Title</label>
-            <input
-              name="title"
-              className={`form-control ${errors.title ? "is-invalid" : ""}`}
-              value={form.title}
-              onChange={handleChange}
-            />
-            {errors.title && <div className="invalid-feedback">{errors.title}</div>}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">ISBN</label>
-            <input
-              name="isbn"
-              className={`form-control ${errors.isbn ? "is-invalid" : ""}`}
-              value={form.isbn}
-              onChange={handleChange}
-            />
-            {errors.isbn && <div className="invalid-feedback">{errors.isbn}</div>}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Publication Year</label>
-            <input
-              name="publicationYear"
-              type="number"
-              className={`form-control ${errors.publicationYear ? "is-invalid" : ""}`}
-              value={form.publicationYear}
-              onChange={handleChange}
-            />
-            {errors.publicationYear && (
-              <div className="invalid-feedback">{errors.publicationYear}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Description</label>
-            <textarea
-              name="description"
-              className={`form-control ${errors.description ? "is-invalid" : ""}`}
-              value={form.description}
-              onChange={handleChange}
-              rows="3"
-            />
-            {errors.description && (
-              <div className="invalid-feedback">{errors.description}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Publisher</label>
-            <select
-              name="publisherId"
-              className={`form-select ${errors.publisherId ? "is-invalid" : ""}`}
-              value={form.publisherId}
-              onChange={handleChange}
-            >
-              <option value="">Select a publisher</option>
-              {publishers.map(publisher => (
-                <option key={publisher.id} value={publisher.id}>
-                  {publisher.title}
-                </option>
-              ))}
-            </select>
-            {errors.publisherId && (
-              <div className="invalid-feedback">{errors.publisherId}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Authors</label>
-
-            {authors.map(author => (
-              <div className="form-check" key={author.id}>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value={author.id}
-                  checked={form.authorIds.includes(author.id)}
-                  onChange={(e) => handleCheckboxChange(e, "authorIds")}
-                />
-                <label className="form-check-label">
-                  {author.person.name}
-                </label>
-              </div>
-            ))}
-
-            {errors.authorIds && (
-              <div className="text-danger mt-1">{errors.authorIds}</div>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="form-label">Categories</label>
-
-            {categories.map(category => (
-              <div className="form-check" key={category.id}>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value={category.id}
-                  checked={form.categoryIds.includes(category.id)}
-                  onChange={(e) => handleCheckboxChange(e, "categoryIds")}
-                />
-                <label className="form-check-label">
-                  {category.title}
-                </label>
-              </div>
-            ))}
-
-            {errors.categoryIds && (
-              <div className="text-danger mt-1">{errors.categoryIds}</div>
-            )}
-          </div>
-
+          <FormInput label="Title" name="title" value={form.title} onChange={handleChange} error={errors.title} required/>
+          <FormInput label="ISBN" name="isbn" value={form.isbn} onChange={handleChange} error={errors.isbn} required/>
+          <FormInput label="Publication Year" name="publicationYear" type="number" value={form.publicationYear} onChange={handleChange} error={errors.publicationYear} required/>
+          <FormInput label="Description" name="description" value={form.description} onChange={handleChange} error={errors.description} required/>
+          <FormSelect label="Publisher" name="publisherId" value={form.publisherId} disabled={loadingPublishers} onChange={handleChange} options={publishers} error={errors.publisherId} placeholder={loadingPublishers ? "Loading publishers..." : "Select a publisher"} getOptionLabel={publisher => publisher.title} />
+          <FormSelect isMulti label="Authors" name="authorIds" options={authors} disabled={loadingAuthors} value={form.authorIds} onChange={handleChange} error={errors.authorIds} placeholder={loadingAuthors ? "Loading authors..." : "Search and select authors"} getOptionLabel={author => author.person.name} getOptionValue={author => author.id}/>
+          <FormSelect isMulti label="Categories" name="categoryIds" options={categories} disabled={loadingCategories} value={form.categoryIds} onChange={handleChange} error={errors.categoryIds} placeholder={loadingCategories ? "Loading categories..." : "Search and select categories"} getOptionLabel={category => category.title} getOptionValue={category => category.id} />
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? "Saving..." : "Create Book"}
           </button>

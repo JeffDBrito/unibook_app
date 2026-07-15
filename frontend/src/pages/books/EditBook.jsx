@@ -104,7 +104,7 @@ export default function EditBook({ title }) {
     return (
         <AppLayout title={title}>
             <div className="container">
-                <h1>Create Book</h1>
+                <h1>Edit Book</h1>
 
                 <form onSubmit={handleSubmit} className="card p-4">
                     <div className="mb-3">
@@ -224,7 +224,7 @@ export default function EditBook({ title }) {
                     </div>
 
                     <button type="submit" className="btn btn-primary" disabled={saving}>
-                        {saving ? "Saving..." : "Create Book"}
+                        {saving ? "Saving..." : "Update Book"}
                     </button>
                 </form>
             </div>

@@ -44,7 +44,6 @@ export default function Authors({ title }) {
 	}, []);
 
 	const columns = [
-		{ key: "id", label: "ID", accessor: "id" },
 		{
 			key: "person",
 			label: "Name",

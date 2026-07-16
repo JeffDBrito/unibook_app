@@ -130,7 +130,6 @@ public class BookService {
             book.setDescription(request.getDescription());
         }
 
-        // TODO: Date must be before or equal to the current year
         if (!partial || request.getPublicationYear() != null) {
 
             if(request.getPublicationYear() < 0){

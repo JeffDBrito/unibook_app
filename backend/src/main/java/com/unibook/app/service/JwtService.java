@@ -1,5 +1,6 @@
 package com.unibook.app.service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -18,61 +19,50 @@ public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
     @Value("${jwt.expiration}")
     private long expirationTime;
 
     /**
-     * Generate Token
-     * @param user
-     * @return String
+     * Generates a JWT token for the authenticated user.
      */
     public String generateToken(User user) {
+        long expirationInMilliseconds =
+            1000L * 60 * 60 * expirationTime;
+
+        Date issuedAt = new Date();
+
+        Date expiration = new Date(
+            issuedAt.getTime() + expirationInMilliseconds
+        );
+
         return Jwts.builder()
             .setSubject(user.getLogin())
-            .claim("roles", user.getRoles().stream().map(r -> r.getTitle()).toList())
+            .claim(
+                "roles",
+                user.getRoles()
+                    .stream()
+                    .map(role -> role.getTitle())
+                    .toList()
+            )
             .claim("id", user.getId())
             .claim("name", user.getPerson().getName())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * expirationTime)) // 1h ttl
-            .signWith(getSignKey(), SignatureAlgorithm.HS256)
+            .setIssuedAt(issuedAt)
+            .setExpiration(expiration)
+            .signWith(
+                getSignKey(),
+                SignatureAlgorithm.HS256
+            )
             .compact();
     }
 
     /**
-     * Extract Username by token
-     * @param token
-     * @return String
+     * Extracts all claims and validates the token signature
+     * and expiration date.
+     *
+     * Expired or invalid tokens cause a JwtException.
      */
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    /**
-     * Check if token is valid
-     * @param token
-     * @param user
-     * @return boolean
-     */
-    public boolean isValid(String token, User user) {
-        String username = extractUsername(token);
-        return username.equals(user.getLogin()) && !isTokenExpired(token);
-    }
-
-    /**
-     * Check if token is expired
-     * @param token
-     * @return boolean
-     */
-    private boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
-
-    /**
-     * Extract all claims
-     * @param token
-     * @return Claims
-     */
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
             .setSigningKey(getSignKey())
             .build()
@@ -81,10 +71,28 @@ public class JwtService {
     }
 
     /**
-     * Get Sign Key
-     * @return Key
+     * Checks whether token claims belong to the given user.
+     *
+     * The expiration is already validated when extracting
+     * the claims, but it is checked again for clarity.
      */
+    public boolean isValid(Claims claims, User user) {
+        if (claims == null || user == null) {
+            return false;
+        }
+
+        String username = claims.getSubject();
+        Date expiration = claims.getExpiration();
+
+        return username != null
+            && username.equals(user.getLogin())
+            && expiration != null
+            && expiration.after(new Date());
+    }
+
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
+        return Keys.hmacShaKeyFor(
+            secretKey.getBytes(StandardCharsets.UTF_8)
+        );
     }
 }

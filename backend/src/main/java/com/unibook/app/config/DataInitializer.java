@@ -6,21 +6,26 @@ import com.unibook.app.dto.request.category.CreateCategoryRequest;
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
 import com.unibook.app.dto.request.user.CreateUserRequest;
 import com.unibook.app.enums.CopyStatus;
+import com.unibook.app.enums.LoanStatus;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Inventory;
+import com.unibook.app.model.Loan;
 import com.unibook.app.model.Permission;
 import com.unibook.app.model.Role;
+import com.unibook.app.model.User;
 import com.unibook.app.repository.BookRepository;
 import com.unibook.app.repository.CopyRepository;
 import com.unibook.app.repository.InventoryRepository;
+import com.unibook.app.repository.LoanRepository;
 import com.unibook.app.repository.PermissionRepository;
 import com.unibook.app.repository.RoleRepository;
 import com.unibook.app.repository.UserRepository;
 import com.unibook.app.service.AuthorService;
 import com.unibook.app.service.BookService;
 import com.unibook.app.service.CategoryService;
+import com.unibook.app.service.LoanService;
 import com.unibook.app.service.PublisherService;
 import com.unibook.app.service.RoleService;
 import com.unibook.app.service.UserService;
@@ -372,31 +377,47 @@ public class DataInitializer {
         return args -> {
             // The Great Gatsby
             Book gatsby = bookRepository.findByTitle("The Great Gatsby")
-                .orElseThrow();
-            Inventory inventory1 = inventoryRepository.save(
-                buildInventory("A", "1", 1, 1)
-            );            
-            Copy copy1 = buildCopy(
-                "GATSBY-001",
-                CopyStatus.AVAILABLE,
-                gatsby,
-                inventory1
-            );
-            copyRepository.save(copy1);
+                .orElseThrow();            
+
+            copyRepository.save(buildCopy("GATSBY-001",CopyStatus.AVAILABLE,gatsby,inventoryRepository.save(buildInventory("A", "1", 1, 1))));
+            copyRepository.save(buildCopy("GATSBY-002",CopyStatus.AVAILABLE,gatsby,inventoryRepository.save(buildInventory("A", "1", 1, 2))));
+            copyRepository.save(buildCopy("GATSBY-003",CopyStatus.AVAILABLE,gatsby,inventoryRepository.save(buildInventory("A", "1", 1, 3))));
+            copyRepository.save(buildCopy("GATSBY-004",CopyStatus.AVAILABLE,gatsby,inventoryRepository.save(buildInventory("A", "1", 1, 4))));
+            copyRepository.save(buildCopy("GATSBY-005",CopyStatus.AVAILABLE,gatsby,inventoryRepository.save(buildInventory("A", "1", 1,53))));
 
             // To Kill a Mockingbird
             Book mockingbird = bookRepository.findByTitle("To Kill a Mockingbird")
                 .orElseThrow();
-            Inventory inventory2 = inventoryRepository.save(
-                buildInventory("A", "1", 1, 2)
-            );
-            Copy copy2 = buildCopy(
-                "MOCK-001",
-                CopyStatus.AVAILABLE,
-                mockingbird,
-                inventory2
-            );
-            copyRepository.save(copy2);
+
+            copyRepository.save(buildCopy("MOCK-001",CopyStatus.AVAILABLE,mockingbird,inventoryRepository.save(buildInventory("A", "1", 2, 1))));
+            copyRepository.save(buildCopy("MOCK-002",CopyStatus.AVAILABLE,mockingbird,inventoryRepository.save(buildInventory("A", "1", 2, 2))));
+            copyRepository.save(buildCopy("MOCK-003",CopyStatus.AVAILABLE,mockingbird,inventoryRepository.save(buildInventory("A", "1", 2, 3))));
+            copyRepository.save(buildCopy("MOCK-004",CopyStatus.AVAILABLE,mockingbird,inventoryRepository.save(buildInventory("A", "1", 2, 4))));
+            copyRepository.save(buildCopy("MOCK-005",CopyStatus.AVAILABLE,mockingbird,inventoryRepository.save(buildInventory("A", "1", 2, 5))));
+
+            // The Great Gatsby
+            Book _1984 = bookRepository.findByTitle("1984")
+                .orElseThrow();
+
+            copyRepository.save(buildCopy("1984-001",CopyStatus.AVAILABLE,_1984,inventoryRepository.save(buildInventory("A", "1", 3, 1))));
+            copyRepository.save(buildCopy("1984-002",CopyStatus.AVAILABLE,_1984,inventoryRepository.save(buildInventory("A", "1", 3, 2))));
+            copyRepository.save(buildCopy("1984-003",CopyStatus.AVAILABLE,_1984,inventoryRepository.save(buildInventory("A", "1", 3, 3))));
+            copyRepository.save(buildCopy("1984-004",CopyStatus.AVAILABLE,_1984,inventoryRepository.save(buildInventory("A", "1", 3, 4))));
+            copyRepository.save(buildCopy("1984-005",CopyStatus.AVAILABLE,_1984,inventoryRepository.save(buildInventory("A", "1", 3, 5))));
+        };
+    }
+
+    @Bean
+    @Order(10)
+    CommandLineRunner initLoans(LoanService loanService, UserService userService, UserRepository userRepository, CopyRepository copyRepository,InventoryRepository inventoryRepository,BookRepository bookRepository, LoanRepository loanRepository){
+        return args -> {
+            userLoanCopy("GATSBY-001", "student", LocalDate.now().plusDays(30), LoanStatus.ACTIVE, copyRepository, userRepository, loanRepository);
+            userLoanCopy("GATSBY-002", "student", LocalDate.now().plusDays(30), LoanStatus.RETURNED, copyRepository, userRepository, loanRepository);
+            userLoanCopy("1984-001", "student", LocalDate.now().plusDays(30), LoanStatus.ACTIVE, copyRepository, userRepository, loanRepository);
+            userLoanCopy("1984-003", "student", LocalDate.now().plusDays(30), LoanStatus.CANCELLED, copyRepository, userRepository, loanRepository);
+
+            userLoanCopy("1984-002", "teacher", LocalDate.now().plusDays(60), LoanStatus.ACTIVE, copyRepository, userRepository, loanRepository);
+            userLoanCopy("GATSBY-002", "teacher", LocalDate.now().plusDays(60), LoanStatus.ACTIVE, copyRepository, userRepository, loanRepository);
         };
     }
 
@@ -424,15 +445,7 @@ public class DataInitializer {
         };
     }
 
-    private CreateBookRequest buildBook(
-        String title,
-        String isbn,
-        String description,
-        Integer year,
-        Long publisherId,
-        Set<Long> authorIds,
-        Set<Long> categoryIds
-    ){
+    private CreateBookRequest buildBook( String title, String isbn, String description, Integer year, Long publisherId, Set<Long> authorIds, Set<Long> categoryIds){
         CreateBookRequest request = CreateBookRequest.builder()
         .title(title)
         .isbn(isbn)
@@ -446,12 +459,7 @@ public class DataInitializer {
         return request;
     }
 
-    private Inventory buildInventory(
-        String sector,
-        String shelf,
-        int row,
-        int slot
-    ) {
+    private Inventory buildInventory(String sector,String shelf,int row,int slot) {
         Inventory inventory = new Inventory();
 
         inventory.setSector(sector);
@@ -462,12 +470,7 @@ public class DataInitializer {
         return inventory;
     }
 
-    private Copy buildCopy(
-        String code,
-        CopyStatus status,
-        Book book,
-        Inventory inventory
-    ) {
+    private Copy buildCopy(String code,CopyStatus status,Book book,Inventory inventory) {
         Copy copy = new Copy();
 
         copy.setCode(code);
@@ -534,4 +537,32 @@ public class DataInitializer {
         roleService.assignPermissionsByRoleName("GUEST", allPermissions);
     }
 
+    private void userLoanCopy(String copyCode, String userLogin, LocalDate dueDate, LoanStatus status, CopyRepository copyRepository, UserRepository userRepository, LoanRepository loanRepository){
+        // The Great Gatsby
+        Copy copy = copyRepository.findByCode(copyCode)
+            .orElseThrow(); 
+
+        User student = userRepository.findByLogin(userLogin)
+            .orElse(null);
+
+        // LoanResponse loan = loanService.createLoan(new CreateLoanRequest(student.getId(),copy.getId(), dueDate));
+
+        Loan loan = new Loan();
+
+        loan.setUser(student);
+        loan.setCopy(copy);
+
+        loan.setLoanDate(LocalDate.now());
+        loan.setDueDate(dueDate);
+
+        loan.setStatus(status);
+
+        copy.setStatus(CopyStatus.RENTED);
+        copy.setInventory(null);
+
+        copyRepository.save(copy);
+
+        loanRepository.save(loan);
+
+    }
 }

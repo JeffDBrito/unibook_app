@@ -3,6 +3,8 @@ import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import { getLoans, returnLoan } from "../services/loans";
+import { toast } from "react-toastify";
 
 
 export default function Loans({ title }) {
@@ -30,20 +32,14 @@ export default function Loans({ title }) {
 			return
 		}
 
-		async function fetchEntity() {
-			try {
-				const res = await api("/loan");
-				const data = await res.json();
-
-				setLoans(data);
-			} catch (err) {
-				setError("Error when loading loans");
-			} finally {
-				setLoading(false);
-			}
+		async function fetchLoans(){
+			const getting = await getLoans();
+			setLoans(getting)
+			console.log(loans)
 		}
 
-		fetchEntity();
+		fetchLoans()
+		setLoading(false)
 	}, []);
 
 	const columns = [
@@ -108,14 +104,33 @@ export default function Loans({ title }) {
 							</button>
 							: ""
 					}
+					{
+						(user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") || user?.roles?.includes("LIBRARIAN")) && loan.status === "ACTIVE" ?
+							<button
+								onClick={() => handleReturn(loan)}
+								style={actionButton("#e2a32d")}
+							>
+								Return
+							</button>
+							: ""
+					}
 				</div>
 			)
 		}
 	]
 
 	function handleEdit(loan) {
-		console.log("Editloan:", loan);
-		// depois: navigate(`/loans/${loan.id}`)
+		navigate(`/loans/${loan.id}`)
+	}
+
+	function handleReturn(loan) {
+		console.log("returning loan", loan.id)
+		try{
+			returnLoan(loan.id)
+			toast.success("Loan returned")
+		}catch(e){
+			toast.error("Error returning loan")
+		}
 	}
 
 	async function handleDelete(loan) {

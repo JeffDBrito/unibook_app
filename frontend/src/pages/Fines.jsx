@@ -45,7 +45,6 @@ export default function Fines({ title }) {
 	}, []);
 
 	const columns = [
-		{ key: "id", label: "ID", accessor: "id" },
 		{
 			key: "authors",
 			label: "Authors",

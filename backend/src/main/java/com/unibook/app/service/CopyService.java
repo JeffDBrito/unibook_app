@@ -21,6 +21,10 @@ import com.unibook.app.repository.InventoryRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
 @Service
 @RequiredArgsConstructor
 public class CopyService {
@@ -196,9 +200,29 @@ public class CopyService {
      * Fetch all Copies
      * @return List<CopyResponse>
      */
-    public List<CopyResponse> findAll(){
-        List<Copy> copies = copyRepository.findAll();
-        return copies.stream().map(CopyMapper::toResponse).toList();
+    public Page<CopyResponse> findAll(String search,Pageable pageable) {
+        Page<Copy> copies;
+
+        if (search == null || search.isBlank()) {
+            copies = copyRepository.findAllActive(pageable);
+        } else {
+            copies = copyRepository.searchActiveCopies(
+                search.trim(),
+                pageable
+            );
+        }
+
+        List<CopyResponse> responses = copies
+            .getContent()
+            .stream()
+            .map(CopyMapper::toResponse)
+            .toList();
+
+        return new PageImpl<>(
+            responses,
+            pageable,
+            copies.getTotalElements()
+        );
     }
 
 }

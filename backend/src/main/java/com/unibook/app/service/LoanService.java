@@ -7,30 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.unibook.app.dto.request.loan.CreateLoanRequest;
 import com.unibook.app.dto.request.loan.PartialUpdateLoanRequest;
-import com.unibook.app.dto.request.loan.RequestLoanRequest;
 import com.unibook.app.dto.request.loan.UpdateLoanRequest;
-import com.unibook.app.dto.response.LoanRequestResponse;
 import com.unibook.app.dto.response.LoanResponse;
 import com.unibook.app.enums.CopyStatus;
-import com.unibook.app.enums.LoanRequestStatus;
 import com.unibook.app.enums.LoanStatus;
-import com.unibook.app.exceptions.BadRequestException;
 import com.unibook.app.exceptions.ResourceNotFoundException;
 import com.unibook.app.mapper.LoanMapper;
-import com.unibook.app.model.Book;
 import com.unibook.app.model.Copy;
 import com.unibook.app.model.Loan;
-import com.unibook.app.model.LoanRequest;
 import com.unibook.app.model.User;
-import com.unibook.app.repository.BookRepository;
 import com.unibook.app.repository.CopyRepository;
 import com.unibook.app.repository.LoanRepository;
-import com.unibook.app.repository.LoanRequestRepository;
 import com.unibook.app.repository.UserRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import com.unibook.app.mapper.LoanRequestMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +30,6 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final UserRepository userRepository;
     private final CopyRepository copyRepository;
-    private final BookRepository bookRepository;
-    private final LoanRequestRepository loanRequestRepository;
 
 
     // --------------------- //
@@ -52,6 +41,7 @@ public class LoanService {
      * @param request
      * @return LoanResponse
      */
+    @Transactional
     public LoanResponse createLoan(CreateLoanRequest request) {
 
         User user = userRepository.findById(request.getUserId())

@@ -1,7 +1,5 @@
 package com.unibook.app.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +22,10 @@ import com.unibook.app.service.CopyService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
 
 
 @RestController
@@ -38,8 +41,8 @@ public class CopyController {
     @PreAuthorize("hasAuthority('COPY_LIST')")
     @GetMapping
     @Operation(summary = "List copies", description = "Retrieves a list of all copies and returns their details.", tags = {"Copy Endpoints"})
-    public List<CopyResponse> getAll() {
-        return copyService.findAll();
+    public Page<CopyResponse> getAll(@RequestParam(defaultValue = "") String search, @PageableDefault(size = 10, sort = "code") Pageable pageable) {
+        return copyService.findAll(search, pageable);
     }
 
     // Create copy

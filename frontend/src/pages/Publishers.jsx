@@ -45,7 +45,6 @@ export default function Publishers({ title }) {
 	}, []);
 
 	const columns = [
-		{ key: "id", label: "ID", accessor: "id" },
 		{
 			key: "title",
 			label: "Title",

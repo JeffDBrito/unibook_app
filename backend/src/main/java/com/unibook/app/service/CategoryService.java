@@ -14,6 +14,9 @@ import com.unibook.app.model.Category;
 import com.unibook.app.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
 
 @Service
 @RequiredArgsConstructor
@@ -96,9 +99,21 @@ public class CategoryService {
      * Fetch all Categories
      * @return List<CategoryResponse>
      */
-    public List<CategoryResponse> findAll() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream().map(CategoryMapper::toResponse).toList();
+    public Page<CategoryResponse> findAll( String search, Pageable pageable ) {
+        Page<Category> categories;
+
+        if (search == null || search.isBlank()) {
+            categories =
+                categoryRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            categories =
+                categoryRepository.searchActiveCategories(
+                    search.trim(),
+                    pageable
+                );
+        }
+
+        return categories.map(CategoryMapper::toResponse);
     }
 
     /**

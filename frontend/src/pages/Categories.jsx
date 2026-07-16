@@ -1,150 +1,207 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import AppLayout from "../components/layout/AppLayout";
 import Table from "../components/Table";
+
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import { usePaginatedTable } from "../hooks/usePaginatedTable";
 
 export default function Categories({ title }) {
-	const [categories, setCategories] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
-	// import { useAuth } from "../hooks/useAuth";
-	const { token, user } = useAuth();
-
-	const canEdit = user?.roles?.includes("ADMIN") ||
-		user?.roles?.includes("SUPER_ADMIN");
+	const navigate = useNavigate();
+	const { user } = useAuth();
 
 	const canCreate =
 		user?.roles?.includes("ADMIN") ||
 		user?.roles?.includes("SUPER_ADMIN");
 
+	const canEdit = canCreate;
+
 	const canDelete =
 		user?.roles?.includes("SUPER_ADMIN");
 
-	useEffect(() => {
-		const token = localStorage.getItem("token");
+	const fetchCategories = useCallback(
+		async ({ page, size, search }) => {
+			const params = new URLSearchParams({
+				page: String(page),
+				size: String(size),
+			});
 
-		if (!token) {
-			return
-		}
-
-		async function fetchEntity() {
-			try {
-				const res = await api("/categories");
-				const data = await res.json();
-
-				setCategories(data);
-			} catch (err) {
-				setError("Error when loading categories");
-			} finally {
-				setLoading(false);
+			if (search) {
+				params.set("search", search);
 			}
+
+			const response = await api(
+				`/categories?${params.toString()}`
+			);
+
+			if (!response.ok) {
+				const body = await response
+					.json()
+					.catch(() => null);
+
+				throw new Error(
+					body?.general ||
+					body?.message ||
+					"Error when loading categories"
+				);
+			}
+
+			return response.json();
+		},
+		[]
+	);
+
+	const {
+		data: categories,
+		setData: setCategories,
+
+		loading,
+		error,
+
+		page,
+		totalPages,
+
+		search,
+		setSearch,
+
+		setPage,
+	} = usePaginatedTable(fetchCategories);
+
+	function handleEdit(category) {
+		navigate(`/categories/${category.id}/edit`);
+	}
+
+	async function handleDelete(category) {
+		const confirmed = window.confirm(
+			`Delete category "${category.title}"?`
+		);
+
+		if (!confirmed) {
+			return;
 		}
 
-		fetchEntity();
-	}, []);
+		try {
+			const response = await api(
+				`/categories/${category.id}`,
+				{
+					method: "DELETE",
+				}
+			);
+
+			if (!response.ok) {
+				const body = await response
+					.json()
+					.catch(() => null);
+
+				throw new Error(
+					body?.general ||
+					body?.message ||
+					"Error when deleting category"
+				);
+			}
+
+			toast.success(
+				"Category deleted successfully"
+			);
+
+			if (categories.length === 1 && page > 0) {
+				setPage(page - 1);
+			} else {
+				setCategories(currentCategories =>
+					currentCategories.filter(
+						currentCategory =>
+							currentCategory.id !== category.id
+					)
+				);
+			}
+		} catch (err) {
+			toast.error(
+				err.message ||
+					"Error when deleting category"
+			);
+		}
+	}
 
 	const columns = [
 		{
 			key: "title",
 			label: "Title",
-			render: (category) => category.title
+			accessor: "title",
 		},
 		{
 			key: "description",
 			label: "Description",
-			render: (category) => category.description
+			render: category =>
+				category.description ?? "-",
 		},
 		{
 			key: "actions",
 			label: "Actions",
-			render: (category) => (
-				<div style={{ display: "flex", gap: "8px" }}>
-					{
-						user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ?
-							<button
-								onClick={() => handleEdit(category)}
-								style={actionButton("#3b82f6")}
-							>
-								Edit
-							</button>
-							: ""
-					}
+			render: category => (
+				<div className="d-flex gap-2">
+					{canEdit && (
+						<button
+							type="button"
+							className="btn btn-sm btn-primary"
+							onClick={() =>
+								handleEdit(category)
+							}
+						>
+							Edit
+						</button>
+					)}
 
-					{
-						user?.roles?.includes("SUPER_ADMIN") ?
-							<button
-								onClick={() => handleDelete(category)}
-								style={actionButton("#ef4444")}
-							>
-								Delete
-							</button>
-							: ""
-					}
+					{canDelete && (
+						<button
+							type="button"
+							className="btn btn-sm btn-danger"
+							onClick={() =>
+								handleDelete(category)
+							}
+						>
+							Delete
+						</button>
+					)}
 				</div>
-			)
-		}
-	]
-
-	function handleEdit(category) {
-		console.log("Editcategory:", category);
-		// depois: navigate(`/categories/${category.id}`)
-	}
-
-	async function handleDelete(category) {
-		const confirmDelete = confirm(`Deletar ${category.title}?`);
-
-		if (!confirmDelete) return;
-
-		try {
-			await api(`/categories/${category.id}`, {
-				method: "DELETE"
-			});
-
-			setCategories((prev) => prev.filter((u) => u.id !== category.id));
-		} catch (err) {
-			alert("Error when deleting category");
-		}
-	}
-
-	function actionButton(color) {
-		return {
-			padding: "6px 10px",
-			border: "none",
-			borderRadius: "4px",
-			background: color,
-			color: "#fff",
-			cursor: "pointer",
-			fontSize: "12px"
-		};
-	}
+			),
+		},
+	];
 
 	return (
 		<AppLayout title={title}>
-			<h2 style={{ marginBottom: "20px" }}>Categories List</h2>
+			<div className="d-flex justify-content-between align-items-center mb-3">
+				<h2 className="mb-0">
+					Categories List
+				</h2>
 
-			{loading && <p>Loading...</p>}
-			{error && <p style={{ color: "red" }}>{error}</p>}
-			{
-				canCreate && (
+				{canCreate && (
 					<button
-						style={{
-							marginBottom: "10px",
-							padding: "8px 12px",
-							background: "#4f46e5",
-							color: "#fff",
-							border: "none",
-							borderRadius: "4px"
-						}}
+						type="button"
+						className="btn btn-primary"
+						onClick={() =>
+							navigate("/categories/create")
+						}
 					>
 						Create Category
 					</button>
-				)
-			}
+				)}
+			</div>
 
-			{!loading && !error && (
-				<Table columns={columns} data={categories} />
-			)}
+			<Table
+				columns={columns}
+				data={categories}
+				loading={loading}
+				error={error}
+				search={search}
+				onSearchChange={setSearch}
+				searchPlaceholder="Search by title or description..."
+				page={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
 		</AppLayout>
 	);
 }

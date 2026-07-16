@@ -3,6 +3,7 @@ package com.unibook.app.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,10 @@ import com.unibook.app.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -35,10 +40,10 @@ public class CategoryController {
     // List categories
     @PreAuthorize("hasAuthority('CATEGORY_LIST')")
     @GetMapping
-    @Operation(summary = "List categories", description = "Retrieves a list of all categories and returns their details.", tags = {"Category Endpoints"})
-    public List<CategoryResponse> getAllCategories() {
-        return categoryService.findAll();
-    }
+    @Operation(summary = "List categories",description = "Retrieves a paginated list of categories.",tags = {"Category Endpoints"})
+    public Page<CategoryResponse> findAll( @RequestParam(defaultValue = "") String search, @PageableDefault( size = 10, sort = "title" ) Pageable pageable) {
+        return categoryService.findAll(search, pageable);
+}
 
     // Create category
     @PreAuthorize("hasAuthority('CATEGORY_CREATE')")

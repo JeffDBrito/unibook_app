@@ -15,6 +15,10 @@ import com.unibook.app.repository.PublisherRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
+
 @Service
 @RequiredArgsConstructor
 public class PublisherService {
@@ -97,9 +101,24 @@ public class PublisherService {
      * Fetch all Publishers
      * @return List<PublisherResponse>
      */
-    public List<PublisherResponse> findAll() {
-        List<Publisher> publishers = publisherRepository.findAll();
-        return publishers.stream().map(PublisherMapper::toResponse).toList();
+    public Page<PublisherResponse> findAll(
+        String search,
+        Pageable pageable
+    ) {
+        Page<Publisher> publishers;
+
+        if (search == null || search.isBlank()) {
+            publishers =
+                publisherRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            publishers =
+                publisherRepository.searchActivePublishers(
+                    search.trim(),
+                    pageable
+                );
+        }
+
+        return publishers.map(PublisherMapper::toResponse);
     }
 
     /**

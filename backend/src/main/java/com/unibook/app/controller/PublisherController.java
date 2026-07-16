@@ -2,6 +2,7 @@ package com.unibook.app.controller;
 
 import java.util.List;
 
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unibook.app.dto.request.publisher.CreatePublisherRequest;
@@ -22,6 +24,9 @@ import com.unibook.app.service.PublisherService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
 @RestController
 @RequestMapping("/publishers")
 public class PublisherController {
@@ -31,13 +36,13 @@ public class PublisherController {
     public PublisherController(PublisherService publisherService) {
         this.publisherService = publisherService;
     }
-
+    
     // List publishers
     @PreAuthorize("hasAuthority('PUBLISHER_LIST')")
     @GetMapping
-    @Operation(summary = "List publishers", description = "Retrieves a list of all publishers and returns their details.", tags = {"Publisher Endpoints"})
-    public List<PublisherResponse> getAllPublishers() {
-        return publisherService.findAll();
+    @Operation(summary = "List publishers",description = "Retrieves a paginated list of publishers.",tags = {"Publisher Endpoints"})
+    public Page<PublisherResponse> findAll(@RequestParam(defaultValue = "") String search,@PageableDefault(size = 10,sort = "title") Pageable pageable) {
+        return publisherService.findAll(search, pageable);
     }
 
     // Create publisher

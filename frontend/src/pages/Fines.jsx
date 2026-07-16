@@ -6,142 +6,156 @@ import { useAuth } from "../hooks/useAuth";
 
 
 export default function Fines({ title }) {
-  const [fines, setFines] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const { token, user } = useAuth()
+	const [fines, setFines] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+	const { token, user } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+	const canEdit = user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-    if (!token){
-      return
-    }
+	const canCreate =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-    async function fetchEntity() {
-      try {
-        const res = await api("/fines");
-        const data = await res.json();
+	const canDelete =
+		user?.roles?.includes("SUPER_ADMIN");
 
-        setFines(data);
-      } catch (err) {
-        setError("Error when loading fines");
-      } finally {
-        setLoading(false);
-      }
-    }
+	useEffect(() => {
+		const token = localStorage.getItem("token");
 
-    fetchEntity();
-  }, []);
+		if (!token) {
+			return
+		}
 
-  const columns = [
-    { key: "id", label: "ID", accessor: "id" },
-    {
-      key: "authors",
-      label: "Authors",
-      render: (fine) => fine.authors
-    },
-    {
-      key: "title",
-      label: "Title",
-      render: (fine) => fine.title
-    },
-    {key:"isbn", label: "ISBN", render: (fine) => fine.isbn},
-    {
-      key: "categories",
-      label: "Categories",
-      render: (fine) => fine.categories
-    },
-    {
-      key: "year",
-      label: "Year",
-      render: (fine) => fine.publicationYear
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      render: (fine) => (
-        <div style={{ display: "flex", gap: "8px" }}>
-          {
-            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
-              <button
-                onClick={() => handleEdit(fine)}
-                style={actionButton("#3b82f6")}
-              >
-                Edit
-              </button>
-            : ""
-          }
+		async function fetchEntity() {
+			try {
+				const res = await api("/fines");
+				const data = await res.json();
 
-          {
-            user?.roles?.includes("SUPER_ADMIN") ?
-              <button
-                onClick={() => handleDelete(fine)}
-                style={actionButton("#ef4444")}
-              >
-                Delete
-              </button>
-            : ""
-          }
-        </div>
-      )
-    }
-  ]
+				setFines(data);
+			} catch (err) {
+				setError("Error when loading fines");
+			} finally {
+				setLoading(false);
+			}
+		}
 
-  function handleEdit(fine) {
-    console.log("Editfine:", fine);
-    // depois: navigate(`/fines/${fine.id}`)
-  }
+		fetchEntity();
+	}, []);
 
-  async function handleDelete(fine) {
-    const confirmDelete = confirm(`Deletar ${fine.title}?`);
+	const columns = [
+		{ key: "id", label: "ID", accessor: "id" },
+		{
+			key: "authors",
+			label: "Authors",
+			render: (fine) => fine.authors
+		},
+		{
+			key: "title",
+			label: "Title",
+			render: (fine) => fine.title
+		},
+		{ key: "isbn", label: "ISBN", render: (fine) => fine.isbn },
+		{
+			key: "categories",
+			label: "Categories",
+			render: (fine) => fine.categories
+		},
+		{
+			key: "year",
+			label: "Year",
+			render: (fine) => fine.publicationYear
+		},
+		{
+			key: "actions",
+			label: "Actions",
+			render: (fine) => (
+				<div style={{ display: "flex", gap: "8px" }}>
+					{
+						user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ?
+							<button
+								onClick={() => handleEdit(fine)}
+								style={actionButton("#3b82f6")}
+							>
+								Edit
+							</button>
+							: ""
+					}
 
-    if (!confirmDelete) return;
+					{
+						user?.roles?.includes("SUPER_ADMIN") ?
+							<button
+								onClick={() => handleDelete(fine)}
+								style={actionButton("#ef4444")}
+							>
+								Delete
+							</button>
+							: ""
+					}
+				</div>
+			)
+		}
+	]
 
-    try {
-      await api(`/fines/${fine.id}`, {
-        method: "DELETE"
-      });
+	function handleEdit(fine) {
+		console.log("Editfine:", fine);
+		// depois: navigate(`/fines/${fine.id}`)
+	}
 
-      setFines((prev) => prev.filter((u) => u.id !== fine.id));
-    } catch (err) {
-      alert("Error when deleting fine");
-    }
-  }
+	async function handleDelete(fine) {
+		const confirmDelete = confirm(`Deletar ${fine.title}?`);
 
-  function actionButton(color) {
-    return {
-      padding: "6px 10px",
-      border: "none",
-      borderRadius: "4px",
-      background: color,
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "12px"
-    };
-  }
+		if (!confirmDelete) return;
 
-  return (
-    <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Fines List</h2>
+		try {
+			await api(`/fines/${fine.id}`, {
+				method: "DELETE"
+			});
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button
-        style={{
-          marginBottom: "10px",
-          padding: "8px 12px",
-          background: "#4f46e5",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px"
-        }}
-      >
-        Create Fine
-      </button>
-      {!loading && !error && (
-        <Table columns={columns} data={fines} />
-      )}
-    </AppLayout>
-  );
+			setFines((prev) => prev.filter((u) => u.id !== fine.id));
+		} catch (err) {
+			alert("Error when deleting fine");
+		}
+	}
+
+	function actionButton(color) {
+		return {
+			padding: "6px 10px",
+			border: "none",
+			borderRadius: "4px",
+			background: color,
+			color: "#fff",
+			cursor: "pointer",
+			fontSize: "12px"
+		};
+	}
+
+	return (
+		<AppLayout title={title}>
+			<h2 style={{ marginBottom: "20px" }}>Fines List</h2>
+
+			{loading && <p>Loading...</p>}
+			{error && <p style={{ color: "red" }}>{error}</p>}
+			{
+				canCreate && (
+					<button
+						style={{
+							marginBottom: "10px",
+							padding: "8px 12px",
+							background: "#4f46e5",
+							color: "#fff",
+							border: "none",
+							borderRadius: "4px"
+						}}
+					>
+						Create Fine
+					</button>
+				)
+			}
+			{!loading && !error && (
+				<Table columns={columns} data={fines} />
+			)}
+		</AppLayout>
+	);
 }

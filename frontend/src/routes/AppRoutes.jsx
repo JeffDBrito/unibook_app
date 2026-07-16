@@ -4,12 +4,13 @@ import { PrivateRoute } from "./PrivateRoute";
 // Pages
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Home";
 import Books from "../pages/books/Books";
 import Copies from "../pages/Copies";
 import Publishers from "../pages/Publishers"; 
 import Categories from "../pages/Categories"; 
 import Loans from "../pages/Loans";
+import LoanRequests from "../pages/LoanRequests";
 import Fines from "../pages/Fines"; 
 import Users from "../pages/users/Users";
 import Authors from "../pages/Authors"; 
@@ -29,7 +30,7 @@ export default function AppRoutes() {
         <Route path="/signup" element={<Signup />} />
         
         // Pages
-        <Route path="/dashboard" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN","LIBRARIAN","TEACHER","STUDENT","GUEST"]}><Dashboard title="Dashboard"/></PrivateRoute>} />
+        <Route path="/home" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN","LIBRARIAN","TEACHER","STUDENT","GUEST"]}><Dashboard title="Home"/></PrivateRoute>} />
         <Route path="/copies" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Copies title="Copies"/></PrivateRoute>} />
         <Route path="/publishers" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Publishers title="Publishers"/></PrivateRoute>} />
         <Route path="/categories" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Categories title="Categories"/></PrivateRoute>} /> 
@@ -48,8 +49,11 @@ export default function AppRoutes() {
         
         // Loans Pages
         <Route path="/loans" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Loans title="Loans"/></PrivateRoute>} />
-        <Route path="/loans/:id" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Loans title="Loans"/></PrivateRoute>} />
+        <Route path="/loans/me" element={<PrivateRoute roles={["LIBRARIAN","TEACHER","STUDENT"]}><Loans title="Loans"/></PrivateRoute>} />
 
+        // Loan Requests Pages
+        <Route path="/loan-requests" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN", "LIBRARIAN"]}><LoanRequests title="Loan Requests"/></PrivateRoute>} />
+        
         // Fines Pages
         <Route path="/fines" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Fines title="Fines"/></PrivateRoute>} /> // fines
         <Route path="/fines/:id" element={<PrivateRoute roles={["SUPER_ADMIN","ADMIN"]}><Fines title="Fines"/></PrivateRoute>} /> // fines

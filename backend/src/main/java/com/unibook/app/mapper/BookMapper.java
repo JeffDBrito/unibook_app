@@ -18,6 +18,7 @@ public class BookMapper {
      * @return BookResponse
      */
     public static BookResponse toResponse(Book book) {
+
         BookResponse response = new BookResponse();
         response.setId(book.getId());
         response.setTitle(book.getTitle());

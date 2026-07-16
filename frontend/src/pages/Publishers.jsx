@@ -5,132 +5,144 @@ import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Publishers({ title }) {
-  const [publishers, setPublishers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const { token, user } = useAuth();
-  
+	const [publishers, setPublishers] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+	const { token, user } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+	const canEdit = user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-    if (!token){
-      return
-    }
+	const canCreate =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-    async function fetchEntity() {
-      try {
-        const res = await api("/publishers");
-        const data = await res.json();
+	const canDelete =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-        setPublishers(data);
-      } catch (err) {
-        setError("Error when loading publishers");
-      } finally {
-        setLoading(false);
-      }
-    }
+	useEffect(() => {
+		const token = localStorage.getItem("token");
 
-    fetchEntity();
-  }, []);
+		if (!token) {
+			return
+		}
 
-  const columns = [
-    { key: "id", label: "ID", accessor: "id" },
-    {
-      key: "title",
-      label: "Title",
-      render: (publisher) => publisher.title
-    },
-    {
-      key: "description",
-      label: "Description",
-      render: (publisher) => publisher.description
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      render: (publisher) => (
-        <div style={{ display: "flex", gap: "8px" }}>
-          {
-            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
-              <button
-                onClick={() => handleEdit(publisher)}
-                style={actionButton("#3b82f6")}
-              >
-                Edit
-              </button>
-            : ""
-          }
+		async function fetchEntity() {
+			try {
+				const res = await api("/publishers");
+				const data = await res.json();
 
-          {
-            user?.roles?.includes("SUPER_ADMIN") ?
-              <button
-                onClick={() => handleDelete(publisher)}
-                style={actionButton("#ef4444")}
-              >
-                Delete
-              </button>
-            : ""
-          }
-        </div>
-      )
-    }
-  ]
+				setPublishers(data);
+			} catch (err) {
+				setError("Error when loading publishers");
+			} finally {
+				setLoading(false);
+			}
+		}
 
-  function handleEdit(publisher) {
-    console.log("Editpublisher:", publisher);
-    // depois: navigate(`/publishers/${publisher.id}`)
-  }
+		fetchEntity();
+	}, []);
 
-  async function handleDelete(publisher) {
-    const confirmDelete = confirm(`Deletar ${publisher.title}?`);
+	const columns = [
+		{ key: "id", label: "ID", accessor: "id" },
+		{
+			key: "title",
+			label: "Title",
+			render: (publisher) => publisher.title
+		},
+		{
+			key: "description",
+			label: "Description",
+			render: (publisher) => publisher.description
+		},
+		{
+			key: "actions",
+			label: "Actions",
+			render: (publisher) => (
+				<div style={{ display: "flex", gap: "8px" }}>
+					{
+						user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ?
+							<button
+								onClick={() => handleEdit(publisher)}
+								style={actionButton("#3b82f6")}
+							>
+								Edit
+							</button>
+							: ""
+					}
 
-    if (!confirmDelete) return;
+					{
+						user?.roles?.includes("SUPER_ADMIN") ?
+							<button
+								onClick={() => handleDelete(publisher)}
+								style={actionButton("#ef4444")}
+							>
+								Delete
+							</button>
+							: ""
+					}
+				</div>
+			)
+		}
+	]
 
-    try {
-      await api(`/publishers/${publisher.id}`, {
-        method: "DELETE"
-      });
+	function handleEdit(publisher) {
+		console.log("Editpublisher:", publisher);
+		// depois: navigate(`/publishers/${publisher.id}`)
+	}
 
-      setPublishers((prev) => prev.filter((u) => u.id !== publisher.id));
-    } catch (err) {
-      alert("Error when deleting publisher");
-    }
-  }
+	async function handleDelete(publisher) {
+		const confirmDelete = confirm(`Deletar ${publisher.title}?`);
 
-  function actionButton(color) {
-    return {
-      padding: "6px 10px",
-      border: "none",
-      borderRadius: "4px",
-      background: color,
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "12px"
-    };
-  }
+		if (!confirmDelete) return;
 
-  return (
-    <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Publishers List</h2>
+		try {
+			await api(`/publishers/${publisher.id}`, {
+				method: "DELETE"
+			});
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button
-        style={{
-          marginBottom: "10px",
-          padding: "8px 12px",
-          background: "#4f46e5",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px"
-        }}
-      >
-        Create Publisher
-      </button>
-      {!loading && !error && (
-        <Table columns={columns} data={publishers} />
-      )}
-    </AppLayout>
-  );
+			setPublishers((prev) => prev.filter((u) => u.id !== publisher.id));
+		} catch (err) {
+			alert("Error when deleting publisher");
+		}
+	}
+
+	function actionButton(color) {
+		return {
+			padding: "6px 10px",
+			border: "none",
+			borderRadius: "4px",
+			background: color,
+			color: "#fff",
+			cursor: "pointer",
+			fontSize: "12px"
+		};
+	}
+
+	return (
+		<AppLayout title={title}>
+			<h2 style={{ marginBottom: "20px" }}>Publishers List</h2>
+
+			{loading && <p>Loading...</p>}
+			{error && <p style={{ color: "red" }}>{error}</p>}
+			{canCreate && (
+				<button
+					style={{
+						marginBottom: "10px",
+						padding: "8px 12px",
+						background: "#4f46e5",
+						color: "#fff",
+						border: "none",
+						borderRadius: "4px"
+					}}
+				>
+					Create Publisher
+				</button>
+			)}
+			{!loading && !error && (
+				<Table columns={columns} data={publishers} />
+			)}
+		</AppLayout>
+	);
 }

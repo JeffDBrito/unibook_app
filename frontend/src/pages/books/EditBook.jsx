@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../components/layout/AppLayout";
-import { getBook, editBook } from "../../services/books";
+import { getBooks, editBook, findBookById } from "../../services/books";
 import { getAuthors } from "../../services/authors";
 import { getCategories } from "../../services/categories";
 import { getPublishers } from "../../services/publishers";
@@ -34,7 +34,7 @@ export default function EditBook({ title }) {
         }
 
         async function loadBook() {
-            const book = await getBook(id);
+            const book = await findBookById(id);
             setForm({
                 title: book.title || "",
                 isbn: book.isbn || "",

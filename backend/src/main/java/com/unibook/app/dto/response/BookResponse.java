@@ -43,5 +43,7 @@ public class BookResponse {
     @Schema(example = "[1,2,3]")
     private Set<Long> categoryIds;
 
+    @Schema(example = "true")
+    private Boolean requestedByCurrentUser;
 
 }

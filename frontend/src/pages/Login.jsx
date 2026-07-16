@@ -41,7 +41,7 @@ export default function Login() {
 
       doLogin(data.token);
 
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
       setError("Invalid credentials");
     } finally {

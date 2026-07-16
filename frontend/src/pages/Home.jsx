@@ -3,7 +3,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import AppLayout from "../components/layout/AppLayout";
 
-export default function Dashboard({ title }) {
+export default function Home({ title }) {
   return (
     <AppLayout title={title}>
       <p>Welcome!</p>

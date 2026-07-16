@@ -1,148 +1,280 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestLoan } from "../../services/loanRequests";
+import { toast } from "react-toastify";
+
 import AppLayout from "../../components/layout/AppLayout";
 import Table from "../../components/Table";
+
 import { api } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 
+const PAGE_SIZE = 10;
+const SEARCH_DELAY = 400;
+
 export default function Books({ title }) {
-  const navigate = useNavigate();
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const { token, user } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+	// Constants and hooks
+	const navigate = useNavigate();
+	const { user } = useAuth();
 
-    if (!token){
-      return
-    }
+	const [books, setBooks] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 
-    async function fetchEntity() {
-      try {
-        const res = await api("/books");
-        const data = await res.json();
+	const [page, setPage] = useState(0);
+	const [totalPages, setTotalPages] = useState(0);
 
-        setBooks(data);
-      } catch (err) {
-        setError("Error when loading books");
-      } finally {
-        setLoading(false);
-      }
-    }
+	const [search, setSearch] = useState("");
+	const [debouncedSearch, setDebouncedSearch] = useState("");
 
-    fetchEntity();
-  }, []);
+	// Permissions based on user roles
+	const canCreate =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
 
-  const columns = [
-    { key: "id", label: "ID", accessor: "id" },
-    {
-      key: "authors",
-      label: "Authors",
-      render: (book) => book.authors
-    },
-    {
-      key: "title",
-      label: "Title",
-      render: (book) => book.title
-    },
-    {key:"isbn", label: "ISBN", render: (book) => book.isbn},
-    {
-      key: "categories",
-      label: "Categories",
-      render: (book) => book.categories
-    },
-    {
-      key: "year",
-      label: "Year",
-      render: (book) => book.publicationYear
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      render: (book) => (
-        <div style={{ display: "flex", gap: "8px" }}>
-          {
-            user?.roles?.includes("SUPER_ADMIN") || user?.roles?.includes("ADMIN") ? 
-              <button
-                onClick={() => handleEdit(book)}
-                style={actionButton("#3b82f6")}
-              >
-                Edit
-              </button>
-            : ""
-          }
+	const canEdit = canCreate;
 
-          {
-            user?.roles?.includes("SUPER_ADMIN") ?
-              <button
-                onClick={() => handleDelete(book)}
-                style={actionButton("#ef4444")}
-              >
-                Delete
-              </button>
-            : ""
-          }
-        </div>
-      )
-    }
-  ]
+	const canDelete = user?.roles?.includes("SUPER_ADMIN");
 
-  function handleEdit(book) {
-    navigate(`/books/${book.id}/edit`)
-  }
+	const canRent =
+		user?.roles?.includes("LIBRARIAN") ||
+		user?.roles?.includes("TEACHER") ||
+		user?.roles?.includes("STUDENT");
 
-  async function handleDelete(book) {
-    const confirmDelete = confirm(`Deletar ${book.title}?`);
+	const canRequestLoan =
+		user?.roles?.includes("STUDENT") ||
+		user?.roles?.includes("TEACHER") ||
+		user?.roles?.includes("LIBRARIAN");
 
-    if (!confirmDelete) return;
+	// Fetch books when page or debounced search changes
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setDebouncedSearch(search.trim());
+			setPage(0);
+		}, SEARCH_DELAY);
 
-    try {
-      await api(`/books/${book.id}`, {
-        method: "DELETE"
-      });
+		return () => clearTimeout(timeout);
+	}, [search]);
 
-      setBooks((prev) => prev.filter((u) => u.id !== book.id));
-    } catch (err) {
-      alert("Error when deleting book");
-    }
-  }
+	useEffect(() => {
+		async function fetchBooks() {
+			setLoading(true);
+			setError("");
 
-  function actionButton(color) {
-    return {
-      padding: "6px 10px",
-      border: "none",
-      borderRadius: "4px",
-      background: color,
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "12px"
-    };
-  }
+			try {
+				const params = new URLSearchParams({
+					page: String(page),
+					size: String(PAGE_SIZE),
+				});
 
-  return (
-    <AppLayout title={title}>
-      <h2 style={{ marginBottom: "20px" }}>Book List</h2>
+				if (debouncedSearch) {
+					params.set("search", debouncedSearch);
+				}
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button
-        onClick={() => navigate("/books/create")}
-        style={{
-          marginBottom: "10px",
-          padding: "8px 12px",
-          background: "#4f46e5",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px"
-        }}
-      >
-        Create Book
-      </button>
-      {!loading && !error && (
-        <Table columns={columns} data={books} />
-      )}
-    </AppLayout>
-  );
+				const response = await api(
+					`/books?${params.toString()}`
+				);
+
+				if (!response.ok) {
+					const body = await response.json().catch(() => null);
+
+					throw new Error(
+						body?.general ||
+						body?.message ||
+						"Error when loading books"
+					);
+				}
+
+				const data = await response.json();
+
+				setBooks(data.content ?? []);
+				setTotalPages(data.totalPages ?? 0);
+			} catch (err) {
+				setBooks([]);
+				setTotalPages(0);
+				setError(err.message || "Error when loading books");
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		fetchBooks();
+	}, [page, debouncedSearch]);
+
+	function handleEdit(book) {
+		navigate(`/books/${book.id}/edit`)
+	}
+
+	async function handleDelete(book) {
+		const confirmed = window.confirm(
+			`Delete ${book.title}?`
+		);
+
+		if (!confirmed) {
+			return;
+		}
+
+		try {
+			const response = await api(`/books/${book.id}`, {
+				method: "DELETE",
+			});
+
+			if (!response.ok) {
+				const body = await response.json().catch(() => null);
+
+				throw new Error(
+					body?.general ||
+					body?.message ||
+					"Error when deleting book"
+				);
+			}
+
+			toast.success("Book deleted successfully");
+
+			if (books.length === 1 && page > 0) {
+				setPage(currentPage => currentPage - 1);
+			} else {
+				setBooks(currentBooks =>
+					currentBooks.filter(
+						currentBook => currentBook.id !== book.id
+					)
+				);
+			}
+		} catch (err) {
+			toast.error(err.message || "Error when deleting book");
+		}
+	}
+
+	async function handleRequestLoan(book) {
+		try {
+			await requestLoan(book.id);
+			toast.success(
+				"Loan request sent successfully."
+			);
+			book.requestedByCurrentUser = true;
+		} catch (err) {
+			toast.error(
+				err.bookId ??
+				err.message ??
+				"Unable to request this book."
+			);
+		}
+	}
+
+	const columns = [
+		{
+			key: "title",
+			label: "Title",
+			accessor: "title",
+		},
+		{
+			key: "isbn",
+			label: "ISBN",
+			accessor: "isbn",
+		},
+		{
+			key: "publisher",
+			label: "Publisher",
+			render: book =>
+				book.publisher?.name ??
+				book.publisher?.title ??
+				book.publisher ??
+				"-",
+		},
+		{
+			key: "authors",
+			label: "Authors",
+			render: book =>
+				Array.isArray(book.authors)
+					? book.authors
+						.map(author =>
+							typeof author === "string"
+								? author
+								: author.name
+						)
+						.join(", ")
+					: book.authors ?? "-",
+		},
+		{
+			key: "categories",
+			label: "Categories",
+			render: book =>
+				Array.isArray(book.categories)
+					? book.categories
+						.map(category =>
+							typeof category === "string"
+								? category
+								: category.title
+						)
+						.join(", ")
+					: book.categories ?? "-",
+		},
+		{
+			key: "actions",
+			label: "Actions",
+			render: book => (
+				<div className="d-flex gap-2">
+					{canEdit && (
+						<button
+							className="btn btn-sm btn-primary"
+							onClick={() => handleEdit(book)}
+						>
+							Edit
+						</button>
+					)}
+					{canDelete && (
+						<button
+							className="btn btn-sm btn-danger"
+							onClick={() => handleDelete(book)}
+						>
+							Delete
+						</button>
+					)}
+					{canRequestLoan && (
+						<button
+							className="btn btn-sm btn-success"
+							disabled={book.requestedByCurrentUser}
+							onClick={() => handleRequestLoan(book)}
+						>
+							{book.requestedByCurrentUser
+								? "Requested"
+								: "Request"}
+						</button>
+					)}
+				</div>
+			)
+		},
+	];
+
+	return (
+		<AppLayout title={title}>
+			<div className="d-flex justify-content-between align-items-center mb-3">
+				<h2 className="mb-0">Book List</h2>
+
+				{canCreate && (
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={() => navigate("/books/create")}
+					>
+						Create Book
+					</button>
+				)}
+			</div>
+
+			<Table
+				columns={columns}
+				data={books}
+				loading={loading}
+				error={error}
+				search={search}
+				onSearchChange={setSearch}
+				searchPlaceholder="Search by title or ISBN..."
+				page={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
+		</AppLayout>
+	);
 }

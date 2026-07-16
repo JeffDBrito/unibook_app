@@ -18,10 +18,16 @@ import com.unibook.app.model.Author;
 import com.unibook.app.model.Book;
 import com.unibook.app.model.Category;
 import com.unibook.app.model.Publisher;
+import com.unibook.app.model.User;
 import com.unibook.app.repository.AuthorRepository;
 import com.unibook.app.repository.BookRepository;
 import com.unibook.app.repository.CategoryRepository;
+import com.unibook.app.repository.LoanRequestRepository;
 import com.unibook.app.repository.PublisherRepository;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +39,8 @@ public class BookService {
     private final PublisherRepository publisherRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+    private final LoanRequestRepository loanRequestRepository;
+    private final SecurityService securityService;
 
     // --------------------- //
     // Management Operations //
@@ -209,9 +217,44 @@ public class BookService {
      * List all Books
      * @return List<BookResponse>
      */
-    public List<BookResponse> findAll() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream().map(BookMapper::toResponse).toList();
+    public Page<BookResponse> findAll(String search, Pageable pageable) {
+        Page<Book> books;
+
+        if (search == null || search.isBlank()) {
+            books = bookRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            books = bookRepository.searchActiveBooks(search, pageable);
+        }
+
+        List<BookResponse> responses = books.getContent()
+            .stream()
+            .map(BookMapper::toResponse)
+            .toList();
+
+        User currentUser = securityService.getCurrentUser();
+
+        List<Long> bookIds = books.getContent()
+            .stream()
+            .map(book -> book.getId())
+            .toList();
+
+        Set<Long> requestedBooks =
+            loanRequestRepository.findPendingBookIdsByUser(
+                currentUser.getId(),
+                bookIds
+            );
+
+        responses.forEach(response ->
+            response.setRequestedByCurrentUser(
+                requestedBooks.contains(response.getId())
+            )
+        );
+
+        return new PageImpl<>(
+            responses,
+            pageable,
+            books.getTotalElements()
+        );
     }
 
     /**
@@ -222,7 +265,7 @@ public class BookService {
      */
     public BookResponse findById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("id", "Book not found with id: " + id));
         return BookMapper.toResponse(book);
     }
 

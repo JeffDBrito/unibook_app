@@ -1,7 +1,5 @@
 package com.unibook.app.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +19,10 @@ import com.unibook.app.dto.request.book.PartialUpdateBookRequest;
 import com.unibook.app.dto.request.book.UpdateBookRequest;
 import com.unibook.app.dto.response.BookResponse;
 import com.unibook.app.service.BookService;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -38,8 +41,8 @@ public class BookController {
     @PreAuthorize("hasAuthority('BOOK_LIST')")
     @GetMapping
     @Operation(summary = "List books", description = "Retrieves a list of all books and returns their details.", tags = {"Book Endpoints"})
-    public List<BookResponse> getAll() {
-        return bookService.findAll();
+    public Page<BookResponse> findAll( @RequestParam(defaultValue = "") String search, @PageableDefault(size = 10, sort = "title") Pageable pageable) {
+        return bookService.findAll(search, pageable);
     }
 
     // Create book

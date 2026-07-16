@@ -25,6 +25,10 @@ export default function Users({ title }) {
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
 
+	const canCreate =
+		user?.roles?.includes("ADMIN") ||
+		user?.roles?.includes("SUPER_ADMIN");
+
 	const canEdit =
 		user?.roles?.includes("ADMIN") ||
 		user?.roles?.includes("SUPER_ADMIN");
@@ -194,7 +198,7 @@ export default function Users({ title }) {
 			<div className="d-flex justify-content-between align-items-center mb-3">
 				<h2 className="mb-0">User List</h2>
 
-				{canEdit && (
+				{canCreate && (
 					<button
 						type="button"
 						className="btn btn-primary"

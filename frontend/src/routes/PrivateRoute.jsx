@@ -9,7 +9,7 @@ export function PrivateRoute({ children, roles = [] }) {
   }
 
   if (roles.length > 0 && !roles.some(role => user?.roles?.includes(role))) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return children;
